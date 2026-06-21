@@ -104,7 +104,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.1.2 (2026-06-21)
 - (skvarel) Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)
 
 ### 0.1.1 (2026-06-21)

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)",
+        "de": "Präzisierte Administratorhilfe für useMotionEyeConfig (erforderlich für Modus, Webhooks und Stream-Steuerung – nicht nur für die MotionEye-Weboberfläche)",
+        "ru": "Уточнена административная справка по параметру useMotionEyeConfig (необходим для режима, веб-хуков и управления потоком — не только для веб-интерфейса MotionEye).",
+        "pt": "Esclarecimentos na ajuda administrativa para useMotionEyeConfig (necessário para modo, webhooks e controle de fluxo — não apenas para a interface web do MotionEye).",
+        "nl": "De beheerdershelp voor useMotionEyeConfig is verduidelijkt (vereist voor modus, webhooks en streamcontrole — niet alleen voor de MotionEye-webinterface).",
+        "fr": "Aide d'administration clarifiée pour useMotionEyeConfig (requise pour le mode, les webhooks et le contrôle du flux — et pas seulement pour l'interface utilisateur web de MotionEye)",
+        "it": "Chiarimenti alla guida amministrativa per useMotionEyeConfig (necessario per la modalità, i webhook e il controllo dello streaming, non solo per l'interfaccia web di MotionEye).",
+        "es": "Se ha aclarado la ayuda administrativa para usar MotionEyeConfig (necesario para el modo, los webhooks y el control de la transmisión, no solo para la interfaz web de MotionEye).",
+        "pl": "Wyjaśniono pomoc administracyjną dotyczącą użycia MotionEyeConfig (wymaganą w przypadku trybu, webhooków i sterowania strumieniem — nie tylko interfejsu internetowego MotionEye)",
+        "uk": "Уточнено довідку адміністратора щодо використання MotionEyeConfig (потрібно для режиму, вебхуків та керування потоком — не лише веб-інтерфейсу MotionEye)",
+        "zh-cn": "澄清了有关 useMotionEyeConfig 的管理员帮助（模式、Webhook 和流控制需要此配置，而不仅仅是 MotionEye Web UI）。"
+      },
       "0.1.1": {
         "en": "Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree\nMigrate legacy `info` and `_info` states to `0_info` on adapter start",
         "de": "Der Info-Ordner wurde von `_info` in `0_info` umbenannt, sodass er in der Objektstruktur oberhalb der Kamerakanäle sortiert wird.\nDie alten Zustände `info` und `_info` werden beim Adapterstart in `0_info` migriert.",
