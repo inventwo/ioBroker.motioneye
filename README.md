@@ -90,6 +90,7 @@ The `0_info` folder sorts above camera channels (digits before letters in the ob
 | `webhookPort` | `8090` | Built-in webhook listener port |
 | `motionResetMs` | `15000` | Auto-reset for `.motion` after webhook |
 | `statusPollIntervalSec` | `300` | MotionEye status poll interval |
+| `useMotionEyeConfig` | `true` | Write mode, webhook URLs, and stream on/off to MotionEye (leave enabled for normal use) |
 
 ## Support
 
@@ -103,6 +104,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)
+
 ### 0.1.1 (2026-06-21)
 - (skvarel) Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree
 - (skvarel) Migrate legacy `info` and `_info` states to `0_info` on adapter start
