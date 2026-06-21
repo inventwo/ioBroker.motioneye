@@ -21,13 +21,7 @@ const { createStreamManager } = require('./lib/streamManager');
 
 /** Info states live under `_info` so the folder sorts before camera channels. */
 const INFO_PREFIX = '_info';
-const LEGACY_INFO_STATES = [
-	'connection',
-	'camerasOnline',
-	'lastSync',
-	'motionEyeVersion',
-	'motionVersion',
-];
+const LEGACY_INFO_STATES = ['connection', 'camerasOnline', 'lastSync', 'motionEyeVersion', 'motionVersion'];
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -217,11 +211,7 @@ class Motioneye extends utils.Adapter {
 		for (const [stateId, name] of Object.entries(INFO_STATE_LABELS)) {
 			const type = stateId === 'camerasOnline' ? 'number' : 'string';
 			const role =
-				stateId === 'connection'
-					? 'indicator.connected'
-					: stateId === 'camerasOnline'
-						? 'value'
-						: 'text';
+				stateId === 'connection' ? 'indicator.connected' : stateId === 'camerasOnline' ? 'value' : 'text';
 
 			await this.setObjectNotExistsAsync(`${INFO_PREFIX}.${stateId}`, {
 				type: 'state',
