@@ -32,7 +32,6 @@
 	"motionPort_help": "Motion webcontrol port for snapshots (default 7999)",
 	"motionResetMs": "Motion auto-reset (ms)",
 	"motionResetMs_help": "How long the .motion state stays true after a webhook (default 15000)",
-	"phase1_info": "Phase 1: camera datapoints, mode control, built-in webhook server, and MotionEye sync. Stream HTML and snapshots follow in Phase 2.",
 	"requestTimeoutMs": "API request timeout (ms)",
 	"statusPollIntervalSec": "Status poll interval (seconds)",
 	"streamAutoOffMs": "Stream pulse auto-off (ms)",

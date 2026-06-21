@@ -87,23 +87,18 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 | `motionResetMs` | `15000` | Auto-reset for `.motion` after webhook |
 | `statusPollIntervalSec` | `300` | MotionEye status poll interval |
 
+## Support
+
+If you like our work and would like to support us, we appreciate any donation.
+(This link leads to our PayPal account and is not affiliated with ioBroker.)
+
+[![Donate](img/support.png)](https://www.paypal.com/donate?hosted_button_id=7W6M3TFZ4W9LW)
+
 ## Changelog
 
 <!--
   ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
-
-- (skvarel) Added snapshot, stream, streamPulse, and streamUrl datapoints with Motion API and stream HTML manager
-- (skvarel) Clarified admin help for webhookHost — IP must be set manually for MotionEye webhooks
-- (skvarel) Phase 1 MVP: camera table in admin, dynamic channels and states (`mode`, `motion`, `status`, `webhookUrl`, …)
-- (skvarel) Built-in webhook HTTP server on configurable port (no simple-api)
-- (skvarel) Mode control via MotionEye Config API with `off` / `still` / `sharp` profiles
-- (skvarel) Status polling, `info.connection`, and MotionEye name sync
-- (skvarel) Initial adapter scaffold with inventwo boilerplate (CI, tests, Cursor rules)
-- (skvarel) Ported MotionEye Config API client (`lib/motionEyeApi.js`) with SHA1 signature auth and unit tests
-- (skvarel) Dev-server defaults targeting MotionEye at `192.168.130.240`
 
 ### 0.0.1 (2026-06-21)
 - (skvarel) Initial development release
@@ -112,4 +107,25 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
 
 ## License
-MIT — Copyright (c) 2026 skvarel <skvarel@inventwo.com>
+
+MIT License
+
+Copyright (c) 2026 skvarel <skvarel@inventwo.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

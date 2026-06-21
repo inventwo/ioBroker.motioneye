@@ -215,31 +215,13 @@
 					"md": 4,
 					"lg": 4,
 					"xl": 4
-				},
-				"_phase1Info": {
-					"type": "staticText",
-					"text": "phase1_info",
-					"xs": 12,
-					"sm": 12,
-					"md": 12,
-					"lg": 12,
-					"xl": 12,
-					"style": {
-						"fontSize": "0.875rem",
-						"whiteSpace": "pre-wrap",
-						"marginTop": "20px",
-						"padding": "10px 14px",
-						"border": "1px solid #546e7a",
-						"borderRadius": "6px",
-						"backgroundColor": "rgba(84, 110, 122, 0.12)"
-					}
 				}
 			}
 		},
 		"_cameras": {
 			"type": "panel",
 			"label": "tab_cameras",
-			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTcsMTBIMTdWNUMxNywyLjc5IDE0LjIxLDAgMTEsMFM1LDIuNzkgNSw1djVINUMyLjI0LDEwIDAsMTIuMjQgMCwxNXY0YzAsMi43NiwyLjI0LDUsNSw1aDE0YzIuNzYsMCw1LTIuMjQsNS01di00QzI0LDEyLjI0LDIxLjc2LDEwLDE5LDEweiBNMTEsN2MwLTEuNjYsMS4zNC0zLDMtM3MzLDAuMzQsMywzdjNoLTZWN3oiLz48L3N2Zz4=",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTcgMTAuNVY3YzAtLjU1LS40NS0xLTEtMUg0Yy0uNTUgMC0xIC40NS0xIDF2MTBjMCAuNTUuNDUgMSAxIDFoMTJjLjU1IDAgMS0uNDUgMS0xdi0zLjVsNCA0di0xMWwtNCA0eiIvPjwvc3ZnPg==",
 			"items": {
 				"_camerasHeader": {
 					"type": "header",
