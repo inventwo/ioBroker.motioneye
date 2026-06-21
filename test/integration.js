@@ -3,6 +3,13 @@ const { expect } = require('chai');
 const { tests } = require('@iobroker/testing');
 
 const ADAPTER_NAME = 'motioneye';
+const NAMESPACE = `${ADAPTER_NAME}.0`;
+
+async function expectStateObject(harness, objectId) {
+	const obj = await harness.objects.getObjectAsync(objectId);
+	expect(obj, `missing object ${objectId}`).to.exist;
+	expect(obj.type).to.equal('state');
+}
 
 // Run integration tests - See https://github.com/ioBroker/testing for a detailed explanation and further options
 tests.integration(path.join(__dirname, '..'), {
@@ -33,14 +40,20 @@ tests.integration(path.join(__dirname, '..'), {
 					},
 				});
 				await harness.startAdapterAndWait();
-				const ids = await harness.states.getStateIDsAsync();
-				expect(ids).to.include('motioneye.0.TestCam.mode');
-				expect(ids).to.include('motioneye.0.TestCam.webhookUrl');
-				expect(ids).to.include('motioneye.0.TestCam.snapshot');
-				expect(ids).to.include('motioneye.0.TestCam.stream');
-				expect(ids).to.include('motioneye.0.TestCam.streamPulse');
-				expect(ids).to.include('motioneye.0.TestCam.streamUrl');
-				expect(ids).to.include('motioneye.0.info.connection');
+
+				const stateIds = [
+					`${NAMESPACE}.TestCam.mode`,
+					`${NAMESPACE}.TestCam.webhookUrl`,
+					`${NAMESPACE}.TestCam.snapshot`,
+					`${NAMESPACE}.TestCam.stream`,
+					`${NAMESPACE}.TestCam.streamPulse`,
+					`${NAMESPACE}.TestCam.streamUrl`,
+					`${NAMESPACE}.info.connection`,
+				];
+
+				for (const id of stateIds) {
+					await expectStateObject(harness, id);
+				}
 			}).timeout(40000);
 		});
 	},
