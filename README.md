@@ -103,7 +103,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.1.1 (2026-06-21)
 - (skvarel) Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree
 - (skvarel) Migrate legacy `info` and `_info` states to `0_info` on adapter start
 

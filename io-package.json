@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree\nMigrate legacy `info` and `_info` states to `0_info` on adapter start",
+        "de": "Der Info-Ordner wurde von `_info` in `0_info` umbenannt, sodass er in der Objektstruktur oberhalb der Kamerakanäle sortiert wird.\nDie alten Zustände `info` und `_info` werden beim Adapterstart in `0_info` migriert.",
+        "ru": "Папка info переименована из `_info` в `0_info`, чтобы она сортировалась выше каналов камеры в дереве объектов.\nПри запуске адаптера устаревшие состояния `info` и `_info` преобразуются в `0_info`.",
+        "pt": "Renomeei a pasta de informações de `_info` para `0_info` para que ela seja classificada acima dos canais da câmera na árvore de objetos.\nMigre os estados legados `info` e `_info` para `0_info` na inicialização do adaptador.",
+        "nl": "De info-map is hernoemd van `_info` naar `0_info`, zodat deze in de objectstructuur boven de camerakanalen wordt gesorteerd.\nMigreer de oude `info` en `_info` statussen naar `0_info` bij het opstarten van de adapter.",
+        "fr": "Le dossier d'informations a été renommé de `_info` à `0_info` afin qu'il soit trié au-dessus des canaux de caméra dans l'arborescence des objets.\nMigrer les états `info` et `_info` hérités vers `0_info` au démarrage de l'adaptateur",
+        "it": "Rinominata la cartella info da `_info` a `0_info` in modo che venga visualizzata prima dei canali della telecamera nell'albero degli oggetti.\nMigra gli stati legacy `info` e `_info` a `0_info` all'avvio dell'adattatore",
+        "es": "Se cambió el nombre de la carpeta de información de `_info` a `0_info` para que se ordene por encima de los canales de la cámara en el árbol de objetos.\nMigrar los estados heredados `info` y `_info` a `0_info` al iniciar el adaptador.",
+        "pl": "Zmieniono nazwę folderu info z `_info` na `0_info`, aby był sortowany nad kanałami kamer w drzewie obiektów\nMigracja starszych stanów `info` i `_info` do `0_info` podczas uruchamiania adaptera",
+        "uk": "Папку info перейменовано з `_info` на `0_info`, щоб вона сортувалася вище каналів камер у дереві об'єктів\nПеренести застарілі стани `info` та `_info` на `0_info` під час запуску адаптера",
+        "zh-cn": "将信息文件夹从 `_info` 重命名为 `0_info`，使其在对象树中位于摄像机通道之上。\n在适配器启动时，将旧版 `info` 和 `_info` 状态迁移到 `0_info`。"
+      },
       "0.1.0": {
         "en": "Added states for motionEyeVersion and motionVersion",
         "de": "Zustände für motionEyeVersion und motionVersion hinzugefügt.",
