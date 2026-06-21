@@ -27,7 +27,7 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 - Dynamic channels under `motioneye.0.<Name>.*`
 - Built-in webhook server — no simple-api dependency
 - MotionEye Config API sync for modes and webhook URLs
-- `info.connection` — instance shows when MotionEye is unreachable
+- `_info.connection` — instance shows when MotionEye is unreachable
 - Stream sibling relink after VIS re-render (multi-camera dashboards)
 
 ## Data Points
@@ -48,13 +48,17 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 | `motionEyeId` | value | yes | no | MotionEye camera ID |
 | `motionEyeName` | text | yes | no | Original name in MotionEye |
 
-### Instance (`motioneye.0.info.*`)
+### Instance (`motioneye.0._info.*`)
+
+The `_info` folder sorts above camera channels in the object tree.
 
 | State | Type | Description |
 |-------|------|-------------|
-| `info.connection` | boolean | MotionEye reachable |
-| `info.camerasOnline` | number | Enabled cameras found in MotionEye |
-| `info.lastSync` | text | Last status poll timestamp |
+| `_info.connection` | boolean | MotionEye reachable |
+| `_info.camerasOnline` | number | Enabled cameras found in MotionEye |
+| `_info.lastSync` | text | Last status poll timestamp |
+| `_info.motionEyeVersion` | text | MotionEye server version |
+| `_info.motionVersion` | text | Motion daemon version |
 
 ## Installation
 
@@ -99,6 +103,8 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Added states for motionEyeVersion and motionVersion
 
 ### 0.0.1 (2026-06-21)
 - (skvarel) Initial development release

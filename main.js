@@ -7,6 +7,7 @@
 const utils = require('@iobroker/adapter-core');
 const { createMotionEyeApi } = require('./lib/motionEyeApi');
 const { createMotionApi } = require('./lib/motionApi');
+const { INFO_STATE_LABELS } = require('./lib/infoLabels');
 const { resolveCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
 const {
 	normalizeMode,
@@ -17,6 +18,16 @@ const {
 } = require('./lib/modeProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
+
+/** Info states live under `_info` so the folder sorts before camera channels. */
+const INFO_PREFIX = '_info';
+const LEGACY_INFO_STATES = [
+	'connection',
+	'camerasOnline',
+	'lastSync',
+	'motionEyeVersion',
+	'motionVersion',
+];
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -43,6 +54,7 @@ class Motioneye extends utils.Adapter {
 		this.camerasByChannel = new Map();
 		this.webhookHost = '';
 		this._unloading = false;
+		this._serverVersionsFetched = false;
 	}
 
 	/**
@@ -202,42 +214,79 @@ class Motioneye extends utils.Adapter {
 	}
 
 	async ensureInfoStates() {
-		await this.setObjectNotExistsAsync('info.connection', {
-			type: 'state',
-			common: {
-				name: 'MotionEye reachable',
-				type: 'boolean',
-				role: 'indicator.connected',
-				read: true,
-				write: false,
-				def: false,
-			},
-			native: {},
-		});
-		await this.setObjectNotExistsAsync('info.camerasOnline', {
-			type: 'state',
-			common: {
-				name: 'Cameras online',
-				type: 'number',
-				role: 'value',
-				read: true,
-				write: false,
-				def: 0,
-			},
-			native: {},
-		});
-		await this.setObjectNotExistsAsync('info.lastSync', {
-			type: 'state',
-			common: {
-				name: 'Last MotionEye sync',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false,
-				def: '',
-			},
-			native: {},
-		});
+		for (const [stateId, name] of Object.entries(INFO_STATE_LABELS)) {
+			const type = stateId === 'camerasOnline' ? 'number' : 'string';
+			const role =
+				stateId === 'connection'
+					? 'indicator.connected'
+					: stateId === 'camerasOnline'
+						? 'value'
+						: 'text';
+
+			await this.setObjectNotExistsAsync(`${INFO_PREFIX}.${stateId}`, {
+				type: 'state',
+				common: {
+					name,
+					type: stateId === 'connection' ? 'boolean' : type,
+					role,
+					read: true,
+					write: false,
+					def: stateId === 'connection' ? false : stateId === 'camerasOnline' ? 0 : '',
+				},
+				native: {},
+			});
+		}
+
+		await this.migrateLegacyInfoChannel();
+	}
+
+	async migrateLegacyInfoChannel() {
+		for (const stateId of LEGACY_INFO_STATES) {
+			const legacyId = `info.${stateId}`;
+			const newId = `${INFO_PREFIX}.${stateId}`;
+			const legacyObject = await this.getObjectAsync(legacyId);
+			if (!legacyObject) {
+				continue;
+			}
+
+			const legacyState = await this.getStateAsync(legacyId);
+			if (legacyState) {
+				await this.setStateAsync(newId, legacyState.val, true);
+			}
+
+			await this.delObjectAsync(legacyId);
+		}
+
+		const legacyFolder = await this.getObjectAsync('info');
+		if (legacyFolder) {
+			await this.delObjectAsync('info');
+		}
+	}
+
+	async updateServerVersionStates() {
+		if (!this.motionEyeApi) {
+			return;
+		}
+
+		const motionEyeVersion = this.motionEyeApi.getLastMotionEyeVersion();
+		if (motionEyeVersion) {
+			await this.setStateAsync(`${INFO_PREFIX}.motionEyeVersion`, motionEyeVersion, true);
+		}
+
+		if (this._serverVersionsFetched) {
+			return;
+		}
+
+		try {
+			const versions = await this.motionEyeApi.getServerVersions();
+			if (versions.motionEyeVersion) {
+				await this.setStateAsync(`${INFO_PREFIX}.motionEyeVersion`, versions.motionEyeVersion, true);
+			}
+			await this.setStateAsync(`${INFO_PREFIX}.motionVersion`, versions.motionVersion || '', true);
+			this._serverVersionsFetched = true;
+		} catch (error) {
+			this.log.debug(`Could not read MotionEye /version page: ${error.message}`);
+		}
 	}
 
 	syncCameraRegistry() {
@@ -442,7 +491,7 @@ class Motioneye extends utils.Adapter {
 			this.log.warn(`MotionEye not reachable at startup: ${error.message}`);
 		}
 
-		await this.setStateAsync('info.connection', connected, true);
+		await this.setStateAsync(`${INFO_PREFIX}.connection`, connected, true);
 
 		for (const camera of this.camerasById.values()) {
 			try {
@@ -455,6 +504,7 @@ class Motioneye extends utils.Adapter {
 		}
 
 		if (connected) {
+			await this.updateServerVersionStates();
 			await this.pollMotionEye();
 		}
 	}
@@ -537,9 +587,9 @@ class Motioneye extends utils.Adapter {
 		let cameras;
 		try {
 			cameras = await this.motionEyeApi.getCameraList();
-			await this.setStateAsync('info.connection', true, true);
+			await this.setStateAsync(`${INFO_PREFIX}.connection`, true, true);
 		} catch (error) {
-			await this.setStateAsync('info.connection', false, true);
+			await this.setStateAsync(`${INFO_PREFIX}.connection`, false, true);
 			throw error;
 		}
 
@@ -576,8 +626,9 @@ class Motioneye extends utils.Adapter {
 			}
 		}
 
-		await this.setStateAsync('info.camerasOnline', online, true);
-		await this.setStateAsync('info.lastSync', new Date().toISOString(), true);
+		await this.setStateAsync(`${INFO_PREFIX}.camerasOnline`, online, true);
+		await this.setStateAsync(`${INFO_PREFIX}.lastSync`, new Date().toISOString(), true);
+		await this.updateServerVersionStates();
 	}
 
 	async startWebhookServer() {
