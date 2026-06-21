@@ -19,7 +19,7 @@
 
 Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for inventwo/VIS2 widgets — no simple-api required for webhooks.
 
-> **Status:** Phase 1 (MVP) — camera datapoints, mode control, webhook server, MotionEye sync. Stream HTML and snapshots follow in Phase 2.
+> **Status:** Phase 2 — snapshot, stream, streamPulse, and `streamUrl` HTML for inventwo/VIS widgets. Phase 1 covers modes, webhooks, and MotionEye sync.
 
 ## Features
 
@@ -28,7 +28,7 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 - Built-in webhook server — no simple-api dependency
 - MotionEye Config API sync for modes and webhook URLs
 - `info.connection` — instance shows when MotionEye is unreachable
-- Stream sibling relink after VIS re-render (planned Phase 2)
+- Stream sibling relink after VIS re-render (multi-camera dashboards)
 
 ## Data Points
 
@@ -38,6 +38,10 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 |-------|------|------|-------|-------------|
 | `mode` | value | yes | yes | `off` / `still` / `sharp` |
 | `motion` | indicator | yes | yes | Motion detected (auto-reset) |
+| `snapshot` | button | no | yes | Trigger snapshot |
+| `stream` | switch | yes | yes | Live MJPEG stream on/off |
+| `streamPulse` | button | no | yes | Stream on briefly (auto-off) |
+| `streamUrl` | text | yes | no | HTML `<img>` for inventwo widget |
 | `status` | text | yes | no | Last sync status |
 | `lastAction` | text | yes | no | Last API action |
 | `webhookUrl` | url | yes | no | URL written to MotionEye |
@@ -68,31 +72,17 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 | `still` | yes | no | yes |
 | `sharp` | yes | motion-triggered MP4 | yes |
 
-### Local development (dev-server)
-
-```bash
-npm install
-npm run dev-server:start
-```
-
-Open `http://localhost:8081` — default instance config points to MotionEye at `192.168.130.240`. Adjust host and credentials in the instance settings if needed.
-
-Stop the dev-server:
-
-```bash
-npm run dev-server:stop
-```
 
 ## Configuration
 
 | Option | Default | Description |
 |--------|---------|-------------|
 | `motionHost` | `192.168.130.240` | MotionEye server hostname or IP |
-| `motionPort` | `7999` | Motion HTTP API (snapshots, Phase 2) |
+| `motionPort` | `7999` | Motion HTTP API (snapshots) |
 | `motionEyePort` | `8765` | MotionEye config API |
 | `motionEyeUser` | `admin` | MotionEye login user |
 | `motionEyePassword` | *(empty)* | MotionEye password (plain text, stored encrypted) |
-| `webhookHost` | *(auto)* | ioBroker host IP as seen from MotionEye |
+| `webhookHost` | *(required)* | ioBroker host IP or hostname reachable from MotionEye (used in webhook URLs) |
 | `webhookPort` | `8090` | Built-in webhook listener port |
 | `motionResetMs` | `15000` | Auto-reset for `.motion` after webhook |
 | `statusPollIntervalSec` | `300` | MotionEye status poll interval |
@@ -105,6 +95,8 @@ npm run dev-server:stop
 
 ### **WORK IN PROGRESS**
 
+- (skvarel) Added snapshot, stream, streamPulse, and streamUrl datapoints with Motion API and stream HTML manager
+- (skvarel) Clarified admin help for webhookHost — IP must be set manually for MotionEye webhooks
 - (skvarel) Phase 1 MVP: camera table in admin, dynamic channels and states (`mode`, `motion`, `status`, `webhookUrl`, …)
 - (skvarel) Built-in webhook HTTP server on configurable port (no simple-api)
 - (skvarel) Mode control via MotionEye Config API with `off` / `still` / `sharp` profiles

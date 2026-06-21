@@ -44,7 +44,7 @@
 	"webhookBind": "Webhook bind address",
 	"webhookBind_help": "Network interface for the built-in webhook listener (default 0.0.0.0)",
 	"webhookHost": "ioBroker host for webhooks",
-	"webhookHost_help": "IP or hostname of your ioBroker host as seen from MotionEye (e.g. 192.168.1.10). Leave empty to auto-detect from system.host.",
+	"webhookHost_help": "IP or hostname of your ioBroker host reachable from MotionEye (e.g. 192.168.130.130). Required — without this value the adapter cannot write webhook URLs to MotionEye.",
 	"webhookPort": "Webhook port",
 	"webhookPort_help": "Port for motion webhooks from MotionEye (default 8090). Ensure firewall allows inbound traffic."
 }

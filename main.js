@@ -6,6 +6,7 @@
 
 const utils = require('@iobroker/adapter-core');
 const { createMotionEyeApi } = require('./lib/motionEyeApi');
+const { createMotionApi } = require('./lib/motionApi');
 const { resolveCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
 const {
 	normalizeMode,
@@ -15,6 +16,7 @@ const {
 	MEDIA_SETTINGS,
 } = require('./lib/modeProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
+const { createStreamManager } = require('./lib/streamManager');
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -30,6 +32,8 @@ class Motioneye extends utils.Adapter {
 		this.on('unload', this.onUnload.bind(this));
 
 		this.motionEyeApi = undefined;
+		this.motionApi = undefined;
+		this.streamManager = undefined;
 		this.webhookServer = undefined;
 		this.pollInterval = undefined;
 		this.motionResetTimers = {};
@@ -60,6 +64,34 @@ class Motioneye extends utils.Adapter {
 			requestTimeoutMs: this.config.requestTimeoutMs,
 		});
 
+		this.motionApi = createMotionApi({
+			host: this.config.motionHost,
+			motionPort: this.config.motionPort,
+			requestTimeoutMs: this.config.requestTimeoutMs,
+		});
+
+		this.streamManager = createStreamManager({
+			motionHost: this.config.motionHost,
+			motionEyeApi: this.motionEyeApi,
+			useMotionEyeConfig: this.config.useMotionEyeConfig !== false,
+			disableStreamOnStart: this.config.disableStreamOnStart !== false,
+			streamAutoOffMs: Number(this.config.streamAutoOffMs) || 0,
+			streamStartDelayMs: Number(this.config.streamStartDelayMs) || 3000,
+			streamReadyTimeoutMs: Number(this.config.streamReadyTimeoutMs) || 45000,
+			streamRetryMs: Number(this.config.streamRetryMs) || 2000,
+			streamSiblingRelinkTimeoutMs: Number(this.config.streamSiblingRelinkTimeoutMs) || 60000,
+			getState: id => this.getStateAsync(id),
+			setState: (id, val, ack) => this.setStateAsync(id, val, ack),
+			log: (level, message) => this.log[level](message),
+			setTimeoutFn: (fn, ms) => this.setTimeout(fn, ms),
+			clearTimeoutFn: id => {
+				// @ts-expect-error adapter-core branded Timeout id from setTimeout
+				this.clearTimeout(id);
+			},
+			getCamerasByChannel: () => this.camerasByChannel,
+			isUnloading: () => this._unloading,
+		});
+
 		this.webhookHost = await this.resolveWebhookHost();
 		if (!this.webhookHost) {
 			this.log.warn(
@@ -80,6 +112,9 @@ class Motioneye extends utils.Adapter {
 
 		this.subscribeStates('*.mode');
 		this.subscribeStates('*.motion');
+		this.subscribeStates('*.snapshot');
+		this.subscribeStates('*.stream');
+		this.subscribeStates('*.streamPulse');
 
 		const pollSec = Math.max(30, Number(this.config.statusPollIntervalSec) || 300);
 		this.pollInterval = this.setInterval(() => {
@@ -259,6 +294,50 @@ class Motioneye extends utils.Adapter {
 				},
 			},
 			{
+				id: 'snapshot',
+				common: {
+					name: `${camera.name} snapshot trigger`,
+					type: 'boolean',
+					role: 'button',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+			{
+				id: 'stream',
+				common: {
+					name: `${camera.name} video stream`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+			{
+				id: 'streamPulse',
+				common: {
+					name: `${camera.name} stream pulse`,
+					type: 'boolean',
+					role: 'button',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+			{
+				id: 'streamUrl',
+				common: {
+					name: `${camera.name} stream HTML (inventwo)`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
 				id: 'webhookUrl',
 				common: {
 					name: `${camera.name} webhook URL`,
@@ -304,6 +383,7 @@ class Motioneye extends utils.Adapter {
 		const webhookUrl = this.getWebhookUrl(camera);
 		await this.setStateAsync(`${channelId}.webhookUrl`, webhookUrl, true);
 		await this.setStateAsync(`${channelId}.motionEyeId`, camera.motionEyeId, true);
+		await this.setStateAsync(`${channelId}.streamUrl`, '', true);
 	}
 
 	async initializeCameras() {
@@ -330,6 +410,7 @@ class Motioneye extends utils.Adapter {
 		for (const camera of this.camerasById.values()) {
 			try {
 				await this.applyInitialCameraConfig(camera);
+				await this.streamManager.applyStreamOnStart(camera);
 			} catch (error) {
 				this.log.warn(`Initial setup failed for ${camera.name}: ${error.message}`);
 				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
@@ -449,6 +530,13 @@ class Motioneye extends utils.Adapter {
 			} else {
 				await this.setStateAsync(`${camera.channel}.status`, `Mode=${MODE_LABELS[mode]}`, true);
 			}
+
+			const streaming = !!uiConfig.video_streaming;
+			const streamState = await this.getStateAsync(`${camera.channel}.stream`);
+			const localStream = !!(streamState && streamState.val);
+			if (localStream !== streaming) {
+				await this.streamManager.setStream(camera, streaming, true);
+			}
 		}
 
 		await this.setStateAsync('info.camerasOnline', online, true);
@@ -548,6 +636,37 @@ class Motioneye extends utils.Adapter {
 
 		if (stateName === 'motion' && state.val === true) {
 			this.scheduleMotionReset(camera);
+			return;
+		}
+
+		if (stateName === 'snapshot' && state.val === true) {
+			try {
+				const result = await this.motionApi.takeSnapshot(camera.motionEyeId);
+				await this.setStateAsync(`${camera.channel}.lastAction`, `action/snapshot: ${result.body}`, true);
+			} catch (error) {
+				this.log.error(`Snapshot failed for ${camera.name}: ${error.message}`);
+			}
+			await this.setStateAsync(`${camera.channel}.snapshot`, false, true);
+			return;
+		}
+
+		if (stateName === 'stream') {
+			try {
+				await this.streamManager.setStream(camera, !!state.val);
+			} catch (error) {
+				this.log.error(`setStream failed for ${camera.name}: ${error.message}`);
+				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
+			}
+			return;
+		}
+
+		if (stateName === 'streamPulse' && state.val === true) {
+			try {
+				await this.streamManager.pulseStream(camera);
+			} catch (error) {
+				this.log.error(`streamPulse failed for ${camera.name}: ${error.message}`);
+			}
+			await this.setStateAsync(`${camera.channel}.streamPulse`, false, true);
 		}
 	}
 
@@ -568,6 +687,11 @@ class Motioneye extends utils.Adapter {
 			}
 			this.motionResetTimers = {};
 
+			if (this.streamManager) {
+				this.streamManager.destroy();
+				this.streamManager = undefined;
+			}
+
 			const stopWebhook = this.webhookServer ? this.webhookServer.stop() : Promise.resolve();
 			stopWebhook
 				.catch(error => {
@@ -576,6 +700,7 @@ class Motioneye extends utils.Adapter {
 				.finally(() => {
 					this.webhookServer = undefined;
 					this.motionEyeApi = undefined;
+					this.motionApi = undefined;
 					callback();
 				});
 		} catch (error) {
