@@ -1,0 +1,66 @@
+---
+description: MotionEye API, signature auth, stream, webhook patterns
+globs: lib/**,main.js
+alwaysApply: false
+---
+
+# MotionEye Patterns
+
+## APIs
+
+| API | Port | Purpose |
+|-----|------|---------|
+| MotionEye Config | 8765 | `GET /config/list`, `POST /config/{id}/set/` with signature auth |
+| Motion HTTP | 7999 | `/{id}/action/snapshot`, optional `detection/status` |
+| MJPEG Stream | 9080+id | Live image (no login when auth disabled) |
+
+## Signature auth (MotionEye 0.43.x)
+
+- `_username` + `_signature` query parameters
+- Sign key = SHA1(plain password) hex, or empty string when no password
+- Implementation in `lib/motionEyeApi.js` — port from `test.js`, do not duplicate
+
+```javascript
+const { createMotionEyeApi } = require('./lib/motionEyeApi');
+
+const api = createMotionEyeApi({
+  host: config.motionHost,
+  motionEyePort: config.motionEyePort,
+  username: config.motionEyeUser,
+  password: config.motionEyePassword,
+  requestTimeoutMs: config.requestTimeoutMs,
+});
+```
+
+## Mode profiles
+
+- `off` — no detection, no webhook
+- `still` — motion trigger, no video
+- `sharp` — motion + MP4 recording; use `movie_format: 'mp4'` **without OMX**
+
+## Stream HTML
+
+- Poll MJPEG port before setting `streamUrl`
+- `streamPausedHtml` = empty when stream off
+- `publishSiblingStreamRelink()` after VIS re-render (multi-camera dashboards)
+- Delays from `native` config — never hardcode
+
+## Webhook (Phase 1+)
+
+```
+MotionEye → http://<ioBroker-IP>:<webhookPort>/motioneye.0/webhook/<cameraId>?value=true
+```
+
+- `cameraId` = internal key from `native.cameras[]`, not MotionEye numeric ID
+- Auto-reset `.motion` after `motionResetMs`
+
+## Channel names
+
+- User-chosen display name → channel via `safe(name)` (spaces → `_`, sanitize special chars)
+- Decouple ioBroker name from MotionEye camera name
+
+## Known pitfalls
+
+- Motion restart after `config/set` — 5–15 s offline; delay stream HTML
+- VIS re-render can briefly black out other streams — sibling relink
+- Passwords only in adapter instance `native`, never in repo

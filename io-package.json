@@ -1,0 +1,132 @@
+{
+	"common": {
+		"name": "motioneye",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "Initial development release — adapter scaffold and MotionEye API client",
+				"de": "Erste Entwicklungsversion — Adapter-Grundgerüst und MotionEye-API-Client",
+				"ru": "Первоначальный выпуск разработки — каркас адаптера и клиент MotionEye API",
+				"pt": "Lançamento inicial de desenvolvimento — estrutura do adaptador e cliente MotionEye API",
+				"nl": "Eerste ontwikkelingsrelease — adapter scaffold en MotionEye API-client",
+				"fr": "Première version de développement — structure d'adaptateur et client API MotionEye",
+				"it": "Rilascio iniziale di sviluppo — scaffold dell'adattatore e client API MotionEye",
+				"es": "Lanzamiento inicial de desarrollo — andamiaje del adaptador y cliente API MotionEye",
+				"pl": "Początkowe wydanie deweloperskie — szkielet adaptera i klient API MotionEye",
+				"uk": "Початковий випуск розробки — каркас адаптера та клієнт MotionEye API",
+				"zh-cn": "初始开发版本 — 适配器脚手架和 MotionEye API 客户端"
+			}
+		},
+		"titleLang": {
+			"en": "MotionEye",
+			"de": "MotionEye",
+			"ru": "MotionEye",
+			"pt": "MotionEye",
+			"nl": "MotionEye",
+			"fr": "MotionEye",
+			"it": "MotionEye",
+			"es": "MotionEye",
+			"pl": "MotionEye",
+			"uk": "MotionEye",
+			"zh-cn": "MotionEye"
+		},
+		"desc": {
+			"en": "Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams",
+			"de": "MotionEye-Kameras mit ioBroker verbinden für Bewegungserkennung, Snapshots und Livestreams",
+			"ru": "Подключите камеры MotionEye к ioBroker для обнаружения движения, снимков и прямых трансляций",
+			"pt": "Conecte câmeras MotionEye ao ioBroker para detecção de movimento, snapshots e transmissões ao vivo",
+			"nl": "Verbind MotionEye-camera's met ioBroker voor bewegingsdetectie, snapshots en livestreams",
+			"fr": "Connectez les caméras MotionEye à ioBroker pour la détection de mouvement, les instantanés et les flux en direct",
+			"it": "Collega le telecamere MotionEye a ioBroker per il rilevamento del movimento, gli snapshot e gli streaming live",
+			"es": "Conecte cámaras MotionEye a ioBroker para detección de movimiento, instantáneas y transmisiones en vivo",
+			"pl": "Połącz kamery MotionEye z ioBroker w celu wykrywania ruchu, migawek i transmisji na żywo",
+			"uk": "Підключіть камери MotionEye до ioBroker для виявлення руху, знімків і прямих трансляцій",
+			"zh-cn": "将 MotionEye 摄像头连接到 ioBroker，实现运动检测、快照和直播"
+		},
+		"authors": [
+			"skvarel <skvarel@inventwo.com>"
+		],
+		"keywords": [
+			"motioneye",
+			"motion",
+			"camera",
+			"surveillance"
+		],
+		"licenseInformation": {
+			"type": "free",
+			"license": "MIT"
+		},
+		"platform": "Javascript/Node.js",
+		"icon": "motioneye.svg",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/inventwo/ioBroker.motioneye/main/admin/motioneye.svg",
+		"readme": "https://github.com/inventwo/ioBroker.motioneye/blob/main/README.md",
+		"loglevel": "info",
+		"tier": 3,
+		"mode": "daemon",
+		"type": "hardware",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=6.0.11"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=7.6.20"
+			}
+		]
+	},
+	"native": {
+		"motionHost": "192.168.130.240",
+		"motionPort": 7999,
+		"motionEyePort": 8765,
+		"motionEyeUser": "admin",
+		"motionEyePassword": "",
+		"useMotionEyeConfig": true,
+		"webhookPort": 8090,
+		"webhookBind": "0.0.0.0",
+		"webhookHost": "",
+		"motionResetMs": 15000,
+		"statusPollIntervalSec": 300,
+		"requestTimeoutMs": 45000,
+		"disableStreamOnStart": true,
+		"applyMediaSettingsOnStart": true,
+		"streamAutoOffMs": 120000,
+		"streamStartDelayMs": 3000,
+		"streamReadyTimeoutMs": 45000,
+		"streamRetryMs": 2000,
+		"streamSiblingRelinkTimeoutMs": 60000,
+		"defaultMode": "off",
+		"cameras": []
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "meta",
+			"common": {
+				"name": {
+					"en": "MotionEye adapter information",
+					"de": "MotionEye-Adapter-Informationen",
+					"ru": "Информация об адаптере MotionEye",
+					"pt": "Informações do adaptador MotionEye",
+					"nl": "MotionEye-adapterinformatie",
+					"fr": "Informations sur l'adaptateur MotionEye",
+					"it": "Informazioni sull'adattatore MotionEye",
+					"es": "Información del adaptador MotionEye",
+					"pl": "Informacje o adapterze MotionEye",
+					"uk": "Інформація про адаптер MotionEye",
+					"zh-cn": "MotionEye 适配器信息"
+				},
+				"type": "meta.folder"
+			},
+			"native": {}
+		}
+	]
+}

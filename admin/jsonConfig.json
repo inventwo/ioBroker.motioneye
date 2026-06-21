@@ -1,0 +1,320 @@
+{
+	"i18n": true,
+	"type": "tabs",
+	"items": {
+		"_general": {
+			"type": "panel",
+			"label": "tab_settings",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTIsMTUuNUEzLjUsMy41IDAgMCwxIDguNSwxMkEzLjUsMy41IDAgMCwxIDEyLDguNUEzLjUsMy41IDAgMCwxIDE1LjUsMTJBMy41LDMuNSAwIDAsMSAxMiwxNS41TTE5LjQzLDEyLjk3QzE5LjQ3LDEyLjY1IDE5LjUsMTIuMzMgMTkuNSwxMkMxOS41LDExLjY3IDE5LjQ3LDExLjM0IDE5LjQzLDExTDIxLjU0LDkuMzdDMjEuNzMsOS4yMiAyMS43OCw4Ljk1IDIxLjY2LDguNzNMMTkuNjYsNS4yN0MxOS41NCw1LjA1IDE5LjI3LDQuOTYgMTkuMDUsNS4wNUwxNi41Niw2LjA1QzE2LjA0LDUuNjYgMTUuNSw1LjMyIDE0Ljg3LDUuMDdMMTQuNSwyLjQyQzE0LjQ2LDIuMTggMTQuMjUsMiAxNCwySDEwQzkuNzUsMiA5LjU0LDIuMTggOS41LDIuNDJMOS4xMyw1LjA3QzguNSw1LjMyIDcuOTYsNS42NiA3LjQ0LDYuMDVMNC45NSw1LjA1QzQuNzMsNC45NiA0LjQ2LDUuMDUgNC4zNCw1LjI3TDIuMzQsOC43M0MyLjIxLDguOTUgMi4yNyw5LjIyIDIuNDYsOS4zN0w0LjU3LDExQzQuNTMsMTEuMzQgNC41LDExLjY3IDQuNSwxMkM0LjUsMTIuMzMgNC41MywxMi42NSA0LjU3LDEyLjk3TDIuNDYsMTQuNjNDMi4yNywxNC43OCAyLjIxLDE1LjA1IDIuMzQsMTUuMjdMNC4zNCwxOC43M0M0LjQ2LDE4Ljk1IDQuNzMsMTkuMDMgNC45NSwxOC45NUw3LjQ0LDE3Ljk0QzcuOTYsMTguMzQgOC41LDE4LjY4IDkuMTMsMTguOTNMOS41LDIxLjU4QzkuNTQsMjEuODIgOS43NSwyMiAxMCwyMkgxNEMxNC4yNSwyMiAxNC40NiwyMS44MiAxNC41LDIxLjU4TDE0Ljg3LDE4LjkzQzE1LjUsMTguNjcgMTYuMDQsMTguMzQgMTYuNTYsMTcuOTRMMTkuMDUsMTguOTVDMTkuMjcsMTkuMDMgMTkuNTQsMTguOTUgMTkuNjYsMTguNzNMMjEuNjYsMTUuMjdDMjEuNzgsMTUuMDUgMjEuNzMsMTQuNzggMjEuNTQsMTQuNjNMMTkuNDMsMTIuOTdaIi8+PC9zdmc+",
+			"items": {
+				"_connectionHeader": {
+					"type": "header",
+					"text": "header_connection",
+					"size": 3
+				},
+				"motionHost": {
+					"type": "text",
+					"label": "motionHost",
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"xl": 6,
+					"help": "motionHost_help"
+				},
+				"motionPort": {
+					"type": "number",
+					"label": "motionPort",
+					"min": 1,
+					"max": 65535,
+					"default": 7999,
+					"xs": 12,
+					"sm": 6,
+					"md": 3,
+					"lg": 3,
+					"xl": 3,
+					"help": "motionPort_help"
+				},
+				"motionEyePort": {
+					"type": "number",
+					"label": "motionEyePort",
+					"min": 1,
+					"max": 65535,
+					"default": 8765,
+					"xs": 12,
+					"sm": 6,
+					"md": 3,
+					"lg": 3,
+					"xl": 3,
+					"help": "motionEyePort_help"
+				},
+				"motionEyeUser": {
+					"type": "text",
+					"label": "motionEyeUser",
+					"default": "admin",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
+				},
+				"motionEyePassword": {
+					"type": "password",
+					"label": "motionEyePassword",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "motionEyePassword_help"
+				},
+				"useMotionEyeConfig": {
+					"type": "checkbox",
+					"label": "useMotionEyeConfig",
+					"default": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"help": "useMotionEyeConfig_help"
+				},
+				"_webhookHeader": {
+					"type": "header",
+					"text": "header_webhook",
+					"size": 3,
+					"newLine": true
+				},
+				"webhookPort": {
+					"type": "number",
+					"label": "webhookPort",
+					"min": 1,
+					"max": 65535,
+					"default": 8090,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "webhookPort_help"
+				},
+				"webhookBind": {
+					"type": "text",
+					"label": "webhookBind",
+					"default": "0.0.0.0",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "webhookBind_help"
+				},
+				"webhookHost": {
+					"type": "text",
+					"label": "webhookHost",
+					"xs": 12,
+					"sm": 12,
+					"md": 8,
+					"lg": 8,
+					"xl": 8,
+					"help": "webhookHost_help"
+				},
+				"motionResetMs": {
+					"type": "number",
+					"label": "motionResetMs",
+					"min": 1000,
+					"max": 300000,
+					"default": 15000,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "motionResetMs_help"
+				},
+				"_timingHeader": {
+					"type": "header",
+					"text": "header_timing",
+					"size": 3,
+					"newLine": true
+				},
+				"statusPollIntervalSec": {
+					"type": "number",
+					"label": "statusPollIntervalSec",
+					"min": 30,
+					"max": 86400,
+					"default": 300,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
+				},
+				"requestTimeoutMs": {
+					"type": "number",
+					"label": "requestTimeoutMs",
+					"min": 5000,
+					"max": 120000,
+					"default": 45000,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
+				},
+				"_streamHeader": {
+					"type": "header",
+					"text": "header_stream",
+					"size": 3,
+					"newLine": true
+				},
+				"disableStreamOnStart": {
+					"type": "checkbox",
+					"label": "disableStreamOnStart",
+					"default": true,
+					"xs": 12,
+					"sm": 6,
+					"md": 6,
+					"lg": 6,
+					"xl": 6
+				},
+				"applyMediaSettingsOnStart": {
+					"type": "checkbox",
+					"label": "applyMediaSettingsOnStart",
+					"default": true,
+					"xs": 12,
+					"sm": 6,
+					"md": 6,
+					"lg": 6,
+					"xl": 6
+				},
+				"streamAutoOffMs": {
+					"type": "number",
+					"label": "streamAutoOffMs",
+					"min": 0,
+					"max": 3600000,
+					"default": 120000,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "streamAutoOffMs_help"
+				},
+				"defaultMode": {
+					"type": "select",
+					"label": "defaultMode",
+					"options": [
+						["off", "mode_off"],
+						["still", "mode_still"],
+						["sharp", "mode_sharp"]
+					],
+					"default": "off",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
+				},
+				"_phase1Info": {
+					"type": "staticText",
+					"text": "phase1_info",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginTop": "20px",
+						"padding": "10px 14px",
+						"border": "1px solid #546e7a",
+						"borderRadius": "6px",
+						"backgroundColor": "rgba(84, 110, 122, 0.12)"
+					}
+				}
+			}
+		},
+		"_cameras": {
+			"type": "panel",
+			"label": "tab_cameras",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTcsMTBIMTdWNUMxNywyLjc5IDE0LjIxLDAgMTEsMFM1LDIuNzkgNSw1djVINUMyLjI0LDEwIDAsMTIuMjQgMCwxNXY0YzAsMi43NiwyLjI0LDUsNSw1aDE0YzIuNzYsMCw1LTIuMjQsNS01di00QzI0LDEyLjI0LDIxLjc2LDEwLDE5LDEweiBNMTEsN2MwLTEuNjYsMS4zNC0zLDMtM3MzLDAuMzQsMywzdjNoLTZWN3oiLz48L3N2Zz4=",
+			"items": {
+				"_camerasHeader": {
+					"type": "header",
+					"text": "header_cameras",
+					"size": 3
+				},
+				"_camerasInfo": {
+					"type": "staticText",
+					"text": "cameras_info",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginBottom": "10px"
+					}
+				},
+				"cameras": {
+					"type": "table",
+					"newLine": true,
+					"label": "cameras_table",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"items": [
+						{
+							"type": "text",
+							"attr": "name",
+							"title": "camera_name",
+							"width": "22%",
+							"tooltip": "camera_name_help"
+						},
+						{
+							"type": "number",
+							"attr": "motionEyeId",
+							"title": "camera_motionEyeId",
+							"width": "12%",
+							"min": 1,
+							"tooltip": "camera_motionEyeId_help"
+						},
+						{
+							"type": "text",
+							"attr": "id",
+							"title": "camera_id",
+							"width": "18%",
+							"placeholder": "camera_id_placeholder",
+							"tooltip": "camera_id_help"
+						},
+						{
+							"type": "select",
+							"attr": "defaultMode",
+							"title": "camera_defaultMode",
+							"width": "18%",
+							"options": [
+								["off", "mode_off"],
+								["still", "mode_still"],
+								["sharp", "mode_sharp"]
+							],
+							"default": "off"
+						},
+						{
+							"type": "checkbox",
+							"attr": "enabled",
+							"title": "camera_enabled",
+							"width": "10%",
+							"default": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
