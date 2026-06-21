@@ -51,6 +51,8 @@ class Motioneye extends utils.Adapter {
 	async onReady() {
 		this.log.info('MotionEye adapter starting...');
 
+		await this.ensureAdapterRootMeta();
+
 		if (!this.config.motionHost) {
 			this.log.error('No MotionEye host configured. Please set the host in instance settings.');
 			return;
@@ -124,6 +126,41 @@ class Motioneye extends utils.Adapter {
 		}, pollSec * 1000);
 
 		this.log.info('MotionEye adapter ready');
+	}
+
+	/**
+	 * Ensure adapter root (e.g. motioneye) is typed as meta.
+	 * instanceObjects handles motioneye.0; objects with _id "" fails on adapter update (Invalid ID).
+	 */
+	async ensureAdapterRootMeta() {
+		const rootId = this.name;
+		const titleLang = this.ioPack?.common?.titleLang;
+		const name =
+			typeof titleLang === 'object' && titleLang !== null && !Array.isArray(titleLang)
+				? (titleLang[this.language] ?? titleLang.en ?? rootId)
+				: typeof titleLang === 'string'
+					? titleLang
+					: rootId;
+
+		const existing = await this.getForeignObjectAsync(rootId);
+		if (!existing) {
+			await this.setForeignObjectAsync(rootId, {
+				type: 'meta',
+				common: {
+					name,
+					type: 'meta.folder',
+				},
+				native: {},
+			});
+		} else if (existing.type !== 'meta') {
+			await this.extendForeignObjectAsync(rootId, {
+				type: 'meta',
+				common: {
+					name,
+					type: 'meta.folder',
+				},
+			});
+		}
 	}
 
 	/**

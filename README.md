@@ -77,7 +77,7 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `motionHost` | `192.168.130.240` | MotionEye server hostname or IP |
+| `motionHost` | *(empty)* | MotionEye server hostname or IP (required) |
 | `motionPort` | `7999` | Motion HTTP API (snapshots) |
 | `motionEyePort` | `8765` | MotionEye config API |
 | `motionEyeUser` | `admin` | MotionEye login user |
@@ -105,7 +105,7 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 - (skvarel) Ported MotionEye Config API client (`lib/motionEyeApi.js`) with SHA1 signature auth and unit tests
 - (skvarel) Dev-server defaults targeting MotionEye at `192.168.130.240`
 
-### 0.0.1 (YYYY-MM-DD)
+### 0.0.1 (2026-06-21)
 - (skvarel) Initial development release
 
 ## Older changes

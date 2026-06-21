@@ -83,7 +83,7 @@
 		]
 	},
 	"native": {
-		"motionHost": "192.168.130.240",
+		"motionHost": "",
 		"motionPort": 7999,
 		"motionEyePort": 8765,
 		"motionEyeUser": "admin",
@@ -94,7 +94,7 @@
 		"webhookHost": "",
 		"motionResetMs": 15000,
 		"statusPollIntervalSec": 300,
-		"requestTimeoutMs": 45000,
+		"requestTimeoutMs": 10000,
 		"disableStreamOnStart": true,
 		"applyMediaSettingsOnStart": true,
 		"streamAutoOffMs": 120000,
@@ -107,6 +107,27 @@
 	},
 	"objects": [],
 	"instanceObjects": [
+		{
+			"_id": "",
+			"type": "meta",
+			"common": {
+				"name": {
+					"en": "MotionEye cameras and adapter states",
+					"de": "MotionEye-Kameras und Adapter-Zustände",
+					"ru": "Камеры MotionEye и состояния адаптера",
+					"pt": "Câmeras MotionEye e estados do adaptador",
+					"nl": "MotionEye-camera's en adapterstatussen",
+					"fr": "Caméras MotionEye et états de l'adaptateur",
+					"it": "Telecamere MotionEye e stati dell'adattatore",
+					"es": "Cámaras MotionEye y estados del adaptador",
+					"pl": "Kamery MotionEye i stany adaptera",
+					"uk": "Камери MotionEye та стани адаптера",
+					"zh-cn": "MotionEye 摄像头和适配器状态"
+				},
+				"type": "meta.folder"
+			},
+			"native": {}
+		},
 		{
 			"_id": "info",
 			"type": "meta",
