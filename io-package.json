@@ -142,7 +142,7 @@
       "native": {}
     },
     {
-      "_id": "_info",
+      "_id": "0_info",
       "type": "meta",
       "common": {
         "name": {

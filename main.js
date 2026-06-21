@@ -19,8 +19,9 @@ const {
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 
-/** Info states live under `_info` so the folder sorts before camera channels. */
-const INFO_PREFIX = '_info';
+/** Info states under `0_info` — digits sort before letters (underscore does not). */
+const INFO_PREFIX = '0_info';
+const LEGACY_INFO_PREFIXES = ['info', '_info'];
 const LEGACY_INFO_STATES = ['connection', 'camerasOnline', 'lastSync', 'motionEyeVersion', 'motionVersion'];
 
 class Motioneye extends utils.Adapter {
@@ -232,24 +233,29 @@ class Motioneye extends utils.Adapter {
 
 	async migrateLegacyInfoChannel() {
 		for (const stateId of LEGACY_INFO_STATES) {
-			const legacyId = `info.${stateId}`;
 			const newId = `${INFO_PREFIX}.${stateId}`;
-			const legacyObject = await this.getObjectAsync(legacyId);
-			if (!legacyObject) {
-				continue;
-			}
 
-			const legacyState = await this.getStateAsync(legacyId);
-			if (legacyState) {
-				await this.setStateAsync(newId, legacyState.val, true);
-			}
+			for (const prefix of LEGACY_INFO_PREFIXES) {
+				const legacyId = `${prefix}.${stateId}`;
+				const legacyObject = await this.getObjectAsync(legacyId);
+				if (!legacyObject) {
+					continue;
+				}
 
-			await this.delObjectAsync(legacyId);
+				const legacyState = await this.getStateAsync(legacyId);
+				if (legacyState) {
+					await this.setStateAsync(newId, legacyState.val, true);
+				}
+
+				await this.delObjectAsync(legacyId);
+			}
 		}
 
-		const legacyFolder = await this.getObjectAsync('info');
-		if (legacyFolder) {
-			await this.delObjectAsync('info');
+		for (const prefix of LEGACY_INFO_PREFIXES) {
+			const legacyFolder = await this.getObjectAsync(prefix);
+			if (legacyFolder) {
+				await this.delObjectAsync(prefix);
+			}
 		}
 	}
 

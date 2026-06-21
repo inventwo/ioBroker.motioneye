@@ -27,7 +27,7 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 - Dynamic channels under `motioneye.0.<Name>.*`
 - Built-in webhook server — no simple-api dependency
 - MotionEye Config API sync for modes and webhook URLs
-- `_info.connection` — instance shows when MotionEye is unreachable
+- `0_info.connection` — instance shows when MotionEye is unreachable
 - Stream sibling relink after VIS re-render (multi-camera dashboards)
 
 ## Data Points
@@ -48,17 +48,17 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 | `motionEyeId` | value | yes | no | MotionEye camera ID |
 | `motionEyeName` | text | yes | no | Original name in MotionEye |
 
-### Instance (`motioneye.0._info.*`)
+### Instance (`motioneye.0.0_info.*`)
 
-The `_info` folder sorts above camera channels in the object tree.
+The `0_info` folder sorts above camera channels (digits before letters in the object tree).
 
 | State | Type | Description |
 |-------|------|-------------|
-| `_info.connection` | boolean | MotionEye reachable |
-| `_info.camerasOnline` | number | Enabled cameras found in MotionEye |
-| `_info.lastSync` | text | Last status poll timestamp |
-| `_info.motionEyeVersion` | text | MotionEye server version |
-| `_info.motionVersion` | text | Motion daemon version |
+| `0_info.connection` | boolean | MotionEye reachable |
+| `0_info.camerasOnline` | number | Enabled cameras found in MotionEye |
+| `0_info.lastSync` | text | Last status poll timestamp |
+| `0_info.motionEyeVersion` | text | MotionEye server version |
+| `0_info.motionVersion` | text | Motion daemon version |
 
 ## Installation
 
@@ -103,6 +103,10 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree
+- (skvarel) Migrate legacy `info` and `_info` states to `0_info` on adapter start
+
 ### 0.1.0 (2026-06-21)
 - (skvarel) Added states for motionEyeVersion and motionVersion
 
