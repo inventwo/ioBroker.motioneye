@@ -205,9 +205,9 @@
 					"type": "select",
 					"label": "defaultMode",
 					"options": [
-						["off", "mode_off"],
-						["still", "mode_still"],
-						["sharp", "mode_sharp"]
+						{ "label": "mode_off", "value": "off" },
+						{ "label": "mode_still", "value": "still" },
+						{ "label": "mode_sharp", "value": "sharp" }
 					],
 					"default": "off",
 					"xs": 12,
@@ -299,9 +299,9 @@
 							"title": "camera_defaultMode",
 							"width": "18%",
 							"options": [
-								["off", "mode_off"],
-								["still", "mode_still"],
-								["sharp", "mode_sharp"]
+								{ "label": "mode_off", "value": "off" },
+								{ "label": "mode_still", "value": "still" },
+								{ "label": "mode_sharp", "value": "sharp" }
 							],
 							"default": "off"
 						},
