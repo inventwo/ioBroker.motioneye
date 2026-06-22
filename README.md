@@ -106,6 +106,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Modified config/help
+
 ### 0.3.1 (2026-06-22)
 - (skvarel) Changed repo icon
 
