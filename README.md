@@ -41,7 +41,7 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 | `snapshot` | button | no | yes | Trigger snapshot |
 | `stream` | switch | yes | yes | Live MJPEG stream on/off |
 | `streamPulse` | button | no | yes | Stream on briefly (auto-off) |
-| `streamUrl` | text | yes | no | HTML `<img>` for inventwo widget |
+| `streamUrl` | text | yes | no | HTML `<img>` for html widget |
 | `status` | text | yes | no | Last sync status |
 | `lastAction` | text | yes | no | Last API action |
 | `webhookUrl` | url | yes | no | URL written to MotionEye |
@@ -65,7 +65,7 @@ The `0_info` folder sorts above camera channels (digits before letters in the ob
 1. Install the adapter from the ioBroker admin interface (or clone this repo and use the dev-server)
 2. Create a new instance
 3. Configure **Settings**: MotionEye host, ports, credentials (optional), webhook host
-4. Add cameras on the **Cameras** tab (display name + MotionEye ID)
+4. Add cameras on the **Cameras** tab (display name, MotionEye ID, optional media folder)
 5. Save and restart the instance — datapoints are created and webhook URLs are written to MotionEye
 
 ### Camera modes
@@ -92,6 +92,8 @@ The `0_info` folder sorts above camera channels (digits before letters in the ob
 | `statusPollIntervalSec` | `300` | MotionEye status poll interval |
 | `useMotionEyeConfig` | `true` | Write mode, webhook URLs, and stream on/off to MotionEye (leave enabled for normal use) |
 
+Per camera (Cameras tab): optional **Media folder** name under `/var/lib/motioneye` (e.g. `Bambu` instead of default `Camera8`). Applied on adapter start when config sync is enabled. Does not rename existing folders on disk.
+
 ## Support
 
 If you like our work and would like to support us, we appreciate any donation.
@@ -104,6 +106,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)
+
 ### 0.1.2 (2026-06-21)
 - (skvarel) Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)
 

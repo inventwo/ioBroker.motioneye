@@ -7,6 +7,7 @@
 const utils = require('@iobroker/adapter-core');
 const { createMotionEyeApi } = require('./lib/motionEyeApi');
 const { createMotionApi } = require('./lib/motionApi');
+const { buildStoragePatch } = require('./lib/mediaStorage');
 const { INFO_STATE_LABELS } = require('./lib/infoLabels');
 const { resolveCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
 const {
@@ -532,6 +533,15 @@ class Motioneye extends utils.Adapter {
 
 		if (this.config.disableStreamOnStart) {
 			patch.video_streaming = false;
+		}
+
+		const storagePatch = buildStoragePatch(camera.mediaFolder);
+		if (camera.mediaFolder && !storagePatch.root_directory) {
+			this.log.warn(
+				`Invalid media folder for ${camera.name}: "${camera.mediaFolder}" — skipped (use a single folder name without slashes)`,
+			);
+		} else {
+			Object.assign(patch, storagePatch);
 		}
 
 		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, patch);

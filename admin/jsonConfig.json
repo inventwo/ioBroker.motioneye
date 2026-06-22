@@ -256,14 +256,14 @@
 							"type": "text",
 							"attr": "name",
 							"title": "camera_name",
-							"width": "22%",
+							"width": "18%",
 							"tooltip": "camera_name_help"
 						},
 						{
 							"type": "number",
 							"attr": "motionEyeId",
 							"title": "camera_motionEyeId",
-							"width": "12%",
+							"width": "10%",
 							"min": 1,
 							"tooltip": "camera_motionEyeId_help"
 						},
@@ -271,15 +271,23 @@
 							"type": "text",
 							"attr": "id",
 							"title": "camera_id",
-							"width": "18%",
+							"width": "14%",
 							"placeholder": "camera_id_placeholder",
 							"tooltip": "camera_id_help"
+						},
+						{
+							"type": "text",
+							"attr": "mediaFolder",
+							"title": "camera_mediaFolder",
+							"width": "14%",
+							"placeholder": "camera_mediaFolder_placeholder",
+							"tooltip": "camera_mediaFolder_help"
 						},
 						{
 							"type": "select",
 							"attr": "defaultMode",
 							"title": "camera_defaultMode",
-							"width": "18%",
+							"width": "16%",
 							"options": [
 								{ "label": "mode_off", "value": "off" },
 								{ "label": "mode_still", "value": "still" },
