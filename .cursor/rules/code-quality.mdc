@@ -41,7 +41,7 @@ onUnload(callback) {
 
 - Wrap async/API work in try/catch; log errors, do not crash the adapter
 - Use adapter log levels: error, warn, info, debug
-- Handle network failures gracefully; set `0_info.connection` state accordingly
+- Handle network failures gracefully; set `_info.connection` state accordingly
 
 ## HTTP
 

@@ -24,15 +24,17 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 ## Features
 
 - User-defined camera names in ioBroker (independent of MotionEye labels)
-- Dynamic channels under `motioneye.0.<Name>.*`
+- Dynamic channels under `motioneye.0.<name>.*` (lowercase folder names)
 - Built-in webhook server — no simple-api dependency
 - MotionEye Config API sync for modes and webhook URLs
-- `0_info.connection` — instance shows when MotionEye is unreachable
+- `_info.connection` — instance shows when MotionEye is unreachable
 - Stream sibling relink after VIS re-render (multi-camera dashboards)
 
 ## Data Points
 
-### Per camera (`motioneye.0.<Name>.*`)
+### Per camera (`motioneye.0.<name>.*`)
+
+Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 
 | State | Type | Read | Write | Description |
 |-------|------|------|-------|-------------|
@@ -48,17 +50,15 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 | `motionEyeId` | value | yes | no | MotionEye camera ID |
 | `motionEyeName` | text | yes | no | Original name in MotionEye |
 
-### Instance (`motioneye.0.0_info.*`)
-
-The `0_info` folder sorts above camera channels (digits before letters in the object tree).
+### Instance (`motioneye.0._info.*`)
 
 | State | Type | Description |
 |-------|------|-------------|
-| `0_info.connection` | boolean | MotionEye reachable |
-| `0_info.camerasOnline` | number | Enabled cameras found in MotionEye |
-| `0_info.lastSync` | text | Last status poll timestamp |
-| `0_info.motionEyeVersion` | text | MotionEye server version |
-| `0_info.motionVersion` | text | Motion daemon version |
+| `_info.connection` | boolean | MotionEye reachable |
+| `_info.camerasOnline` | number | Enabled cameras found in MotionEye |
+| `_info.lastSync` | text | Last status poll timestamp |
+| `_info.motionEyeVersion` | text | MotionEye server version |
+| `_info.motionVersion` | text | Motion daemon version |
 
 ## Installation
 
@@ -106,8 +106,13 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Camera channel folders are now lowercase (e.g. `innenhof_ii` instead of `Innenhof_II`) — aligned with other ioBroker adapters
+- (skvarel) Info states moved from `0_info` to `_info`
+- (skvarel) Existing datapoint values are migrated automatically on adapter start — please check VIS, scripts, and automations that use fixed state paths
+
 ### 0.2.1 (2026-06-22)
-- (skvarel) Fixed adapter checker errors an warnings
+- (skvarel) Fixed adapter checker errors and warnings
 
 ### 0.2.0 (2026-06-22)
 - (skvarel) Added optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)

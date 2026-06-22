@@ -201,7 +201,7 @@
       "native": {}
     },
     {
-      "_id": "0_info",
+      "_id": "_info",
       "type": "meta",
       "common": {
         "name": {

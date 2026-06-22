@@ -10,7 +10,7 @@ const { createMotionApi } = require('./lib/motionApi');
 const { buildStoragePatch } = require('./lib/mediaStorage');
 const { INFO_STATE_LABELS } = require('./lib/infoLabels');
 const { mergeMotionEyeCameras, parseLoadCamerasMessage } = require('./lib/cameraDiscovery');
-const { resolveCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
+const { resolveCameras, resolveLegacyCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
 const {
 	normalizeMode,
 	inferModeFromConfig,
@@ -21,10 +21,23 @@ const {
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 
-/** Info states under `0_info` — digits sort before letters (underscore does not). */
-const INFO_PREFIX = '0_info';
-const LEGACY_INFO_PREFIXES = ['info', '_info'];
+/** Info states under `_info` (lowercase, like other adapters). */
+const INFO_PREFIX = '_info';
+const LEGACY_INFO_PREFIXES = ['info', '0_info'];
 const LEGACY_INFO_STATES = ['connection', 'camerasOnline', 'lastSync', 'motionEyeVersion', 'motionVersion'];
+const CAMERA_STATE_IDS = [
+	'mode',
+	'motion',
+	'status',
+	'lastAction',
+	'snapshot',
+	'stream',
+	'streamPulse',
+	'streamUrl',
+	'webhookUrl',
+	'motionEyeId',
+	'motionEyeName',
+];
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -218,7 +231,19 @@ class Motioneye extends utils.Adapter {
 	}
 
 	async ensureInfoStates() {
+		await this.setObjectNotExistsAsync(INFO_PREFIX, {
+			type: 'meta',
+			common: {
+				name: 'MotionEye adapter information',
+				type: 'meta.folder',
+			},
+			native: {},
+		});
+
 		for (const [stateId, labels] of Object.entries(INFO_STATE_LABELS)) {
+			if (stateId.startsWith('_')) {
+				continue;
+			}
 			const type = stateId === 'camerasOnline' ? 'number' : 'string';
 			const role =
 				stateId === 'connection' ? 'indicator.connected' : stateId === 'camerasOnline' ? 'value' : 'text';
@@ -487,12 +512,53 @@ class Motioneye extends utils.Adapter {
 		await this.setStateAsync(`${channelId}.streamUrl`, '', true);
 	}
 
+	async migrateLegacyCameraChannels() {
+		const cameras = resolveCameras(this.config.cameras, this.config.defaultMode || 'off');
+		const legacyCameras = resolveLegacyCameras(this.config.cameras, this.config.defaultMode || 'off');
+
+		for (const camera of cameras) {
+			if (!camera.enabled) {
+				continue;
+			}
+
+			const legacy = legacyCameras.find(
+				entry => entry.motionEyeId === camera.motionEyeId && entry.id === camera.id,
+			);
+			if (!legacy || legacy.channel === camera.channel) {
+				continue;
+			}
+
+			const legacyChannel = legacy.channel;
+			const legacyFolder = await this.getObjectAsync(legacyChannel);
+			if (!legacyFolder) {
+				continue;
+			}
+
+			for (const stateId of CAMERA_STATE_IDS) {
+				const legacyId = `${legacyChannel}.${stateId}`;
+				const newId = `${camera.channel}.${stateId}`;
+				const legacyState = await this.getStateAsync(legacyId);
+				if (legacyState) {
+					await this.setStateAsync(newId, legacyState.val, legacyState.ack);
+				}
+				if (await this.getObjectAsync(legacyId)) {
+					await this.delObjectAsync(legacyId);
+				}
+			}
+
+			await this.delObjectAsync(legacyChannel);
+			this.log.info(`Migrated camera channel ${legacyChannel} → ${camera.channel}`);
+		}
+	}
+
 	async initializeCameras() {
 		this.syncCameraRegistry();
 
 		if (!this.camerasById.size) {
 			this.log.warn('No enabled cameras configured — add cameras on the Cameras tab');
 		}
+
+		await this.migrateLegacyCameraChannels();
 
 		for (const camera of this.camerasById.values()) {
 			await this.ensureCameraObjects(camera);
