@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "news": {
+      "0.2.1": {
+        "en": "Fixed adapter checker errors an warnings",
+        "de": "Adapterprüfungsfehler und Warnungen behoben",
+        "ru": "Исправлены ошибки и предупреждения проверки адаптера.",
+        "pt": "Erros e avisos do verificador de adaptadores corrigidos.",
+        "nl": "Fouten en waarschuwingen van de adaptercontrole zijn verholpen.",
+        "fr": "Correction des erreurs et avertissements du vérificateur d'adaptateur",
+        "it": "Risolti errori e avvisi del controllore dell'adattatore.",
+        "es": "Se corrigieron errores y advertencias del verificador de adaptadores.",
+        "pl": "Naprawiono błędy i ostrzeżenia modułu sprawdzającego adaptery",
+        "uk": "Виправлені помилки та попередження перевірки адаптера",
+        "zh-cn": "修复了适配器检查错误和警告。"
+      },
       "0.2.0": {
         "en": "Added optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)\nAdded camera load from MotionEye (merges `/config/list` into camera table)\nAdded Help-Tab with setup guide, modes, datapoints, and stream/inventwo notes",
         "de": "Optionaler Medienordnername pro Kamera unter `/var/lib/motioneye` hinzugefügt (wird beim Start des Adapters in MotionEye geschrieben)\nKameradaten von MotionEye hinzugefügt (führt `/config/list` in die Kameratabelle ein)\nHilfe-Registerkarte mit Einrichtungsanleitung, Modi, Datenpunkten und Stream-/Inventwo-Hinweisen hinzugefügt",
