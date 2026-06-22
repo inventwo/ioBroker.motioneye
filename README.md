@@ -17,9 +17,9 @@
 
 ## What this adapter does
 
-Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for inventwo/VIS2 widgets — no simple-api required for webhooks.
+Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for any HTML-capable widget — no simple-api required for webhooks.
 
-> **Status:** Phase 2 — snapshot, stream, streamPulse, and `streamUrl` HTML for inventwo/VIS widgets. Phase 1 covers modes, webhooks, and MotionEye sync.
+> **Status:** Phase 2 — snapshot, stream, streamPulse, and `streamUrl` HTML for dashboards. Phase 1 covers modes, webhooks, and MotionEye sync.
 
 ## Features
 

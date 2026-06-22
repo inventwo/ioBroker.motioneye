@@ -419,7 +419,7 @@ class Motioneye extends utils.Adapter {
 			{
 				id: 'streamUrl',
 				common: {
-					name: `${camera.name} stream HTML (inventwo)`,
+					name: `${camera.name} stream HTML`,
 					type: 'string',
 					role: 'text',
 					read: true,
