@@ -106,7 +106,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.3.1 (2026-06-22)
 - (skvarel) Changed repo icon
 
 ### 0.3.0 (2026-06-22)
@@ -124,9 +124,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.1.2 (2026-06-21)
 - (skvarel) Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)
-
-### 0.1.1 (2026-06-21)
-- (skvarel) Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
