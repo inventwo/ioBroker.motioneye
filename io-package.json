@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "news": {
+      "0.3.2": {
+        "en": "Modified config/help",
+        "de": "Geänderte Konfiguration/Hilfe",
+        "ru": "Изменена конфигурация/справка",
+        "pt": "Configuração/ajuda modificada",
+        "nl": "Gewijzigde configuratie/help",
+        "fr": "Configuration/aide modifiée",
+        "it": "Configurazione/aiuto modificato",
+        "es": "Configuración/ayuda modificada",
+        "pl": "Zmodyfikowana konfiguracja/pomoc",
+        "uk": "Змінена конфігурація/довідка",
+        "zh-cn": "修改了配置/帮助"
+      },
       "0.3.1": {
         "en": "Changed repo icon",
         "de": "Repository-Symbol geändert",
@@ -80,19 +93,6 @@
         "pl": "Zmieniono nazwę folderu info z `_info` na `0_info`, aby był sortowany nad kanałami kamer w drzewie obiektów\nMigracja starszych stanów `info` i `_info` do `0_info` podczas uruchamiania adaptera",
         "uk": "Папку info перейменовано з `_info` на `0_info`, щоб вона сортувалася вище каналів камер у дереві об'єктів\nПеренести застарілі стани `info` та `_info` на `0_info` під час запуску адаптера",
         "zh-cn": "将信息文件夹从 `_info` 重命名为 `0_info`，使其在对象树中位于摄像机通道之上。\n在适配器启动时，将旧版 `info` 和 `_info` 状态迁移到 `0_info`。"
-      },
-      "0.1.0": {
-        "en": "Added states for motionEyeVersion and motionVersion",
-        "de": "Zustände für motionEyeVersion und motionVersion hinzugefügt.",
-        "ru": "Добавлены состояния для motionEyeVersion и motionVersion.",
-        "pt": "Adicionados estados para motionEyeVersion e motionVersion.",
-        "nl": "Statuswaarden toegevoegd voor motionEyeVersion en motionVersion",
-        "fr": "Ajout d'états pour motionEyeVersion et motionVersion",
-        "it": "Aggiunti gli stati per motionEyeVersion e motionVersion",
-        "es": "Se agregaron estados para motionEyeVersion y motionVersion.",
-        "pl": "Dodano stany dla motionEyeVersion i motionVersion",
-        "uk": "Додано стани для motionEyeVersion та motionVersion",
-        "zh-cn": "为 motionEyeVersion 和 motionVersion 添加了状态"
       }
     },
     "titleLang": {
