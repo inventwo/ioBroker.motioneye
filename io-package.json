@@ -135,9 +135,9 @@
       "license": "MIT"
     },
     "platform": "Javascript/Node.js",
-    "icon": "motioneye.svg",
+    "icon": "motioneye.png",
     "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/inventwo/ioBroker.motioneye/main/admin/motioneye.svg",
+    "extIcon": "https://raw.githubusercontent.com/inventwo/ioBroker.motioneye/main/admin/motioneye.png",
     "readme": "https://github.com/inventwo/ioBroker.motioneye/blob/main/README.md",
     "loglevel": "info",
     "tier": 3,
