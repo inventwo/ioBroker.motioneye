@@ -9,6 +9,7 @@ const { createMotionEyeApi } = require('./lib/motionEyeApi');
 const { createMotionApi } = require('./lib/motionApi');
 const { buildStoragePatch } = require('./lib/mediaStorage');
 const { INFO_STATE_LABELS } = require('./lib/infoLabels');
+const { mergeMotionEyeCameras } = require('./lib/cameraDiscovery');
 const { resolveCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
 const {
 	normalizeMode,
@@ -36,6 +37,7 @@ class Motioneye extends utils.Adapter {
 		});
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
+		this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 
 		this.motionEyeApi = undefined;
@@ -761,6 +763,66 @@ class Motioneye extends utils.Adapter {
 				this.log.error(`streamPulse failed for ${camera.name}: ${error.message}`);
 			}
 			await this.setStateAsync(`${camera.channel}.streamPulse`, false, true);
+		}
+	}
+
+	/**
+	 * @param {import('@iobroker/adapter-core').Message} obj
+	 */
+	async onMessage(obj) {
+		if (!obj || typeof obj.command !== 'string') {
+			return;
+		}
+
+		if (obj.command === 'loadCameras') {
+			await this.handleLoadCameras(obj);
+		}
+	}
+
+	/**
+	 * @param {import('@iobroker/adapter-core').Message} obj
+	 */
+	async handleLoadCameras(obj) {
+		const payload = obj.message && typeof obj.message === 'object' ? obj.message : {};
+
+		const motionHost = String(payload.motionHost || this.config.motionHost || '').trim();
+		const motionEyePort = Number(payload.motionEyePort ?? this.config.motionEyePort) || 8765;
+		const motionEyeUser = String(payload.motionEyeUser ?? this.config.motionEyeUser ?? 'admin');
+		const motionEyePassword = String(payload.motionEyePassword ?? this.config.motionEyePassword ?? '');
+		const requestTimeoutMs = Number(payload.requestTimeoutMs ?? this.config.requestTimeoutMs) || 45000;
+		const defaultMode = String(payload.defaultMode || this.config.defaultMode || 'off');
+		const existingCameras = Array.isArray(payload.cameras) ? payload.cameras : this.config.cameras || [];
+
+		try {
+			if (!motionHost) {
+				throw new Error('MotionEye host is required');
+			}
+
+			const api = createMotionEyeApi({
+				host: motionHost,
+				motionEyePort,
+				username: motionEyeUser,
+				password: motionEyePassword,
+				requestTimeoutMs,
+				listCacheMs: 0,
+			});
+
+			const motionEyeList = await api.getCameraList();
+			const { cameras, added } = mergeMotionEyeCameras(existingCameras, motionEyeList, defaultMode);
+
+			this.log.info(`Loaded ${motionEyeList.length} camera(s) from MotionEye, added ${added} new row(s)`);
+
+			if (obj.callback) {
+				obj.callback({
+					native: { cameras },
+					result: added > 0 ? 'added' : 'none',
+				});
+			}
+		} catch (error) {
+			this.log.error(`loadCameras failed: ${error.message}`);
+			if (obj.callback) {
+				obj.callback({ error: error.message });
+			}
 		}
 	}
 

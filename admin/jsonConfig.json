@@ -242,6 +242,27 @@
 						"marginBottom": "10px"
 					}
 				},
+				"_loadCameras": {
+					"type": "sendTo",
+					"label": "load_cameras_button",
+					"help": "load_cameras_help",
+					"command": "loadCameras",
+					"variant": "contained",
+					"useNative": true,
+					"showProcess": true,
+					"timeout": 60000,
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"xl": 6,
+					"jsonData": "{\"motionHost\":\"${data.motionHost}\",\"motionEyePort\":${data.motionEyePort},\"motionEyeUser\":\"${data.motionEyeUser}\",\"motionEyePassword\":\"${data.motionEyePassword}\",\"requestTimeoutMs\":${data.requestTimeoutMs},\"defaultMode\":\"${data.defaultMode}\",\"cameras\":${JSON.stringify(data.cameras || [])}}",
+					"result": {
+						"added": "load_cameras_result_added",
+						"none": "load_cameras_result_none"
+					}
+				},
 				"cameras": {
 					"type": "table",
 					"newLine": true,
@@ -303,6 +324,169 @@
 							"default": true
 						}
 					]
+				}
+			}
+		},
+		"_help": {
+			"type": "panel",
+			"label": "tab_help",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTUuMDcsMTEuMjVMMTQuMTcsMTIuMTdDMTMuNDUsMTIuODkgMTMsMTMuNSAxMywxNUgxMVYxNC41QzExLDEzLjM5IDExLjQ1LDEyLjM5IDEyLjE3LDExLjY3TDEzLjQxLDEwLjQxQzEzLjc4LDEwLjA1IDE0LDkuNTUgMTQsOUMxNCw3Ljg5IDEzLjEsNyAxMiw3QTIsMiAwIDAsMCAxMCw5SDhBNCw0IDAgMCwxIDEyLDVBNCs0IDAgMCwxIDE2LDlDMTYsOS44OCAxNS42NCwxMC42NyAxNS4wNywxMS4yNU0xMywxOUgxMVYxN0gxM00xMiwyQTEwLDEwIDAgMCwwIDIsMTJBMTAsMTAgMCAwLDAgMTIsMjJBMTAsMTAgMCAwLDAgMjIsMTJDMjIsNi40NyAxNy41LDIgMTIsMloiIC8+PC9zdmc+",
+			"items": {
+				"help_intro": {
+					"type": "staticText",
+					"text": "help_intro",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"_helpSetupHeader": {
+					"type": "header",
+					"text": "help_section_setup",
+					"size": 4,
+					"newLine": true
+				},
+				"help_setup": {
+					"type": "staticText",
+					"text": "help_setup",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"_helpConnectionHeader": {
+					"type": "header",
+					"text": "help_section_connection",
+					"size": 4,
+					"newLine": true
+				},
+				"help_connection": {
+					"type": "staticText",
+					"text": "help_connection",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"_helpCamerasHeader": {
+					"type": "header",
+					"text": "help_section_cameras",
+					"size": 4,
+					"newLine": true
+				},
+				"help_cameras": {
+					"type": "staticText",
+					"text": "help_cameras",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"_helpModesHeader": {
+					"type": "header",
+					"text": "help_section_modes",
+					"size": 4,
+					"newLine": true
+				},
+				"help_modes": {
+					"type": "staticText",
+					"text": "help_modes",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"_helpStatesHeader": {
+					"type": "header",
+					"text": "help_section_states",
+					"size": 4,
+					"newLine": true
+				},
+				"help_states": {
+					"type": "staticText",
+					"text": "help_states",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"_helpStreamHeader": {
+					"type": "header",
+					"text": "help_section_stream",
+					"size": 4,
+					"newLine": true
+				},
+				"help_stream": {
+					"type": "staticText",
+					"text": "help_stream",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"marginBottom": "16px"
+					}
+				},
+				"help_readme": {
+					"type": "staticText",
+					"text": "help_readme",
+					"format": "html",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "1rem",
+						"marginBottom": "16px"
+					}
 				}
 			}
 		}

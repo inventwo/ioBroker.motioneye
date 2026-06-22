@@ -105,6 +105,7 @@
     "mode": "daemon",
     "type": "hardware",
     "compact": true,
+    "messagebox": true,
     "connectionType": "local",
     "dataSource": "poll",
     "adminUI": {
