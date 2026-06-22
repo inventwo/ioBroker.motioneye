@@ -18,7 +18,7 @@ alwaysApply: false
 
 - `_username` + `_signature` query parameters
 - Sign key = SHA1(plain password) hex, or empty string when no password
-- Implementation in `lib/motionEyeApi.js` — port from `test.js`, do not duplicate
+- Implementation in `lib/motionEyeApi.js` — port from `test/legacy-prototype.test.js`, do not duplicate
 
 ```javascript
 const { createMotionEyeApi } = require('./lib/motionEyeApi');

@@ -101,6 +101,7 @@ class Motioneye extends utils.Adapter {
 			setState: (id, val, ack) => this.setStateAsync(id, val, ack),
 			log: (level, message) => this.log[level](message),
 			setTimeoutFn: (fn, ms) => this.setTimeout(fn, ms),
+			delayFn: ms => this.delay(ms),
 			clearTimeoutFn: id => {
 				// @ts-expect-error adapter-core branded Timeout id from setTimeout
 				this.clearTimeout(id);
@@ -467,6 +468,16 @@ class Motioneye extends utils.Adapter {
 				type: 'state',
 				common: /** @type {ioBroker.StateCommon} */ (state.common),
 				native: {},
+			});
+		}
+
+		const streamUrlId = `${channelId}.streamUrl`;
+		const streamUrlName = `${camera.name} stream HTML`;
+		const streamUrlObject = await this.getObjectAsync(streamUrlId);
+		const currentStreamUrlName = streamUrlObject?.common?.name ? String(streamUrlObject.common.name) : '';
+		if (currentStreamUrlName && /\(inventwo\)|inventwo HTML/i.test(currentStreamUrlName)) {
+			await this.extendObjectAsync(streamUrlId, {
+				common: { name: streamUrlName },
 			});
 		}
 
