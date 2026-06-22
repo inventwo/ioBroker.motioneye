@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "en": "Camera channel folders are now lowercase (e.g. `innenhof_ii` instead of `Innenhof_II`) — aligned with other ioBroker adapters\nInfo states moved from `0_info` to `_info`\nExisting datapoint values are migrated automatically on adapter start — please check VIS, scripts, and automations that use fixed state paths",
+        "de": "Die Ordner für die Kamerakanäle werden jetzt in Kleinbuchstaben geschrieben (z. B. `innenhof_ii` statt `Innenhof_II`) – angepasst an andere ioBroker-Adapter.\nInformationszustände wurden von `0_info` nach `_info` verschoben.\nVorhandene Datenpunktwerte werden beim Start des Adapters automatisch migriert – bitte überprüfen Sie VIS, Skripte und Automatisierungen, die feste Zustandspfade verwenden.",
+        "ru": "Папки каналов камер теперь отображаются строчными буквами (например, `innenhof_ii` вместо `Innenhof_II`) — в соответствии с другими адаптерами ioBroker.\nИнформационные состояния перенесены из `0_info` в `_info`\nСуществующие значения точек данных переносятся автоматически при запуске адаптера — пожалуйста, проверьте VIS, скрипты и автоматизации, использующие фиксированные пути состояния.",
+        "pt": "As pastas dos canais da câmera agora estão em minúsculas (por exemplo, `innenhof_ii` em vez de `Innenhof_II`) — em consonância com outros adaptadores ioBroker.\nOs estados de informação foram movidos de `0_info` para `_info`.\nOs valores dos pontos de dados existentes são migrados automaticamente na inicialização do adaptador — verifique os VIS, scripts e automações que usam caminhos de estado fixos.",
+        "nl": "De mappen voor camerakanalen worden nu in kleine letters weergegeven (bijv. `innenhof_ii` in plaats van `Innenhof_II`) — in lijn met andere ioBroker-adapters.\nInformatiestatussen zijn verplaatst van `0_info` naar `_info`.\nBestaande datapuntwaarden worden automatisch gemigreerd bij het opstarten van de adapter. Controleer hiervoor VIS, scripts en automatiseringen die gebruikmaken van paden met vaste status.",
+        "fr": "Les noms des dossiers des canaux de caméra sont désormais en minuscules (par exemple, `innenhof_ii` au lieu de `Innenhof_II`) — conformément aux autres adaptateurs ioBroker.\nLes états d'information ont été déplacés de `0_info` à `_info`\nLes valeurs des points de données existants sont migrées automatiquement au démarrage de l'adaptateur — veuillez vérifier les interfaces visuelles, les scripts et les automatisations qui utilisent des chemins d'état fixes.",
+        "it": "Le cartelle dei canali della telecamera ora sono in minuscolo (ad esempio `innenhof_ii` invece di `Innenhof_II`) — allineate con gli altri adattatori ioBroker\nGli stati informativi sono stati spostati da `0_info` a `_info`\nI valori dei punti dati esistenti vengono migrati automaticamente all'avvio dell'adattatore: si prega di verificare VIS, script e automazioni che utilizzano percorsi di stato fissi.",
+        "es": "Las carpetas de los canales de la cámara ahora están en minúsculas (por ejemplo, `innenhof_ii` en lugar de `Innenhof_II`), para que coincidan con otros adaptadores de ioBroker.\nLos estados de información se movieron de `0_info` a `_info`.\nLos valores de los puntos de datos existentes se migran automáticamente al iniciar el adaptador; compruebe los VIS, los scripts y las automatizaciones que utilizan rutas de estado fijo.",
+        "pl": "Foldery kanałów kamer są teraz pisane małymi literami (np. `innenhof_ii` zamiast `Innenhof_II`) — zgodne z innymi adapterami ioBroker\nStany informacji przeniesiono z `0_info` do `_info`\nIstniejące wartości punktów danych są automatycznie migrowane podczas uruchamiania adaptera — sprawdź VIS, skrypty i automatyzacje korzystające ze ścieżek stanu stałego",
+        "uk": "Папки каналів камер тепер пишуться малими літерами (наприклад, `innenhof_ii` замість `Innenhof_II`) — узгоджено з іншими адаптерами ioBroker.\nІнформаційні стани переміщено з `0_info` на `_info`\nІснуючі значення точок даних переносяться автоматично під час запуску адаптера — перевірте VIS, скрипти та автоматизації, які використовують шляхи з фіксованим станом.",
+        "zh-cn": "摄像机通道文件夹现在全部使用小写字母（例如，`innenhof_ii` 而不是 `Innenhof_II`）——与其他 ioBroker 适配器保持一致。\n信息状态从 `0_info` 移至 `_info`\n适配器启动时，现有数据点值会自动迁移——请检查使用固定状态路径的 VIS、脚本和自动化流程。"
+      },
       "0.2.1": {
         "en": "Fixed adapter checker errors an warnings",
         "de": "Adapterprüfungsfehler und Warnungen behoben",
