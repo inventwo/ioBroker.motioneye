@@ -257,7 +257,7 @@
 					"md": 6,
 					"lg": 6,
 					"xl": 6,
-					"jsonData": "{\"motionHost\":\"${data.motionHost}\",\"motionEyePort\":${data.motionEyePort},\"motionEyeUser\":\"${data.motionEyeUser}\",\"motionEyePassword\":\"${data.motionEyePassword}\",\"requestTimeoutMs\":${data.requestTimeoutMs},\"defaultMode\":\"${data.defaultMode}\",\"cameras\":${JSON.stringify(data.cameras || [])}}",
+					"jsonData": "{\"motionHost\":\"${data.motionHost}\",\"motionEyePort\":${data.motionEyePort},\"motionEyeUser\":\"${data.motionEyeUser}\",\"requestTimeoutMs\":${data.requestTimeoutMs},\"defaultMode\":\"${data.defaultMode}\",\"camerasPayload\":\"${encodeURIComponent(JSON.stringify(data.cameras || []))}\"}",
 					"result": {
 						"added": "load_cameras_result_added",
 						"none": "load_cameras_result_none"

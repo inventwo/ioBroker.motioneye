@@ -9,7 +9,7 @@ const { createMotionEyeApi } = require('./lib/motionEyeApi');
 const { createMotionApi } = require('./lib/motionApi');
 const { buildStoragePatch } = require('./lib/mediaStorage');
 const { INFO_STATE_LABELS } = require('./lib/infoLabels');
-const { mergeMotionEyeCameras } = require('./lib/cameraDiscovery');
+const { mergeMotionEyeCameras, parseLoadCamerasMessage } = require('./lib/cameraDiscovery');
 const { resolveCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
 const {
 	normalizeMode,
@@ -37,7 +37,12 @@ class Motioneye extends utils.Adapter {
 		});
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
-		this.on('message', this.onMessage.bind(this));
+		this.on('message', obj => {
+			this.onMessage(obj).catch(error => {
+				this.log.error(`onMessage failed: ${error.stack || error.message || error}`);
+				this.replyToMessage(obj, { error: String(error.message || error) });
+			});
+		});
 		this.on('unload', this.onUnload.bind(this));
 
 		this.motionEyeApi = undefined;
@@ -212,7 +217,7 @@ class Motioneye extends utils.Adapter {
 	}
 
 	async ensureInfoStates() {
-		for (const [stateId, name] of Object.entries(INFO_STATE_LABELS)) {
+		for (const [stateId, labels] of Object.entries(INFO_STATE_LABELS)) {
 			const type = stateId === 'camerasOnline' ? 'number' : 'string';
 			const role =
 				stateId === 'connection' ? 'indicator.connected' : stateId === 'camerasOnline' ? 'value' : 'text';
@@ -220,7 +225,7 @@ class Motioneye extends utils.Adapter {
 			await this.setObjectNotExistsAsync(`${INFO_PREFIX}.${stateId}`, {
 				type: 'state',
 				common: {
-					name,
+					name: /** @type {ioBroker.StringOrTranslated} */ (labels),
 					type: stateId === 'connection' ? 'boolean' : type,
 					role,
 					read: true,
@@ -767,7 +772,19 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
-	 * @param {import('@iobroker/adapter-core').Message} obj
+	 * @param {ioBroker.Message} obj
+	 * @param {Record<string, unknown>} response
+	 */
+	replyToMessage(obj, response) {
+		if (!obj?.callback || !obj.from || !obj.command) {
+			return;
+		}
+
+		this.sendTo(obj.from, obj.command, response, obj.callback);
+	}
+
+	/**
+	 * @param {ioBroker.Message} obj
 	 */
 	async onMessage(obj) {
 		if (!obj || typeof obj.command !== 'string') {
@@ -780,15 +797,15 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
-	 * @param {import('@iobroker/adapter-core').Message} obj
+	 * @param {ioBroker.Message} obj
 	 */
 	async handleLoadCameras(obj) {
-		const payload = obj.message && typeof obj.message === 'object' ? obj.message : {};
+		const payload = parseLoadCamerasMessage(obj.message);
 
 		const motionHost = String(payload.motionHost || this.config.motionHost || '').trim();
 		const motionEyePort = Number(payload.motionEyePort ?? this.config.motionEyePort) || 8765;
 		const motionEyeUser = String(payload.motionEyeUser ?? this.config.motionEyeUser ?? 'admin');
-		const motionEyePassword = String(payload.motionEyePassword ?? this.config.motionEyePassword ?? '');
+		const motionEyePassword = String(this.config.motionEyePassword ?? '');
 		const requestTimeoutMs = Number(payload.requestTimeoutMs ?? this.config.requestTimeoutMs) || 45000;
 		const defaultMode = String(payload.defaultMode || this.config.defaultMode || 'off');
 		const existingCameras = Array.isArray(payload.cameras) ? payload.cameras : this.config.cameras || [];
@@ -812,17 +829,13 @@ class Motioneye extends utils.Adapter {
 
 			this.log.info(`Loaded ${motionEyeList.length} camera(s) from MotionEye, added ${added} new row(s)`);
 
-			if (obj.callback) {
-				obj.callback({
-					native: { cameras },
-					result: added > 0 ? 'added' : 'none',
-				});
-			}
+			this.replyToMessage(obj, {
+				native: { cameras },
+				result: added > 0 ? 'added' : 'none',
+			});
 		} catch (error) {
 			this.log.error(`loadCameras failed: ${error.message}`);
-			if (obj.callback) {
-				obj.callback({ error: error.message });
-			}
+			this.replyToMessage(obj, { error: error.message });
 		}
 	}
 

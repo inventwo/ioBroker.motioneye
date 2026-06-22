@@ -107,16 +107,15 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) Optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)
-- (skvarel) Admin: **Load cameras from MotionEye** button (merges `/config/list` into camera table)
-- (skvarel) Admin: **Help** tab with setup guide, modes, datapoints, and stream/inventwo notes
+- (skvarel) Added optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)
+- (skvarel) Added camera load from MotionEye (merges `/config/list` into camera table)
+- (skvarel) Added Help-Tab with setup guide, modes, datapoints, and stream/inventwo notes
 
 ### 0.1.2 (2026-06-21)
 - (skvarel) Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)
 
 ### 0.1.1 (2026-06-21)
 - (skvarel) Renamed info folder from `_info` to `0_info` so it sorts above camera channels in the object tree
-- (skvarel) Migrate legacy `info` and `_info` states to `0_info` on adapter start
 
 ### 0.1.0 (2026-06-21)
 - (skvarel) Added states for motionEyeVersion and motionVersion

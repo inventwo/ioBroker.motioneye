@@ -106,6 +106,7 @@
     "type": "hardware",
     "compact": true,
     "messagebox": true,
+    "subscribe": "messagebox",
     "connectionType": "local",
     "dataSource": "poll",
     "adminUI": {
