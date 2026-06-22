@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "news": {
+      "0.2.0": {
+        "en": "Added optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)\nAdded camera load from MotionEye (merges `/config/list` into camera table)\nAdded Help-Tab with setup guide, modes, datapoints, and stream/inventwo notes",
+        "de": "Optionaler Medienordnername pro Kamera unter `/var/lib/motioneye` hinzugefügt (wird beim Start des Adapters in MotionEye geschrieben)\nKameradaten von MotionEye hinzugefügt (führt `/config/list` in die Kameratabelle ein)\nHilfe-Registerkarte mit Einrichtungsanleitung, Modi, Datenpunkten und Stream-/Inventwo-Hinweisen hinzugefügt",
+        "ru": "Добавлено необязательное имя папки с медиафайлами для каждой камеры в каталоге `/var/lib/motioneye` (записывается в MotionEye при запуске адаптера).\nДобавлена загрузка данных с камеры из MotionEye (объединяет `/config/list` с таблицей камер).\nДобавлена вкладка «Справка» с руководством по настройке, режимами, точками данных и примечаниями по stream/inventtwo.",
+        "pt": "Adicionada opção para definir o nome da pasta de mídia por câmera em `/var/lib/motioneye` (gravada no MotionEye na inicialização do adaptador).\nAdicionada a carga da câmera do MotionEye (mescla `/config/list` na tabela de câmeras).\nAdicionada aba de Ajuda com guia de configuração, modos, pontos de dados e notas de fluxo/invenção.",
+        "nl": "Er is een optionele mapnaam voor mediabestanden per camera toegevoegd onder `/var/lib/motioneye` (deze wordt naar MotionEye geschreven bij het opstarten van de adapter).\nCamera's geladen vanuit MotionEye (voegt `/config/list` samen met de cameratabel)\nEr is een Help-tabblad toegevoegd met een installatiehandleiding, informatie over modi, datapunten en opmerkingen over streamen/inventariseren.",
+        "fr": "Ajout d'un nom de dossier multimédia optionnel par caméra sous `/var/lib/motioneye` (écrit dans MotionEye au démarrage de l'adaptateur)\nAjout du chargement de la caméra depuis MotionEye (fusionne `/config/list` dans la table des caméras)\nAjout d'un onglet Aide contenant un guide d'installation, les modes, les points de données et des notes sur le flux/l'inventaire",
+        "it": "Aggiunto il nome opzionale della cartella multimediale per ciascuna telecamera in `/var/lib/motioneye` (scritto in MotionEye all'avvio dell'adattatore)\nAggiunto caricamento della telecamera da MotionEye (unisce `/config/list` nella tabella delle telecamere)\nAggiunta la scheda Aiuto con guida alla configurazione, modalità, punti dati e note su stream/inventtwo.",
+        "es": "Se agregó un nombre de carpeta de medios opcional por cámara en `/var/lib/motioneye` (se escribe en MotionEye al iniciar el adaptador).\nSe agregó la carga de la cámara desde MotionEye (fusiona `/config/list` en la tabla de cámaras).\nSe agregó una pestaña de Ayuda con guía de configuración, modos, puntos de datos y notas sobre stream/inventwo.",
+        "pl": "Dodano opcjonalną nazwę folderu multimedialnego dla każdej kamery w `/var/lib/motioneye` (zapisywana w MotionEye po uruchomieniu adaptera)\nDodano ładowanie kamery z MotionEye (scala `/config/list` z tabelą kamer)\nDodano zakładkę Pomoc z przewodnikiem konfiguracji, trybami, punktami danych i notatkami dotyczącymi strumienia/inventwo",
+        "uk": "Додано необов'язкову назву папки медіа для кожної камери в `/var/lib/motioneye` (записується в MotionEye під час запуску адаптера)\nДодано завантаження камери з MotionEye (об'єднання `/config/list` з таблицею камер)\nДодано вкладку «Довідка» з посібником з налаштування, режимами, точками даних та нотатками щодо потоку/винаходу.",
+        "zh-cn": "在 `/var/lib/motioneye` 下添加了可选的每台摄像机的媒体文件夹名称（在适配器启动时写入 MotionEye）\n添加了来自 MotionEye 的摄像头加载信息（将 `/config/list` 合并到摄像头表中）\n新增帮助选项卡，包含设置指南、模式、数据点和流/库存说明"
+      },
       "0.1.2": {
         "en": "Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)",
         "de": "Präzisierte Administratorhilfe für useMotionEyeConfig (erforderlich für Modus, Webhooks und Stream-Steuerung – nicht nur für die MotionEye-Weboberfläche)",

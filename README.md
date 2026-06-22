@@ -106,7 +106,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.2.0 (2026-06-22)
 - (skvarel) Added optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)
 - (skvarel) Added camera load from MotionEye (merges `/config/list` into camera table)
 - (skvarel) Added Help-Tab with setup guide, modes, datapoints, and stream/inventwo notes
