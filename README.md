@@ -116,7 +116,7 @@ If you like our work and would like to support us, we appreciate any donation.
 ### **WORK IN PROGRESS**
 - (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation
 - (skvarel) Added GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)
-- (skvarel) Fixed help tab link colors to match theme (like Autodarts adapter); external links open in a new tab
+- (skvarel) Help tab shows one documentation link per admin language (DE or EN) plus direct FAQ link; external links open in a new tab
 
 ### 0.3.2 (2026-06-22)
 - (skvarel) Modified config/help
