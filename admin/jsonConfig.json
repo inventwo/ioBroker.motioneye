@@ -364,7 +364,6 @@
 				"help_docs": {
 					"type": "staticText",
 					"text": "help_docs",
-					"format": "html",
 					"newLine": true,
 					"xs": 12,
 					"sm": 12,
@@ -392,7 +391,6 @@
 				"help_outro": {
 					"type": "staticText",
 					"text": "help_outro",
-					"format": "html",
 					"newLine": true,
 					"sm": 12,
 					"xs": 12,
