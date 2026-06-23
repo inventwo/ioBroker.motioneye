@@ -18,7 +18,7 @@ Connects ioBroker to a local [MotionEye](https://github.com/motioneye-project/mo
 
 - **Never** run `git commit`, `git push`, or releases unless the user explicitly asks
 - User commits and pushes; releases via `npm run release-*` (AlCalzone release-script)
-- **Never** run `npm run translate` — owner runs it manually before release
+- After changing `admin/i18n/de.json` or `admin/i18n/en.json`, run `npm run translate` to update the other language files
 
 ## Changelog & README (mandatory for every change)
 

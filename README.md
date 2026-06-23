@@ -21,6 +21,13 @@ Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live 
 
 > **Status:** Phase 2 — snapshot, stream, streamPulse, and `streamUrl` HTML for dashboards. Phase 1 covers modes, webhooks, and MotionEye sync.
 
+## Documentation
+
+- 🇺🇸 [Documentation](docs/en/README.md)
+- 🇩🇪 [Dokumentation](docs/de/README.md)
+
+FAQ and troubleshooting (Docker/Unraid, `unauthorized`, VIS stream): [EN](docs/en/faq.md) · [DE](docs/de/faq.md)
+
 ## Features
 
 - User-defined camera names in ioBroker (independent of MotionEye labels)
@@ -106,6 +113,10 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation
+- (skvarel) Added GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)
+
 ### 0.3.2 (2026-06-22)
 - (skvarel) Modified config/help
 
