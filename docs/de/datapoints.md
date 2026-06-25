@@ -11,7 +11,7 @@ Kanalnamen in Kleinbuchstaben (z. B. `garten`, `innenhof_ii`).
 | Datenpunkt | Lesen | Schreiben | Beschreibung |
 |------------|-------|-----------|--------------|
 | `mode` | ja | ja | `off` / `still` / `sharp` |
-| `motion` | ja | ja | Bewegung erkannt (Auto-Reset) |
+| `motion` | ja | nein | Bewegung erkannt (Auto-Reset) |
 | `snapshot` | nein | ja | Snapshot auslösen (Button) |
 | `stream` | ja | ja | Live-MJPEG-Stream ein/aus |
 | `streamPulse` | nein | ja | Kurzer Stream-Impuls (Button) |

@@ -46,7 +46,7 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | State | Type | Read | Write | Description |
 |-------|------|------|-------|-------------|
 | `mode` | value | yes | yes | `off` / `still` / `sharp` |
-| `motion` | indicator | yes | yes | Motion detected (auto-reset) |
+| `motion` | indicator | yes | no | Motion detected (auto-reset) |
 | `snapshot` | button | no | yes | Trigger snapshot |
 | `stream` | switch | yes | yes | Live MJPEG stream on/off |
 | `streamPulse` | button | no | yes | Stream on briefly (auto-off) |
@@ -113,6 +113,8 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
 
 ### 0.3.3 (2026-06-23)
 - (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation

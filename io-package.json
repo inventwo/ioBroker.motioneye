@@ -215,7 +215,7 @@
     },
     {
       "_id": "_info",
-      "type": "meta",
+      "type": "channel",
       "common": {
         "name": {
           "en": "MotionEye adapter information",
@@ -229,8 +229,7 @@
           "pl": "Informacje o adapterze MotionEye",
           "uk": "Інформація про адаптер MotionEye",
           "zh-cn": "MotionEye 适配器信息"
-        },
-        "type": "meta.folder"
+        }
       },
       "native": {}
     }

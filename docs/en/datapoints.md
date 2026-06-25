@@ -11,7 +11,7 @@ Channel names are lowercase (e.g. `garten`, `innenhof_ii`).
 | State | Read | Write | Description |
 |-------|------|-------|-------------|
 | `mode` | yes | yes | `off` / `still` / `sharp` |
-| `motion` | yes | yes | Motion detected (auto-reset) |
+| `motion` | yes | no | Motion detected (auto-reset) |
 | `snapshot` | no | yes | Trigger snapshot (button) |
 | `stream` | yes | yes | Live MJPEG stream on/off |
 | `streamPulse` | no | yes | Short stream pulse (button) |

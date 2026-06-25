@@ -231,14 +231,38 @@ class Motioneye extends utils.Adapter {
 	}
 
 	async ensureInfoStates() {
+		const infoChannelName = {
+			en: 'MotionEye adapter information',
+			de: 'MotionEye-Adapter-Informationen',
+			ru: 'Информация об адаптере MotionEye',
+			pt: 'Informações do adaptador MotionEye',
+			nl: 'MotionEye-adapterinformatie',
+			fr: "Informations sur l'adaptateur MotionEye",
+			it: "Informazioni sull'adattatore MotionEye",
+			es: 'Información del adaptador MotionEye',
+			pl: 'Informacje o adapterze MotionEye',
+			uk: 'Інформація про адаптер MotionEye',
+			'zh-cn': 'MotionEye 适配器信息',
+		};
+
 		await this.setObjectNotExistsAsync(INFO_PREFIX, {
-			type: 'meta',
+			type: 'channel',
 			common: {
-				name: 'MotionEye adapter information',
-				type: 'meta.folder',
+				name: infoChannelName,
 			},
 			native: {},
 		});
+
+		const infoChannel = await this.getObjectAsync(INFO_PREFIX);
+		if (infoChannel && infoChannel.type !== 'channel') {
+			await this.extendObjectAsync(INFO_PREFIX, {
+				type: 'channel',
+				common: {
+					name: infoChannelName,
+					type: undefined,
+				},
+			});
+		}
 
 		for (const [stateId, labels] of Object.entries(INFO_STATE_LABELS)) {
 			if (stateId.startsWith('_')) {
@@ -365,7 +389,7 @@ class Motioneye extends utils.Adapter {
 				common: {
 					name: `${camera.name} mode`,
 					type: 'string',
-					role: 'level.mode',
+					role: 'value',
 					read: true,
 					write: true,
 					def: camera.defaultMode,
@@ -383,7 +407,7 @@ class Motioneye extends utils.Adapter {
 					type: 'boolean',
 					role: 'sensor.motion',
 					read: true,
-					write: true,
+					write: false,
 					def: false,
 				},
 			},
@@ -489,12 +513,20 @@ class Motioneye extends utils.Adapter {
 		];
 
 		for (const state of states) {
-			await this.setObjectNotExistsAsync(`${channelId}.${state.id}`, {
+			const stateId = `${channelId}.${state.id}`;
+			await this.setObjectNotExistsAsync(stateId, {
 				type: 'state',
 				common: /** @type {ioBroker.StateCommon} */ (state.common),
 				native: {},
 			});
 		}
+
+		await this.extendObjectAsync(`${channelId}.mode`, {
+			common: { role: 'value' },
+		});
+		await this.extendObjectAsync(`${channelId}.motion`, {
+			common: { write: false },
+		});
 
 		const streamUrlId = `${channelId}.streamUrl`;
 		const streamUrlName = `${camera.name} stream HTML`;
