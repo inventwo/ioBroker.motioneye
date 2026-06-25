@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.2.1 (2026-06-22)
+- (skvarel) Fixed adapter checker errors and warnings
+
 ## 0.2.0 (2026-06-22)
 - (skvarel) Added optional per-camera media folder name under `/var/lib/motioneye` (written to MotionEye on adapter start)
 - (skvarel) Added camera load from MotionEye (merges `/config/list` into camera table)

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.motioneye",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams",
   "author": {
     "name": "skvarel",

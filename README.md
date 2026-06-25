@@ -113,7 +113,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.3.4 (2026-06-25)
 - (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
 
 ### 0.3.3 (2026-06-23)
@@ -131,9 +131,6 @@ If you like our work and would like to support us, we appreciate any donation.
 - (skvarel) Camera channel folders are now lowercase (e.g. `innenhof_ii` instead of `Innenhof_II`) — aligned with other ioBroker adapters
 - (skvarel) Info states moved from `0_info` to `_info`
 - (skvarel) Existing datapoint values are migrated automatically on adapter start — please check VIS, scripts, and automations that use fixed state paths
-
-### 0.2.1 (2026-06-22)
-- (skvarel) Fixed adapter checker errors and warnings
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)

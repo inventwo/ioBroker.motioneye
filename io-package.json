@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "news": {
+      "0.3.4": {
+        "en": "Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)",
+        "de": "Festgelegte Objektstruktur für die Überprüfung des ioBroker-Repositorys: `_info` als Kanal, `mode` Rolle `value`, `motion` schreibgeschützt (`sensor.motion`)",
+        "ru": "Исправлена структура объекта для проверки репозитория ioBroker: `_info` как канал, `mode` роль `value`, `motion` только для чтения (`sensor.motion`)",
+        "pt": "Estrutura de objeto fixa para revisão do repositório ioBroker: `_info` como canal, `mode` como função, `value` como valor, `motion` como somente leitura (`sensor.motion`)",
+        "nl": "Vaste objectstructuur voor ioBroker-repositorybeoordeling: `_info` als kanaal, `mode` rol `value`, `motion` alleen-lezen (`sensor.motion`)",
+        "fr": "Structure d'objet fixe pour la revue du dépôt ioBroker : `_info` en tant que canal, `mode` rôle `value`, `motion` en lecture seule (`sensor.motion`)",
+        "it": "Struttura fissa degli oggetti per la revisione del repository ioBroker: `_info` come canale, `mode` ruolo `value`, `motion` sola lettura (`sensor.motion`)",
+        "es": "Estructura de objeto corregida para la revisión del repositorio ioBroker: `_info` como canal, rol `mode` `value`, `motion` de solo lectura (`sensor.motion`)",
+        "pl": "Naprawiono strukturę obiektów do przeglądu repozytorium ioBroker: `_info` jako kanał, `mode` rola `value`, `motion` tylko do odczytu (`sensor.motion`)",
+        "uk": "Виправлено структуру об'єктів для огляду репозиторію ioBroker: `_info` як канал, `mode` роль `value`, `motion` лише для читання (`sensor.motion`)",
+        "zh-cn": "ioBroker 代码库审查的固定对象结构：`_info` 作为通道，`mode` 扮演 `value` 角色，`motion` 只读（`sensor.motion`）"
+      },
       "0.3.3": {
         "en": "Redesigned help tab: short intro, quickstart, and links to GitHub documentation\nAdded GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)\nHelp tab shows one documentation link per admin language (DE or EN) plus direct FAQ link; external links open in a new tab",
         "de": "Neu gestalteter Hilfe-Tab: Kurze Einführung, Schnellstartanleitung und Links zur GitHub-Dokumentation\nDie GitHub-Dokumentation wurde in `docs/en/` und `docs/de/` hinzugefügt (Einstellungen, Kameras, Modi, Datenpunkte, VIS-Stream, FAQ).\nDer Hilfe-Tab zeigt pro Administratorsprache (DE oder EN) einen Dokumentationslink sowie einen direkten FAQ-Link an; externe Links öffnen sich in einem neuen Tab.",
@@ -80,19 +93,6 @@
         "pl": "Dodano opcjonalną nazwę folderu multimedialnego dla każdej kamery w `/var/lib/motioneye` (zapisywana w MotionEye po uruchomieniu adaptera)\nDodano ładowanie kamery z MotionEye (scala `/config/list` z tabelą kamer)\nDodano zakładkę Pomoc z przewodnikiem konfiguracji, trybami, punktami danych i notatkami dotyczącymi strumienia/inventwo",
         "uk": "Додано необов'язкову назву папки медіа для кожної камери в `/var/lib/motioneye` (записується в MotionEye під час запуску адаптера)\nДодано завантаження камери з MotionEye (об'єднання `/config/list` з таблицею камер)\nДодано вкладку «Довідка» з посібником з налаштування, режимами, точками даних та нотатками щодо потоку/винаходу.",
         "zh-cn": "在 `/var/lib/motioneye` 下添加了可选的每台摄像机的媒体文件夹名称（在适配器启动时写入 MotionEye）\n添加了来自 MotionEye 的摄像头加载信息（将 `/config/list` 合并到摄像头表中）\n新增帮助选项卡，包含设置指南、模式、数据点和流/库存说明"
-      },
-      "0.1.2": {
-        "en": "Clarified admin help for useMotionEyeConfig (required for mode, webhooks, and stream control — not only MotionEye web UI)",
-        "de": "Präzisierte Administratorhilfe für useMotionEyeConfig (erforderlich für Modus, Webhooks und Stream-Steuerung – nicht nur für die MotionEye-Weboberfläche)",
-        "ru": "Уточнена административная справка по параметру useMotionEyeConfig (необходим для режима, веб-хуков и управления потоком — не только для веб-интерфейса MotionEye).",
-        "pt": "Esclarecimentos na ajuda administrativa para useMotionEyeConfig (necessário para modo, webhooks e controle de fluxo — não apenas para a interface web do MotionEye).",
-        "nl": "De beheerdershelp voor useMotionEyeConfig is verduidelijkt (vereist voor modus, webhooks en streamcontrole — niet alleen voor de MotionEye-webinterface).",
-        "fr": "Aide d'administration clarifiée pour useMotionEyeConfig (requise pour le mode, les webhooks et le contrôle du flux — et pas seulement pour l'interface utilisateur web de MotionEye)",
-        "it": "Chiarimenti alla guida amministrativa per useMotionEyeConfig (necessario per la modalità, i webhook e il controllo dello streaming, non solo per l'interfaccia web di MotionEye).",
-        "es": "Se ha aclarado la ayuda administrativa para usar MotionEyeConfig (necesario para el modo, los webhooks y el control de la transmisión, no solo para la interfaz web de MotionEye).",
-        "pl": "Wyjaśniono pomoc administracyjną dotyczącą użycia MotionEyeConfig (wymaganą w przypadku trybu, webhooków i sterowania strumieniem — nie tylko interfejsu internetowego MotionEye)",
-        "uk": "Уточнено довідку адміністратора щодо використання MotionEyeConfig (потрібно для режиму, вебхуків та керування потоком — не лише веб-інтерфейсу MotionEye)",
-        "zh-cn": "澄清了有关 useMotionEyeConfig 的管理员帮助（模式、Webhook 和流控制需要此配置，而不仅仅是 MotionEye Web UI）。"
       }
     },
     "titleLang": {
