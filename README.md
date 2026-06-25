@@ -113,6 +113,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+
 ### 0.3.3 (2026-06-23)
 - (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation
 - (skvarel) Added GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)
