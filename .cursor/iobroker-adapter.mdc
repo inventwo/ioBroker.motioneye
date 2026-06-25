@@ -45,5 +45,4 @@ Detailed conventions live in `.cursor/rules/` (code, admin UI, testing, docs/CI,
 
 ## Reference
 
-Planning document: `docs/IOBROKER-ADAPTER-PLAN.md`  
-Prototype script: `test/legacy-prototype.test.js` (functional spec for porting)
+Planning document: `docs/IOBROKER-ADAPTER-PLAN.md`

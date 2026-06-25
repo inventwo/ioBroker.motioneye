@@ -25,6 +25,8 @@ const { createStreamManager } = require('./lib/streamManager');
 const INFO_PREFIX = '_info';
 const LEGACY_INFO_PREFIXES = ['info', '0_info'];
 const LEGACY_INFO_STATES = ['connection', 'camerasOnline', 'lastSync', 'motionEyeVersion', 'motionVersion'];
+/** Writable string enum — valid ioBroker role for off/still/sharp (repochecker). */
+const CAMERA_MODE_ROLE = 'level.effect';
 const CAMERA_STATE_IDS = [
 	'mode',
 	'motion',
@@ -142,7 +144,6 @@ class Motioneye extends utils.Adapter {
 		await this.initializeCameras();
 
 		this.subscribeStates('*.mode');
-		this.subscribeStates('*.motion');
 		this.subscribeStates('*.snapshot');
 		this.subscribeStates('*.stream');
 		this.subscribeStates('*.streamPulse');
@@ -255,12 +256,12 @@ class Motioneye extends utils.Adapter {
 
 		const infoChannel = await this.getObjectAsync(INFO_PREFIX);
 		if (infoChannel && infoChannel.type !== 'channel') {
-			await this.extendObjectAsync(INFO_PREFIX, {
+			await this.setObjectAsync(INFO_PREFIX, {
 				type: 'channel',
 				common: {
 					name: infoChannelName,
-					type: undefined,
 				},
+				native: infoChannel.native || {},
 			});
 		}
 
@@ -389,7 +390,7 @@ class Motioneye extends utils.Adapter {
 				common: {
 					name: `${camera.name} mode`,
 					type: 'string',
-					role: 'value',
+					role: CAMERA_MODE_ROLE,
 					read: true,
 					write: true,
 					def: camera.defaultMode,
@@ -522,10 +523,10 @@ class Motioneye extends utils.Adapter {
 		}
 
 		await this.extendObjectAsync(`${channelId}.mode`, {
-			common: { role: 'value' },
+			common: { role: CAMERA_MODE_ROLE },
 		});
 		await this.extendObjectAsync(`${channelId}.motion`, {
-			common: { write: false },
+			common: { write: false, role: 'sensor.motion' },
 		});
 
 		const streamUrlId = `${channelId}.streamUrl`;
@@ -841,11 +842,6 @@ class Motioneye extends utils.Adapter {
 				this.log.error(`setMode failed for ${camera.name}: ${error.message}`);
 				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
 			}
-			return;
-		}
-
-		if (stateName === 'motion' && state.val === true) {
-			this.scheduleMotionReset(camera);
 			return;
 		}
 
