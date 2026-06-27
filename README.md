@@ -130,6 +130,8 @@ If you like our work and would like to support us, we appreciate any donation.
 ### 0.3.1 (2026-06-22)
 - (skvarel) Changed repo icon
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
 
