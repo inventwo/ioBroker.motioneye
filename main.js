@@ -20,6 +20,7 @@ const {
 } = require('./lib/modeProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
+const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
 
 /** Info states under `_info` (lowercase, like other adapters). */
 const INFO_PREFIX = '_info';
@@ -107,11 +108,14 @@ class Motioneye extends utils.Adapter {
 			motionEyeApi: this.motionEyeApi,
 			useMotionEyeConfig: this.config.useMotionEyeConfig !== false,
 			disableStreamOnStart: this.config.disableStreamOnStart !== false,
-			streamAutoOffMs: Number(this.config.streamAutoOffMs) || 0,
-			streamStartDelayMs: Number(this.config.streamStartDelayMs) || 3000,
-			streamReadyTimeoutMs: Number(this.config.streamReadyTimeoutMs) || 45000,
-			streamRetryMs: Number(this.config.streamRetryMs) || 2000,
-			streamSiblingRelinkTimeoutMs: Number(this.config.streamSiblingRelinkTimeoutMs) || 60000,
+			streamAutoOffMs: capTimerMs(this.config.streamAutoOffMs, { min: 0, default: 0 }),
+			streamStartDelayMs: capTimerMs(this.config.streamStartDelayMs, { min: 0, default: 3000 }),
+			streamReadyTimeoutMs: capTimerMs(this.config.streamReadyTimeoutMs, { min: 1000, default: 45000 }),
+			streamRetryMs: capTimerMs(this.config.streamRetryMs, { min: 100, default: 2000 }),
+			streamSiblingRelinkTimeoutMs: capTimerMs(this.config.streamSiblingRelinkTimeoutMs, {
+				min: 0,
+				default: 60000,
+			}),
 			getState: id => this.getStateAsync(id),
 			setState: (id, val, ack) => this.setStateAsync(id, val, ack),
 			log: (level, message) => this.log[level](message),
@@ -148,12 +152,23 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.stream');
 		this.subscribeStates('*.streamPulse');
 
-		const pollSec = Math.max(30, Number(this.config.statusPollIntervalSec) || 300);
-		this.pollInterval = this.setInterval(() => {
-			this.pollMotionEye().catch(error => {
-				this.log.warn(`Status poll failed: ${error.message}`);
-			});
-		}, pollSec * 1000);
+		const pollSec = Math.min(
+			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
+			Math.floor(MAX_TIMER_MS / 1000),
+		);
+		const schedulePoll = () => {
+			this.pollInterval = this.setTimeout(async () => {
+				try {
+					await this.pollMotionEye();
+				} catch (error) {
+					this.log.warn(`Status poll failed: ${error.message}`);
+				}
+				if (!this._unloading) {
+					schedulePoll();
+				}
+			}, pollSec * 1000);
+		};
+		schedulePoll();
 
 		this.log.info('MotionEye adapter ready');
 	}
@@ -800,7 +815,7 @@ class Motioneye extends utils.Adapter {
 			this.clearTimeout(this.motionResetTimers[stateId]);
 		}
 
-		const resetMs = Math.max(1000, Number(this.config.motionResetMs) || 15000);
+		const resetMs = capTimerMs(this.config.motionResetMs, { min: 1000, default: 15000 });
 		this.motionResetTimers[stateId] = this.setTimeout(async () => {
 			delete this.motionResetTimers[stateId];
 			await this.setStateAsync(stateId, false, true);
@@ -952,7 +967,7 @@ class Motioneye extends utils.Adapter {
 
 		try {
 			if (this.pollInterval) {
-				this.clearInterval(this.pollInterval);
+				this.clearTimeout(this.pollInterval);
 				this.pollInterval = undefined;
 			}
 
