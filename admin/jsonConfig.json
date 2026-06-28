@@ -383,6 +383,43 @@
 				}
 			}
 		},
+		"_logging": {
+			"type": "panel",
+			"label": "tab_logging",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMjAsOEgxNy4xOUMxNi43NCw3LjIyIDE2LjEyLDYuNTUgMTUuMzcsNi4wNEwxNyw0LjQxTDE1LjU5LDNMMTMuNDIsNS4xN0MxMi45Niw1LjA2IDEyLjQ5LDUgMTIsNUMxMS41MSw1IDExLjA0LDUuMDYgMTAuNTksNS4xN0w4LjQxLDNMNyw0LjQxTDguNjIsNi4wNEM3Ljg4LDYuNTUgNy4yNiw3LjIyIDYuODEsOEg0VjEwSDYuMDlDNi4wNCwxMC4zMyA2LDEwLjY2IDYsMTFWMTJINFYxNEg2VjE1QzYsMTUuMzQgNi4wNCwxNS42NyA2LjA5LDE2SDRWMThINi44MUM3Ljg1LDE5Ljc5IDkuNzgsMjEgMTIsMjFDMTQuMjIsMjEgMTYuMTUsMTkuNzkgMTcuMTksMThIMjBWMTZIMTcuOTFDMTcuOTYsMTUuNjcgMTgsMTUuMzQgMTgsMTVWMTRIMjBWMTJIMThWMTFDMTgsMTAuNjYgMTcuOTYsMTAuMzMgMTcuOTEsMTBIMjBWOE0xNiwxNUE0LDQgMCAwLDEgMTIsMTlBNCw0IDAgMCwxIDgsMTVWMTEBNCw0IDAgMCwxIDEyLDdBNCw0IDAgMCwxIDE2LDExVjE1WiIvPjwvc3ZnPg==",
+			"items": {
+				"debugging_verbose_hint": {
+					"type": "staticText",
+					"text": "debugging_verbose_hint",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginBottom": "8px",
+						"padding": "10px 14px",
+						"border": "1px solid #546e7a",
+						"borderRadius": "6px",
+						"backgroundColor": "rgba(84, 110, 122, 0.12)"
+					}
+				},
+				"debugging_verbose": {
+					"type": "checkbox",
+					"label": "debugging_verbose",
+					"default": false,
+					"newLine": true,
+					"xs": 12,
+					"sm": 6,
+					"md": 6,
+					"lg": 6,
+					"xl": 6
+				}
+			}
+		},
 		"_help": {
 			"type": "panel",
 			"label": "tab_help",

@@ -21,6 +21,7 @@ const {
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
+const { createVerboseLogger, describePassword } = require('./lib/diagLog');
 
 /** Info states under `_info` (lowercase, like other adapters). */
 const INFO_PREFIX = '_info';
@@ -74,6 +75,36 @@ class Motioneye extends utils.Adapter {
 		this.webhookHost = '';
 		this._unloading = false;
 		this._serverVersionsFetched = false;
+		this.verboseLog = _message => {};
+	}
+
+	/**
+	 * Refresh verbose logger after config is available.
+	 */
+	initVerboseLogging() {
+		this.verboseLog = createVerboseLogger(this.config, (level, message) => this.log[level](message));
+	}
+
+	/**
+	 * Log connection settings when verbose logging is enabled (no secrets).
+	 */
+	logVerboseStartup() {
+		if (!this.config.debugging_verbose) {
+			return;
+		}
+
+		const host = String(this.config.motionHost || '').trim();
+		const user = String(this.config.motionEyeUser || 'admin');
+		this.verboseLog('Verbose diagnostic logging enabled — disable after troubleshooting');
+		this.verboseLog(
+			`MotionEye API: ${host}:${Number(this.config.motionEyePort) || 8765}, user=${user}, password ${describePassword(this.config.motionEyePassword)}`,
+		);
+		this.verboseLog(`Motion HTTP port: ${Number(this.config.motionPort) || 7999}`);
+		this.verboseLog(
+			`Webhook listener: ${this.config.webhookBind || '0.0.0.0'}:${Number(this.config.webhookPort) || 8090}, webhook host for MotionEye: ${this.webhookHost || '(not set)'}`,
+		);
+		this.verboseLog(`useMotionEyeConfig=${this.config.useMotionEyeConfig !== false}`);
+		this.verboseLog(`Enabled cameras in config: ${this.camerasById.size}`);
 	}
 
 	/**
@@ -81,6 +112,7 @@ class Motioneye extends utils.Adapter {
 	 */
 	async onReady() {
 		this.log.info('MotionEye adapter starting...');
+		this.initVerboseLogging();
 
 		await this.ensureAdapterRootMeta();
 
@@ -95,6 +127,7 @@ class Motioneye extends utils.Adapter {
 			username: this.config.motionEyeUser,
 			password: this.config.motionEyePassword,
 			requestTimeoutMs: this.config.requestTimeoutMs,
+			verboseLog: message => this.verboseLog(message),
 		});
 
 		this.motionApi = createMotionApi({
@@ -138,6 +171,7 @@ class Motioneye extends utils.Adapter {
 
 		await this.ensureInfoStates();
 		await this.syncCameraRegistry();
+		this.logVerboseStartup();
 
 		try {
 			await this.startWebhookServer();
@@ -618,6 +652,11 @@ class Motioneye extends utils.Adapter {
 			connected = true;
 		} catch (error) {
 			this.log.warn(`MotionEye not reachable at startup: ${error.message}`);
+			if (String(error.message).toLowerCase().includes('unauthorized')) {
+				this.verboseLog(
+					`Auth failed at startup — check MotionEye password in instance settings (password ${describePassword(this.config.motionEyePassword)}). Clear the field, save, re-enter, save again.`,
+				);
+			}
 		}
 
 		await this.setStateAsync(`${INFO_PREFIX}.connection`, connected, true);
@@ -728,8 +767,17 @@ class Motioneye extends utils.Adapter {
 			await this.setStateAsync(`${INFO_PREFIX}.connection`, true, true);
 		} catch (error) {
 			await this.setStateAsync(`${INFO_PREFIX}.connection`, false, true);
+			if (String(error.message).toLowerCase().includes('unauthorized')) {
+				this.verboseLog(
+					`Status poll auth failed — password ${describePassword(this.config.motionEyePassword)}. MotionEye is reachable but API login was rejected.`,
+				);
+			}
 			throw error;
 		}
+
+		this.verboseLog(
+			`Poll OK: ${cameras.length} camera(s) in MotionEye, ${this.camerasById.size} enabled in ioBroker`,
+		);
 
 		const byId = new Map(cameras.map(entry => [Number(entry.id), entry]));
 		let online = 0;
@@ -802,6 +850,7 @@ class Motioneye extends utils.Adapter {
 		if (value) {
 			this.scheduleMotionReset(camera);
 			await this.setStateAsync(`${camera.channel}.lastAction`, 'motion webhook', true);
+			this.verboseLog(`Motion webhook for camera "${camera.name}" (id=${cameraId})`);
 			this.log.debug(`Motion webhook for ${camera.name}`);
 		}
 	}
@@ -942,6 +991,7 @@ class Motioneye extends utils.Adapter {
 				password: motionEyePassword,
 				requestTimeoutMs,
 				listCacheMs: 0,
+				verboseLog: message => this.verboseLog(message),
 			});
 
 			const motionEyeList = await api.getCameraList();

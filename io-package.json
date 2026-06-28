@@ -182,6 +182,7 @@
     "streamRetryMs": 2000,
     "streamSiblingRelinkTimeoutMs": 60000,
     "defaultMode": "off",
+    "debugging_verbose": false,
     "cameras": []
   },
   "protectedNative": [
