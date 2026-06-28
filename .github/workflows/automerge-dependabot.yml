@@ -32,4 +32,4 @@ jobs:
           # Optional: Wait for other checks to complete
           # wait-for-checks: 'true'
           # Optional: Maximum time to wait for checks in seconds (default: 3600)
-          # wait-for-checks-timeout: '3600'
+          # max-wait-time: '3600'
