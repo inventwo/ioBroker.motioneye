@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.3.2 (2026-06-22)
+- (skvarel) Modified config/help
+
 ## 0.3.1 (2026-06-22)
 - (skvarel) Changed repo icon
 
