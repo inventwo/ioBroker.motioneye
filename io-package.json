@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.3.5",
+    "version": "0.4.0",
     "news": {
+      "0.4.0": {
+        "en": "Adapter requires admin >= 7.8.23 now.\nRepository review fixes: timer value capping, self-scheduling status poll, removed unused help i18n keys, stream timing settings in expert mode",
+        "de": "Adapter erfordert admin >= 7.8.23 jetzt.\nRepository Review Fixes: Timer Value Capping, Selbstplanung Status Umfrage, entfernte ungenutzte Hilfe i18n Schlüssel, Stream-Timing-Einstellungen im Experten-Modus",
+        "ru": "Адаптер требует администратора >= 7.8.23.\nРепозиторный обзор исправлений: ограничение стоимости таймера, опрос о статусе самостоятельного планирования, удаление неиспользованных ключей помощи i18n, настройка времени потока в экспертном режиме",
+        "pt": "Adaptador requer administrador >= 7.8.23 agora.\nCorrigições de revisão de repositório: capping de valor do timer, pesquisa de status de auto-agendamento, chaves i18n de ajuda não utilizadas removidas, configurações de timing de fluxo em modo experiente",
+        "nl": "Voor adapter is admin < 7.8.23 nodig.\nRepository recensie fixes: timer waarde capping, self-scheduling status poll, verwijderde ongebruikte hulp i18n sleutels, stream timing instellingen in expert modus",
+        "fr": "Adaptateur nécessite admin >= 7.8.23 maintenant.\nCorrections de l'examen du dépôt : captage de la valeur du minuteur, sondage d'état d'auto-échelonnement, suppression des clés i18n inutilisées d'aide, réglages du calendrier du flux en mode expert",
+        "it": "L'adattatore richiede ora admin >= 7.8.23.\nCorrezioni di revisione del repository: timer value capping, auto-scheduling stato poll, rimosso inutilizzato aiuto chiavi i18n, impostazioni di temporizzazione del flusso in modalità esperto",
+        "es": "El adaptador requiere admin= 7.8.23 ahora.\nRepository review fixes: timer value capping, self-scheduling status poll, removed unused help i18n keys, stream timing settings in expert mode",
+        "pl": "Adapter wymaga admin > = 7.8.23 teraz.\nRepozytorium review fixes: timer value capping, self-scheduling status poll, usunięty niewykorzystany help i18n Keys, ustawienia czasu strumienia w trybie ekspertów",
+        "uk": "Адаптер вимагає адміністратора >= 7.8.23 тепер.\nРепозиторійна рецензія фіксує: блокування значень таймера, опитування статусу самозабезпечення, видалення невикористаної допомоги i18n ключів, налаштування термінів потоку в експертному режимі",
+        "zh-cn": "适配器需要管理员 \\ 7.8.23现在.\n仓库审查修正:定时器值封顶,自定时间状态民调,移除未使用的帮助 i18n 密钥, 专家模式中的流时设置"
+      },
       "0.3.5": {
         "en": "Fixed object roles for repository review: `_info` as channel, camera `mode` role `level.effect`, `motion` read-only (`sensor.motion`)",
         "de": "Festgelegte Objektrollen für die Repository-Überprüfung: `_info` als Kanal, Kamera-`mode`-Rolle `level.effect`, `motion`-schreibgeschützt (`sensor.motion`)",
@@ -80,19 +93,6 @@
         "pl": "Foldery kanałów kamer są teraz pisane małymi literami (np. `innenhof_ii` zamiast `Innenhof_II`) — zgodne z innymi adapterami ioBroker\nStany informacji przeniesiono z `0_info` do `_info`\nIstniejące wartości punktów danych są automatycznie migrowane podczas uruchamiania adaptera — sprawdź VIS, skrypty i automatyzacje korzystające ze ścieżek stanu stałego",
         "uk": "Папки каналів камер тепер пишуться малими літерами (наприклад, `innenhof_ii` замість `Innenhof_II`) — узгоджено з іншими адаптерами ioBroker.\nІнформаційні стани переміщено з `0_info` на `_info`\nІснуючі значення точок даних переносяться автоматично під час запуску адаптера — перевірте VIS, скрипти та автоматизації, які використовують шляхи з фіксованим станом.",
         "zh-cn": "摄像机通道文件夹现在全部使用小写字母（例如，`innenhof_ii` 而不是 `Innenhof_II`）——与其他 ioBroker 适配器保持一致。\n信息状态从 `0_info` 移至 `_info`\n适配器启动时，现有数据点值会自动迁移——请检查使用固定状态路径的 VIS、脚本和自动化流程。"
-      },
-      "0.2.1": {
-        "en": "Fixed adapter checker errors an warnings",
-        "de": "Adapterprüfungsfehler und Warnungen behoben",
-        "ru": "Исправлены ошибки и предупреждения проверки адаптера.",
-        "pt": "Erros e avisos do verificador de adaptadores corrigidos.",
-        "nl": "Fouten en waarschuwingen van de adaptercontrole zijn verholpen.",
-        "fr": "Correction des erreurs et avertissements du vérificateur d'adaptateur",
-        "it": "Risolti errori e avvisi del controllore dell'adattatore.",
-        "es": "Se corrigieron errores y advertencias del verificador de adaptadores.",
-        "pl": "Naprawiono błędy i ostrzeżenia modułu sprawdzającego adaptery",
-        "uk": "Виправлені помилки та попередження перевірки адаптера",
-        "zh-cn": "修复了适配器检查错误和警告。"
       }
     },
     "titleLang": {

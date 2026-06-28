@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.3.1 (2026-06-22)
+- (skvarel) Changed repo icon
+
 ## 0.3.0 (2026-06-22)
 - (skvarel) Camera channel folders are now lowercase (e.g. `innenhof_ii` instead of `Innenhof_II`) — aligned with other ioBroker adapters
 - (skvarel) Info states moved from `0_info` to `_info`

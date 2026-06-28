@@ -113,8 +113,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.4.0 (2026-06-28)
 - (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 - (skvarel) Repository review fixes: timer value capping, self-scheduling status poll, removed unused help i18n keys, stream timing settings in expert mode
 
@@ -131,9 +130,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.3.2 (2026-06-22)
 - (skvarel) Modified config/help
-
-### 0.3.1 (2026-06-22)
-- (skvarel) Changed repo icon
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
