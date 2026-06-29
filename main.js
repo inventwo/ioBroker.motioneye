@@ -21,7 +21,7 @@ const {
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
-const { createVerboseLogger, describePassword } = require('./lib/diagLog');
+const { createVerboseLogger, describePassword, getUnauthorizedVerboseHints } = require('./lib/diagLog');
 
 /** Info states under `_info` (lowercase, like other adapters). */
 const INFO_PREFIX = '_info';
@@ -105,6 +105,15 @@ class Motioneye extends utils.Adapter {
 		);
 		this.verboseLog(`useMotionEyeConfig=${this.config.useMotionEyeConfig !== false}`);
 		this.verboseLog(`Enabled cameras in config: ${this.camerasById.size}`);
+	}
+
+	/**
+	 * Extra verbose hints when MotionEye API returns unauthorized.
+	 */
+	logVerboseUnauthorizedHints() {
+		for (const line of getUnauthorizedVerboseHints(this.config)) {
+			this.verboseLog(line);
+		}
 	}
 
 	/**
@@ -653,9 +662,7 @@ class Motioneye extends utils.Adapter {
 		} catch (error) {
 			this.log.warn(`MotionEye not reachable at startup: ${error.message}`);
 			if (String(error.message).toLowerCase().includes('unauthorized')) {
-				this.verboseLog(
-					`Auth failed at startup — check MotionEye password in instance settings (password ${describePassword(this.config.motionEyePassword)}). Clear the field, save, re-enter, save again.`,
-				);
+				this.logVerboseUnauthorizedHints();
 			}
 		}
 
@@ -768,9 +775,7 @@ class Motioneye extends utils.Adapter {
 		} catch (error) {
 			await this.setStateAsync(`${INFO_PREFIX}.connection`, false, true);
 			if (String(error.message).toLowerCase().includes('unauthorized')) {
-				this.verboseLog(
-					`Status poll auth failed — password ${describePassword(this.config.motionEyePassword)}. MotionEye is reachable but API login was rejected.`,
-				);
+				this.logVerboseUnauthorizedHints();
 			}
 			throw error;
 		}

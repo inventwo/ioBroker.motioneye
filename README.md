@@ -115,7 +115,7 @@ If you like our work and would like to support us, we appreciate any donation.
 -->
 
 ### **WORK IN PROGRESS**
-- (skvarel) Modified logging tab
+- (skvarel) Verbose unauthorized hints: web login URL and simple-password troubleshooting
 
 ### 0.4.1 (2026-06-28)
 - (skvarel) Added Logs / Logging tab with optional verbose diagnostic logging for troubleshooting (e.g. unauthorized)
