@@ -115,6 +115,7 @@ If you like our work and would like to support us, we appreciate any donation.
 -->
 
 ### **WORK IN PROGRESS**
+- (skvarel) Trim MotionEye host/user/password before API calls; admin button **Test connection** (`testConnection` sendTo)
 - (skvarel) Verbose unauthorized hints: web login URL and simple-password troubleshooting
 
 ### 0.4.1 (2026-06-28)

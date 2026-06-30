@@ -967,6 +967,56 @@ class Motioneye extends utils.Adapter {
 
 		if (obj.command === 'loadCameras') {
 			await this.handleLoadCameras(obj);
+		} else if (obj.command === 'testConnection') {
+			await this.handleTestConnection(obj);
+		}
+	}
+
+	/**
+	 * @param {ioBroker.Message} obj
+	 */
+	async handleTestConnection(obj) {
+		const payload = parseLoadCamerasMessage(obj.message);
+
+		const motionHost = String(payload.motionHost || this.config.motionHost || '').trim();
+		const motionEyePort = Number(payload.motionEyePort ?? this.config.motionEyePort) || 8765;
+		const motionEyeUser = String(payload.motionEyeUser ?? this.config.motionEyeUser ?? 'admin');
+		const motionEyePassword = String(this.config.motionEyePassword ?? '');
+		const requestTimeoutMs = Number(payload.requestTimeoutMs ?? this.config.requestTimeoutMs) || 45000;
+
+		try {
+			if (!motionHost) {
+				throw new Error('MotionEye host is required');
+			}
+
+			const api = createMotionEyeApi({
+				host: motionHost,
+				motionEyePort,
+				username: motionEyeUser,
+				password: motionEyePassword,
+				requestTimeoutMs,
+				listCacheMs: 0,
+				verboseLog: message => this.verboseLog(message),
+			});
+
+			const cameras = await api.getCameraList();
+			const versions = await api.getServerVersions().catch(() => null);
+			const motionEyeVersion = versions?.motionEyeVersion || api.getLastMotionEyeVersion() || '';
+
+			this.log.info(
+				`Test connection OK — ${cameras.length} camera(s) at ${motionHost}:${motionEyePort}${motionEyeVersion ? `, MotionEye ${motionEyeVersion}` : ''}`,
+			);
+
+			this.replyToMessage(obj, { result: 'success' });
+		} catch (error) {
+			const message = String(error.message || error);
+			this.log.error(`testConnection failed: ${message}`);
+			if (/unauthorized/i.test(message)) {
+				this.logVerboseUnauthorizedHints();
+				this.replyToMessage(obj, { result: 'unauthorized', error: message });
+			} else {
+				this.replyToMessage(obj, { error: message });
+			}
 		}
 	}
 

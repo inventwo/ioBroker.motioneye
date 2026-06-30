@@ -68,6 +68,27 @@
 					"xl": 4,
 					"help": "motionEyePassword_help"
 				},
+				"_testConnection": {
+					"type": "sendTo",
+					"label": "test_connection_button",
+					"help": "test_connection_help",
+					"command": "testConnection",
+					"variant": "outlined",
+					"useNative": true,
+					"showProcess": true,
+					"timeout": 30000,
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"xl": 6,
+					"jsonData": "{\"motionHost\":\"${data.motionHost}\",\"motionEyePort\":${data.motionEyePort},\"motionEyeUser\":\"${data.motionEyeUser}\",\"requestTimeoutMs\":${data.requestTimeoutMs}}",
+					"result": {
+						"success": "test_connection_result_success",
+						"unauthorized": "test_connection_result_unauthorized"
+					}
+				},
 				"useMotionEyeConfig": {
 					"type": "checkbox",
 					"label": "useMotionEyeConfig",
