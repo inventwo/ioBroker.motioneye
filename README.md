@@ -131,6 +131,8 @@ If you like our work and would like to support us, we appreciate any donation.
 ### 0.3.4 (2026-06-25)
 - (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
 
