@@ -20,8 +20,79 @@ MotionEye is reachable, but login or API signature failed.
 2. After adapter updates since 0.2.1 the password is stored encrypted — an old plain-text value may no longer work until you save it again.
 3. If MotionEye has **no password**, leave the field empty (no spaces).
 4. Username must match MotionEye exactly (often `admin`).
+5. **MotionEye config API port** is **8765** — not 7999 (Motion HTTP) and not a reverse-proxy web port unless the API is forwarded there too.
 
 **Success:** `_info.connection` = `true`, no `unauthorized` warnings in the log.
+
+#### Web login works, adapter still shows `unauthorized`
+
+If the browser login succeeds but the adapter logs `GET /config/list → HTTP 403: unauthorized`, it is usually **not** a wrong host but **different credentials** or the **wrong API URL**:
+
+1. **Same port as the adapter:** Web login must work at `http://<motionHost>:8765/` — not only at `:7999`, `:80`, `:443`, or another URL.
+2. **Same user:** **MotionEye username** must match the MotionEye admin user exactly (case-sensitive, often `admin`).
+3. **Password in ioBroker:** Clear the field completely → **Save** → restart instance → type the password **manually** (do not paste) → **Save** → restart. Fixes broken encryption or invisible whitespace.
+4. **Two separate servers:** ioBroker and MotionEye on different VMs/LXCs (e.g. Proxmox) is fine — SSH tests and `node` must run on the **ioBroker host**, not on the MotionEye container.
+
+---
+
+### Test connection (admin UI)
+
+From the GitHub build / version **0.4.2** onwards, **Settings** includes a **Test connection** button. It checks host, port, username, and the **saved** password against `/config/list` — no SSH required.
+
+**Requirements:**
+
+- Adapter instance is **running**
+- Settings saved (password must be stored in the instance)
+
+**Steps:**
+
+1. **Settings** → verify host, port `8765`, username, password → **Save**
+2. Click **Test connection**
+3. Result appears in the admin UI; details (camera count, MotionEye version) are written to the adapter log
+
+| Result | Meaning |
+|--------|---------|
+| Success | API and credentials are OK — after an instance restart, `_info.connection` should become `true` |
+| `unauthorized` | Saved password or username does not match the API — repeat the steps under `unauthorized` |
+
+Optional: **Logs** tab → enable **detailed diagnostic logging** for API paths and HTTP status in the log (no password).
+
+---
+
+### API test via SSH (ioBroker host)
+
+Isolates whether MotionEye accepts the credentials — independent of ioBroker password storage.
+
+**Important:** Run the command on the **ioBroker host** (SSH into the ioBroker VM/LXC), **not** on the Proxmox host or MotionEye LXC. There `node` is often missing (`node: command not found`).
+
+ioBroker ships its own Node — full path:
+
+```bash
+/opt/iobroker/node/bin/node -e "const {createMotionEyeApi}=require('/opt/iobroker/node_modules/iobroker.motioneye/lib/motionEyeApi');createMotionEyeApi({host:'192.168.1.10',motionEyePort:8765,username:'admin',password:'YOUR_PASSWORD',requestTimeoutMs:10000,listCacheMs:0}).getCameraList().then(c=>console.log('OK',c.length)).catch(e=>console.error('FAIL',e.message));"
+```
+
+Replace `192.168.1.10` and `YOUR_PASSWORD` (type the password manually).
+
+| Output | Meaning |
+|--------|---------|
+| `OK 1` (or another number) | API + credentials are OK → problem is the **ioBroker instance** (encryption). Delete instance, create anew, type password manually |
+| `FAIL unauthorized` | Web login is probably **not** on port **8765** with the same data — check the browser address bar when logging in |
+
+**Docker ioBroker:** Run the command **inside the ioBroker container** (`docker exec -it <iobroker-container> bash`), adjust paths if needed.
+
+---
+
+### Install latest GitHub version
+
+For fixes before the npm release (e.g. **Test connection**, trimming host/username/password):
+
+```bash
+cd /opt/iobroker
+npm install inventwo/ioBroker.motioneye
+iobroker upload motioneye
+```
+
+Then restart the adapter instance. The startup log line should show a current Git commit (not an old `#41a69ae` hash).
 
 ---
 

@@ -20,8 +20,79 @@ MotionEye ist erreichbar, aber Login oder API-Signatur schlägt fehl.
 2. Seit Adapter-Update 0.2.1 wird das Passwort verschlüsselt gespeichert — ein alter Klartext-Wert funktioniert ggf. erst nach erneutem Speichern wieder.
 3. Hat MotionEye **kein Passwort**, Feld leer lassen (keine Leerzeichen).
 4. Benutzername exakt wie in MotionEye (oft `admin`).
+5. **MotionEye Config-API-Port** ist **8765** — nicht 7999 (Motion-HTTP) und nicht der Port der Weboberfläche hinter einem Reverse-Proxy ohne Weiterleitung der API.
 
 **Erfolg:** `_info.connection` = `true`, keine `unauthorized`-Warnungen im Log.
+
+#### Web-Login klappt, Adapter zeigt trotzdem `unauthorized`
+
+Wenn du dich im Browser anmelden kannst, der Adapter aber `GET /config/list → HTTP 403: unauthorized` meldet, liegt es fast nie an „falschem Host“, sondern an **unterschiedlichen Zugangsdaten** oder **falscher API-Adresse**:
+
+1. **Gleicher Port wie der Adapter:** Web-Login muss unter `http://<motionHost>:8765/` funktionieren — nicht nur unter `:7999`, `:80`, `:443` oder einer anderen URL.
+2. **Gleicher Benutzer:** Der Wert unter **MotionEye-Benutzer** muss exakt dem Admin-User in MotionEye entsprechen (Groß/Klein, oft `admin`).
+3. **Passwort in ioBroker:** Feld komplett leeren → **Speichern** → Instanz neu starten → Passwort **von Hand** tippen (nicht kopieren) → **Speichern** → neu starten. Hilft bei kaputter Verschlüsselung oder unsichtbaren Leerzeichen.
+4. **Zwei verschiedene Server:** ioBroker und MotionEye auf getrennten VMs/LXCs (z. B. Proxmox) ist normal — SSH-Tests und `node` gehören auf den **ioBroker-Host**, nicht auf den MotionEye-Container.
+
+---
+
+### Verbindung testen (Admin)
+
+Ab GitHub-Stand / Version **0.4.2** gibt es unter **Einstellungen** den Button **Verbindung testen**. Er prüft Host, Port, Benutzer und das **gespeicherte** Passwort gegen `/config/list` — ohne SSH.
+
+**Voraussetzungen:**
+
+- Adapter-Instanz **läuft**
+- Einstellungen gespeichert (Passwort muss in der Instanz hinterlegt sein)
+
+**Ablauf:**
+
+1. **Einstellungen** → Host, Port `8765`, Benutzer, Passwort prüfen → **Speichern**
+2. **Verbindung testen** klicken
+3. Ergebnis in der Admin-Meldung; Details (Kameraanzahl, MotionEye-Version) stehen im Adapter-Log
+
+| Ergebnis | Bedeutung |
+|----------|-----------|
+| Erfolg | API und Zugangsdaten stimmen — nach Instanz-Neustart sollte `_info.connection` = `true` werden |
+| `unauthorized` | Gespeichertes Passwort oder Benutzer passt nicht zur API — Schritte unter `unauthorized` wiederholen |
+
+Optional: Tab **Protokolle** → **detaillierte Diagnoseprotokollierung** aktivieren — dann siehst du API-Pfade und HTTP-Status im Log (ohne Passwort).
+
+---
+
+### API-Test per SSH (ioBroker-Host)
+
+Isoliert, ob MotionEye die Zugangsdaten akzeptiert — unabhängig von der ioBroker-Passwort-Speicherung.
+
+**Wichtig:** Den Befehl auf dem **ioBroker-Host** ausführen (z. B. per SSH auf die ioBroker-VM/LXC), **nicht** auf Proxmox-Host oder MotionEye-LXC. Dort fehlt `node` oft (`node: command not found`).
+
+ioBroker bringt Node mit — voller Pfad:
+
+```bash
+/opt/iobroker/node/bin/node -e "const {createMotionEyeApi}=require('/opt/iobroker/node_modules/iobroker.motioneye/lib/motionEyeApi');createMotionEyeApi({host:'192.168.1.10',motionEyePort:8765,username:'admin',password:'DEIN_PASSWORT',requestTimeoutMs:10000,listCacheMs:0}).getCameraList().then(c=>console.log('OK',c.length)).catch(e=>console.error('FAIL',e.message));"
+```
+
+`192.168.1.10` und `DEIN_PASSWORT` anpassen (Passwort von Hand einsetzen).
+
+| Ausgabe | Bedeutung |
+|---------|-----------|
+| `OK 1` (oder andere Zahl) | API + Zugangsdaten stimmen → Problem liegt an der **ioBroker-Instanz** (Verschlüsselung). Instanz löschen, neu anlegen, Passwort von Hand tippen |
+| `FAIL unauthorized` | Web-Login läuft vermutlich **nicht** auf Port **8765** mit denselben Daten — Browser-Adresszeile beim Login prüfen |
+
+**Docker-ioBroker:** Befehl **im ioBroker-Container** ausführen (`docker exec -it <iobroker-container> bash`), Pfade ggf. anpassen.
+
+---
+
+### Aktuelle GitHub-Version installieren
+
+Für Fixes vor dem npm-Release (z. B. **Verbindung testen**, Trim von Host/Benutzer/Passwort):
+
+```bash
+cd /opt/iobroker
+npm install inventwo/ioBroker.motioneye
+iobroker upload motioneye
+```
+
+Danach die Adapter-Instanz neu starten. In der Log-Startzeile sollte ein aktueller Git-Commit stehen (nicht mehr ein alter `#41a69ae`-Hash).
 
 ---
 
