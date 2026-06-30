@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.3.4 (2026-06-25)
+- (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
+
 ## 0.3.3 (2026-06-23)
 - (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation
 - (skvarel) Added GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)

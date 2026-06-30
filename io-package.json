@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "news": {
+      "0.4.3": {
+        "en": "Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)",
+        "de": "Fixe italienische Übersetzung für `streamReadyTimeoutMs help` (Repository Review E5606)",
+        "ru": "Исправленный итальянский перевод для \"streamReadyTimeoutMs help\" (репозиторийный обзор E5606)",
+        "pt": "Tradução italiana fixa para `streamReadyTimeoutMs help` (revisão do repositório E5606)",
+        "nl": "Vaste Italiaanse vertaling voor ",
+        "fr": "Traduction italienne fixe pour `streamReadyTimeoutMs help` (avis de dépôt E5606)",
+        "it": "Traduzione italiana fissa per `streamReadyTimeoutMs help` (repository review E5606)",
+        "es": "Traducción electrónica fija para `streamReadyTimeoutMs help` (repositorio E5606)",
+        "pl": "Stałe tłumaczenie włoskie dla \"streamReadyTimeoutMs _ help\" (przegląd repozytorium E5606)",
+        "uk": "Фіксований італійський переклад для `streamReadyTimeoutMs help` (репозиторійний огляд E5606)",
+        "zh-cn": "\" Stream ReadyTimeoutMs help \" (仓库审查E5606)的固定意大利语翻译"
+      },
       "0.4.2": {
         "en": "FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting\nTrim MotionEye host/user/password before API calls; admin button 'Test connection'\nVerbose unauthorized hints: web login URL and simple-password troubleshooting",
         "de": "FAQ: Verbindungstest-Button, SSH-Knotenpfad auf ioBroker-Host, GitHub-Installation, Web-Login vs API-Fehlersuche\nTrim MotionEye Host/Benutzer/Passwort vor API-Aufrufen; Admin-Button 'Verbindung testen'\nVerbose unautorisierte Hinweise: Web-Login-URL und einfache Passwort-Fehlersuche",
@@ -80,19 +93,6 @@
         "pl": "Przeprojektowana zakładka pomocy: krótkie wprowadzenie, szybki start i linki do dokumentacji GitHub\nDodano dokumentację GitHub w `docs/en/` i `docs/de/` (ustawienia, kamery, tryby, punkty danych, strumień VIS, FAQ)\nKarta Pomoc zawiera jeden link do dokumentacji dla każdego języka administratora (DE lub EN) oraz bezpośredni link do FAQ; linki zewnętrzne otwierają się w nowej karcie",
         "uk": "Оновлена вкладка довідки: короткий вступ, швидкий старт та посилання на документацію GitHub\nДодано документацію GitHub у `docs/en/` та `docs/de/` (налаштування, камери, режими, точки даних, потік VIS, FAQ)\nВкладка «Довідка» показує одне посилання на документацію для кожної мови адміністратора (німецька або англійська), а також пряме посилання на поширені запитання; зовнішні посилання відкриваються в новій вкладці",
         "zh-cn": "重新设计的帮助选项卡：包含简短介绍、快速入门指南以及指向 GitHub 文档的链接。\n在 `docs/en/` 和 `docs/de/` 中添加了 GitHub 文档（设置、相机、模式、数据点、VIS 流、常见问题解答）\n“帮助”选项卡显示每种管理语言（德语或英语）一个文档链接，以及一个常见问题解答的直接链接；外部链接将在新标签页中打开。"
-      },
-      "0.3.2": {
-        "en": "Modified config/help",
-        "de": "Geänderte Konfiguration/Hilfe",
-        "ru": "Изменена конфигурация/справка",
-        "pt": "Configuração/ajuda modificada",
-        "nl": "Gewijzigde configuratie/help",
-        "fr": "Configuration/aide modifiée",
-        "it": "Configurazione/aiuto modificato",
-        "es": "Configuración/ajuda modificada",
-        "pl": "Zmodyfikowana konfiguracja/pomoc",
-        "uk": "Змінена конфігурація/довідка",
-        "zh-cn": "修改了配置/帮助"
       }
     },
     "titleLang": {

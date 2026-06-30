@@ -113,7 +113,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.4.3 (2026-06-30)
 - (skvarel) Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)
 
 ### 0.4.2 (2026-06-30)
@@ -130,9 +130,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.3.5 (2026-06-25)
 - (skvarel) Fixed object roles for repository review: `_info` as channel, camera `mode` role `level.effect`, `motion` read-only (`sensor.motion`)
-
-### 0.3.4 (2026-06-25)
-- (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
