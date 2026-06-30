@@ -51,7 +51,7 @@
 	"streamAutoOffMs": "Spegnimento automatico impulso flusso (ms)",
 	"streamAutoOffMs_help": "Utilizzato solo da streamPulse: lo streaming si interrompe dopo questa durata (0 = mai)",
 	"streamReadyTimeoutMs": "Timeout streaming pronto (ms)",
-	"streamReadyTimeoutMs_help": "How long to wait for the MJPEG stream to become reachable after enabling it (expert)",
+	"streamReadyTimeoutMs_help": "Quanto tempo attendere affinché lo stream MJPEG sia raggiungibile dopo l'attivazione (esperto)",
 	"streamRetryMs": "Intervallo tra i tentativi di streaming (ms)",
 	"streamRetryMs_help": "Ritardo tra i controlli di raggiungibilità del flusso durante l'attesa dell'inizio del flusso (esperto)",
 	"streamSiblingRelinkTimeoutMs": "Timeout ricollegamento flusso gemello (ms)",

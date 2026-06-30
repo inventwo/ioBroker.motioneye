@@ -113,6 +113,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)
+
 ### 0.4.2 (2026-06-30)
 - (skvarel) FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting
 - (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection'
