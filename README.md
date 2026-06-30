@@ -116,7 +116,7 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### **WORK IN PROGRESS**
 - (skvarel) FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting
-- (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection' (`testConnection` sendTo)
+- (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection'
 - (skvarel) Verbose unauthorized hints: web login URL and simple-password troubleshooting
 
 ### 0.4.1 (2026-06-28)
