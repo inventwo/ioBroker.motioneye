@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "news": {
+      "0.4.2": {
+        "en": "FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting\nTrim MotionEye host/user/password before API calls; admin button 'Test connection'\nVerbose unauthorized hints: web login URL and simple-password troubleshooting",
+        "de": "FAQ: Verbindungstest-Button, SSH-Knotenpfad auf ioBroker-Host, GitHub-Installation, Web-Login vs API-Fehlersuche\nTrim MotionEye Host/Benutzer/Passwort vor API-Aufrufen; Admin-Button 'Verbindung testen'\nVerbose unautorisierte Hinweise: Web-Login-URL und einfache Passwort-Fehlersuche",
+        "ru": "FAQ: кнопка тестирования соединения, путь узла SSH на хосте ioBroker, установка GitHub, веб-логин против устранения неполадок API\nTrim MotionEye host/user/password перед вызовами API; кнопка администратора «Test connection»\nВербальные несанкционированные подсказки: URL-адрес веб-логина и устранение неполадок с простым паролем",
+        "pt": "FAQ: botão de teste de conexão, caminho do nó SSH no host ioBroker, instalação do GitHub, solução de problemas web-login vs API\nTrim MotionEye host/user/password antes das chamadas da API; botão de administração 'Test connection'\nVerbose dicas não autorizadas: URL de login da web e solução de problemas de palavras simples",
+        "nl": "Veelgestelde vragen: verbinding testknop, SSH knooppunt pad op ioBroker host, GitHub installeren, web-login vs API probleemoplossing\nTrim MotionEye host/user/password voordat API belt; admin knop 'Test verbinding'\nOngeoorloofde hints: web login URL en eenvoudige wachtwoord probleemoplossing",
+        "fr": "FAQ: bouton de test de connexion, chemin de noeud SSH sur ioBroker host, GitHub install, web-login vs API dépannage\nTrim MotionEye host/user/password avant les appels API; bouton d'administration 'Test connexion'\nBouton non autorisé : URL de connexion web et dépannage de mots de passe simples",
+        "it": "FAQ: pulsante di prova di connessione, percorso di nodo SSH su host ioBroker, installazione GitHub, web-login vs API risoluzione dei problemi\nTrim MotionEye host/user/password prima delle chiamate API; Pulsante di amministratore 'Test Connection'\nVerbose suggerimenti non autorizzati: web login URL e semplice password risoluzione dei problemi",
+        "es": "FAQ: botón de prueba de conexión, ruta de nodo SSH en ioBroker host, GitHub install, web-login vs API solución de problemas\nTrim MotionEye host/user/password antes de las llamadas de API; botón de administración 'Test connection'\nInsinuaciones no autorizadas: URL de inicio de sesión web y solución de problemas de contraseña simple",
+        "pl": "FAQ: przycisk testowy połączenia, ścieżka węzła SSH na hoście joBroker, instalacja GitHub, logowanie web- login vs rozwiązywanie problemów API\nTim MotionEye host / użytkownik / hasło przed wywołaniem API; przycisk admin 'Test connection'\nVerbose nieautoryzowane wskazówki: URL logowania WWW i proste hasło rozwiązywania problemów",
+        "uk": "FAQ: кнопка перевірки з'єднання, шлях SSH на ioBroker host, установка GitHub, web-login vs API усунення несправностей\nTrim MotionEye host/user/password перед дзвінками API; кнопка адміністратора 'Test підключення'\nПеревірити несанкціоновані натяки: URL-адреса веб-реєстратора і простий пошук помилок",
+        "zh-cn": "FAQ: 连接测试按钮, ioBroker主机上的 SSH 节点路径, GitHub 安装, web-login vs API 故障排除\nAPI 调用前的 Trim MotionEye 主机/用户/密码; 管理按钮“ 测试连接 ”\n口头授权提示: 网页登录 URL 和 简单的密码故障排除"
+      },
       "0.4.1": {
         "en": "Added Logs / Logging tab with optional verbose diagnostic logging for troubleshooting (e.g. unauthorized)",
         "de": "Logs / Logging-Tab mit optionaler ausführlicher diagnostischer Protokollierung zur Fehlersuche (z. B. nicht autorisiert)",
@@ -80,19 +93,6 @@
         "pl": "Zmodyfikowana konfiguracja/pomoc",
         "uk": "Змінена конфігурація/довідка",
         "zh-cn": "修改了配置/帮助"
-      },
-      "0.3.1": {
-        "en": "Changed repo icon",
-        "de": "Repository-Symbol geändert",
-        "ru": "Изменен значок репозитория",
-        "pt": "Ícone do repositório alterado",
-        "nl": "Repository-pictogram gewijzigd",
-        "fr": "Icône du dépôt modifiée",
-        "it": "Icona del repository modificata",
-        "es": "Icono del repositorio cambiado",
-        "pl": "Zmieniono ikonę repozytorium",
-        "uk": "Змінено піктограму репозиторію",
-        "zh-cn": "更改了仓库图标"
       }
     },
     "titleLang": {

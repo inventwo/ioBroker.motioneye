@@ -113,8 +113,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.4.2 (2026-06-30)
 - (skvarel) FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting
 - (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection'
 - (skvarel) Verbose unauthorized hints: web login URL and simple-password troubleshooting
@@ -131,11 +130,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.3.4 (2026-06-25)
 - (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
-
-### 0.3.3 (2026-06-23)
-- (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation
-- (skvarel) Added GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)
-- (skvarel) Help tab shows one documentation link per admin language (DE or EN) plus direct FAQ link; external links open in a new tab
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)

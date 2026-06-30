@@ -1,6 +1,11 @@
 # Older changes
 
 _No released versions yet._
+## 0.3.3 (2026-06-23)
+- (skvarel) Redesigned help tab: short intro, quickstart, and links to GitHub documentation
+- (skvarel) Added GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)
+- (skvarel) Help tab shows one documentation link per admin language (DE or EN) plus direct FAQ link; external links open in a new tab
+
 ## 0.3.2 (2026-06-22)
 - (skvarel) Modified config/help
 
