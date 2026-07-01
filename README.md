@@ -113,6 +113,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth
+
 ### 0.4.3 (2026-06-30)
 - (skvarel) Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)
 
