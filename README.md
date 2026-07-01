@@ -19,8 +19,6 @@
 
 Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for any HTML-capable widget — no simple-api required for webhooks.
 
-> **Status:** Phase 2 — snapshot, stream, streamPulse, and `streamUrl` HTML for dashboards. Phase 1 covers modes, webhooks, and MotionEye sync.
-
 ## Documentation
 
 - 🇺🇸 [Documentation](docs/en/README.md)
@@ -69,11 +67,21 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 
 ## Installation
 
-1. Install the adapter from the ioBroker admin interface (or clone this repo and use the dev-server)
+1. Install the adapter from the ioBroker admin interface
 2. Create a new instance
 3. Configure **Settings**: MotionEye host, ports, credentials (optional), webhook host
 4. Add cameras on the **Cameras** tab (display name, MotionEye ID, optional media folder)
 5. Save and restart the instance — datapoints are created and webhook URLs are written to MotionEye
+
+### MotionEye version compatibility
+
+| MotionEye | Adapter | Notes |
+|-----------|---------|-------|
+| **0.43.x** | 0.4.x or **0.5.0+** | URL signature auth |
+| **0.44+** | **0.5.0+** required | Session login (`POST /login`); adapter 0.4.x shows `unauthorized` even when web login works |
+| **0.43.x** | **0.5.0+** | Safe upgrade — backward compatible |
+
+Details: [FAQ EN](docs/en/faq.md#motioneye-044-adapter-050) · [FAQ DE](docs/de/faq.md#motioneye-044-adapter-050)
 
 ### Camera modes
 

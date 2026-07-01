@@ -32,6 +32,24 @@ Wenn du dich im Browser anmelden kannst, der Adapter aber `GET /config/list → 
 2. **Gleicher Benutzer:** Der Wert unter **MotionEye-Benutzer** muss exakt dem Admin-User in MotionEye entsprechen (Groß/Klein, oft `admin`).
 3. **Passwort in ioBroker:** Feld komplett leeren → **Speichern** → Instanz neu starten → Passwort **von Hand** tippen (nicht kopieren) → **Speichern** → neu starten. Hilft bei kaputter Verschlüsselung oder unsichtbaren Leerzeichen.
 4. **Zwei verschiedene Server:** ioBroker und MotionEye auf getrennten VMs/LXCs (z. B. Proxmox) ist normal — SSH-Tests und `node` gehören auf den **ioBroker-Host**, nicht auf den MotionEye-Container.
+5. **MotionEye 0.44 oder neuer:** Ab MotionEye **0.44** nutzt die API **Session-Login** statt URL-Signatur. Dafür brauchst du Adapter **0.5.0** oder neuer — mit **0.4.x** bleibt `unauthorized`, obwohl der Web-Login klappt. Siehe Abschnitt [MotionEye 0.44+](#motioneye-044-adapter-050).
+
+---
+
+### MotionEye 0.44+ (Adapter 0.5.0+)
+
+Ab **MotionEye 0.44** hat sich die API-Authentifizierung geändert: Statt `_username` / `_signature` in der URL meldet sich der Client per **`POST /login`** an und nutzt ein Session-Cookie ([Release Notes](https://github.com/motioneye-project/motioneye/releases/tag/0.44.0)).
+
+| MotionEye | Adapter | Ergebnis |
+|-----------|---------|----------|
+| **0.43.x** | 0.4.x oder **0.5.0+** | funktioniert (URL-Signatur) |
+| **0.44+** | 0.4.x | `unauthorized` — auch wenn Web-Login auf Port 8765 klappt |
+| **0.44+** | **0.5.0+** | funktioniert (Session-Login, automatischer Fallback) |
+| **0.43.x** | **0.5.0+** | funktioniert weiterhin (Rückwärtskompatibilität) |
+
+**Version prüfen:** MotionEye-Weboberfläche, `http://<host>:8765/version` oder Datenpunkt `motioneye.<Instanz>._info.motionEyeVersion`.
+
+**Upgrade:** Adapter auf **0.5.0** oder neuer aktualisieren (npm oder ioBroker Admin). Keine Änderung an Kameras oder MotionEye-Config nötig — Host, Benutzer und Passwort bleiben gleich.
 
 ---
 

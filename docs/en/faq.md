@@ -32,6 +32,24 @@ If the browser login succeeds but the adapter logs `GET /config/list → HTTP 40
 2. **Same user:** **MotionEye username** must match the MotionEye admin user exactly (case-sensitive, often `admin`).
 3. **Password in ioBroker:** Clear the field completely → **Save** → restart instance → type the password **manually** (do not paste) → **Save** → restart. Fixes broken encryption or invisible whitespace.
 4. **Two separate servers:** ioBroker and MotionEye on different VMs/LXCs (e.g. Proxmox) is fine — SSH tests and `node` must run on the **ioBroker host**, not on the MotionEye container.
+5. **MotionEye 0.44 or newer:** From MotionEye **0.44** the API uses **session login** instead of URL signatures. You need adapter **0.5.0** or newer — with **0.4.x** you still get `unauthorized` even when web login works. See [MotionEye 0.44+](#motioneye-044-adapter-050).
+
+---
+
+### MotionEye 0.44+ (adapter 0.5.0+)
+
+From **MotionEye 0.44** onwards, API authentication changed: instead of `_username` / `_signature` in the URL, the client signs in via **`POST /login`** and uses a session cookie ([release notes](https://github.com/motioneye-project/motioneye/releases/tag/0.44.0)).
+
+| MotionEye | Adapter | Result |
+|-----------|---------|--------|
+| **0.43.x** | 0.4.x or **0.5.0+** | works (URL signature) |
+| **0.44+** | 0.4.x | `unauthorized` — even if web login on port 8765 works |
+| **0.44+** | **0.5.0+** | works (session login, automatic fallback) |
+| **0.43.x** | **0.5.0+** | still works (backward compatible upgrade) |
+
+**Check version:** MotionEye web UI, `http://<host>:8765/version`, or datapoint `motioneye.<instance>._info.motionEyeVersion`.
+
+**Upgrade:** Update the adapter to **0.5.0** or newer (npm or ioBroker Admin). No camera or MotionEye config changes required — host, username, and password stay the same.
 
 ---
 
