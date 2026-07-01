@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.3.5 (2026-06-25)
+- (skvarel) Fixed object roles for repository review: `_info` as channel, camera `mode` role `level.effect`, `motion` read-only (`sensor.motion`)
+
 ## 0.3.4 (2026-06-25)
 - (skvarel) Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)
 

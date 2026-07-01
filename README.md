@@ -121,7 +121,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.5.0 (2026-07-01)
 - (skvarel) MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth
 
 ### 0.4.3 (2026-06-30)
@@ -138,9 +138,6 @@ If you like our work and would like to support us, we appreciate any donation.
 ### 0.4.0 (2026-06-28)
 - (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 - (skvarel) Repository review fixes: timer value capping, self-scheduling status poll, removed unused help i18n keys, stream timing settings in expert mode
-
-### 0.3.5 (2026-06-25)
-- (skvarel) Fixed object roles for repository review: `_info` as channel, camera `mode` role `level.effect`, `motion` read-only (`sensor.motion`)
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)

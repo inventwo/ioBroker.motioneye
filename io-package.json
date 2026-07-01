@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.4.3",
+    "version": "0.5.0",
     "news": {
+      "0.5.0": {
+        "en": "MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth",
+        "de": "MotionEye 0.44+ Unterstützung: Sitzungsanmeldung über POST /login (automatischer Fallback bei fehlgeschlagener URL-Signaturauthentifizierung); behält die Signaturauthentifizierung von Version 0.43.x bei",
+        "ru": "Поддержка MotionEye 0.44+: вход в сессию через POST /login (автоматический резервный вариант при сбое аутентификации по подписи URL); сохраняет аутентификацию по подписи версии 0.43.x.",
+        "pt": "Suporte para MotionEye 0.44+: login de sessão via POST /login (fallback automático quando a autenticação por assinatura de URL falha); mantém a autenticação por assinatura da versão 0.43.x.",
+        "nl": "MotionEye 0.44+ ondersteuning: sessie-aanmelding via POST /login (automatische terugvaloptie wanneer authenticatie met URL-handtekening mislukt); behoudt authenticatie met handtekening van 0.43.x",
+        "fr": "Prise en charge de MotionEye 0.44+ : connexion par session via POST /login (repli automatique en cas d’échec de l’authentification par signature URL) ; conserve l’authentification par signature 0.43.x",
+        "it": "Supporto per MotionEye 0.44+: accesso alla sessione tramite POST /login (fallback automatico in caso di errore di autenticazione della firma URL); mantiene l'autenticazione della firma 0.43.x",
+        "es": "Compatibilidad con MotionEye 0.44+: inicio de sesión mediante POST /login (recurrencia automática cuando falla la autenticación de firma de URL); mantiene la autenticación de firma 0.43.x.",
+        "pl": "Obsługa MotionEye 0.44+: logowanie do sesji przez POST /login (automatyczne przywracanie w przypadku niepowodzenia uwierzytelniania podpisu URL); zachowuje uwierzytelnianie podpisu 0.43.x",
+        "uk": "Підтримка MotionEye 0.44+: вхід до сеансу через POST /login (автоматичне повернення до роботи, якщо не вдається автентифікація підпису URL-адреси); зберігається автентифікація підпису 0.43.x",
+        "zh-cn": "支持 MotionEye 0.44+：通过 POST /login 进行会话登录（URL 签名认证失败时自动回退）；保留 0.43.x 签名认证。"
+      },
       "0.4.3": {
         "en": "Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)",
         "de": "Fixe italienische Übersetzung für `streamReadyTimeoutMs help` (Repository Review E5606)",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono strukturę obiektów do przeglądu repozytorium ioBroker: `_info` jako kanał, `mode` rola `value`, `motion` tylko do odczytu (`sensor.motion`)",
         "uk": "Виправлено структуру об'єктів для огляду репозиторію ioBroker: `_info` як канал, `mode` роль `value`, `motion` лише для читання (`sensor.motion`)",
         "zh-cn": "ioBroker 代码库审查的固定对象结构：`_info` 作为通道，`mode` 扮演 `value` 角色，`motion` 只读（`sensor.motion`）"
-      },
-      "0.3.3": {
-        "en": "Redesigned help tab: short intro, quickstart, and links to GitHub documentation\nAdded GitHub documentation in `docs/en/` and `docs/de/` (settings, cameras, modes, datapoints, VIS stream, FAQ)\nHelp tab shows one documentation link per admin language (DE or EN) plus direct FAQ link; external links open in a new tab",
-        "de": "Neu gestalteter Hilfe-Tab: Kurze Einführung, Schnellstartanleitung und Links zur GitHub-Dokumentation\nDie GitHub-Dokumentation wurde in `docs/en/` und `docs/de/` hinzugefügt (Einstellungen, Kameras, Modi, Datenpunkte, VIS-Stream, FAQ).\nDer Hilfe-Tab zeigt pro Administratorsprache (DE oder EN) einen Dokumentationslink sowie einen direkten FAQ-Link an; externe Links öffnen sich in einem neuen Tab.",
-        "ru": "Обновлена вкладка «Справка»: краткое введение, руководство по быстрому запуску и ссылки на документацию GitHub.\nДобавлена документация GitHub в папки `docs/en/` и `docs/de/` (настройки, камеры, режимы, точки данных, поток VIS, часто задаваемые вопросы).\nВкладка «Справка» содержит одну ссылку на документацию для каждого языка администрирования (DE или EN), а также прямую ссылку на часто задаваемые вопросы; внешние ссылки открываются в новой вкладке.",
-        "pt": "Aba de ajuda redesenhada: breve introdução, guia de início rápido e links para a documentação do GitHub.\nAdicionada documentação do GitHub em `docs/en/` e `docs/de/` (configurações, câmeras, modos, pontos de dados, fluxo VIS, perguntas frequentes)\nA aba Ajuda exibe um link para a documentação por idioma do administrador (DE ou EN), além de um link direto para as Perguntas Frequentes; links externos abrem em uma nova aba.",
-        "nl": "Vernieuwd helptabblad: korte introductie, snelstartgids en links naar GitHub-documentatie\nGitHub-documentatie toegevoegd in `docs/en/` en `docs/de/` (instellingen, camera's, modi, datapunten, VIS-stream, FAQ)\nHet tabblad Help toont één documentatielink per beheerderstaal (Duits of Engels) plus een directe link naar de veelgestelde vragen; externe links worden in een nieuw tabblad geopend.",
-        "fr": "Onglet d'aide repensé : brève introduction, guide de démarrage rapide et liens vers la documentation GitHub\nAjout de la documentation GitHub dans `docs/en/` et `docs/de/` (paramètres, caméras, modes, points de données, flux VIS, FAQ)\nL'onglet Aide affiche un lien vers la documentation par langue d'administration (DE ou EN), ainsi qu'un lien direct vers la FAQ ; les liens externes s'ouvrent dans un nouvel onglet.",
-        "it": "Scheda di aiuto riprogettata: breve introduzione, guida rapida e collegamenti alla documentazione di GitHub.\nAggiunta la documentazione di GitHub in `docs/en/` e `docs/de/` (impostazioni, telecamere, modalità, punti dati, flusso VIS, FAQ).\nLa scheda Aiuto mostra un collegamento alla documentazione per ciascuna lingua di amministrazione (DE o EN) oltre al collegamento diretto alle FAQ; i collegamenti esterni si aprono in una nuova scheda.",
-        "es": "Pestaña de ayuda rediseñada: breve introducción, inicio rápido y enlaces a la documentación de GitHub.\nSe ha añadido documentación de GitHub en `docs/en/` y `docs/de/` (configuración, cámaras, modos, puntos de datos, flujo VIS, preguntas frecuentes).\nLa pestaña Ayuda muestra un enlace a la documentación por idioma de administración (DE o EN) más un enlace directo a las preguntas frecuentes; los enlaces externos se abren en una pestaña nueva.",
-        "pl": "Przeprojektowana zakładka pomocy: krótkie wprowadzenie, szybki start i linki do dokumentacji GitHub\nDodano dokumentację GitHub w `docs/en/` i `docs/de/` (ustawienia, kamery, tryby, punkty danych, strumień VIS, FAQ)\nKarta Pomoc zawiera jeden link do dokumentacji dla każdego języka administratora (DE lub EN) oraz bezpośredni link do FAQ; linki zewnętrzne otwierają się w nowej karcie",
-        "uk": "Оновлена вкладка довідки: короткий вступ, швидкий старт та посилання на документацію GitHub\nДодано документацію GitHub у `docs/en/` та `docs/de/` (налаштування, камери, режими, точки даних, потік VIS, FAQ)\nВкладка «Довідка» показує одне посилання на документацію для кожної мови адміністратора (німецька або англійська), а також пряме посилання на поширені запитання; зовнішні посилання відкриваються в новій вкладці",
-        "zh-cn": "重新设计的帮助选项卡：包含简短介绍、快速入门指南以及指向 GitHub 文档的链接。\n在 `docs/en/` 和 `docs/de/` 中添加了 GitHub 文档（设置、相机、模式、数据点、VIS 流、常见问题解答）\n“帮助”选项卡显示每种管理语言（德语或英语）一个文档链接，以及一个常见问题解答的直接链接；外部链接将在新标签页中打开。"
       }
     },
     "titleLang": {
