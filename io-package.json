@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "news": {
+      "0.6.0": {
+        "en": "Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation, auto brightness and privacy mask (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); resolution is validated against the camera's supported list",
+        "de": "Gerätespezifische Kameraeinstellungen unter `settings.*`: Bildrate, Auflösung, Drehung, automatische Helligkeit und Datenschutzmaske lesen und steuern (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); die Auflösung wird anhand der Liste der von der Kamera unterstützten Auflösungen validiert.",
+        "ru": "Настройки для каждого устройства камеры в разделе `settings.*`: чтение и управление частотой кадров, разрешением, поворотом, автоматической яркостью и маской конфиденциальности (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); разрешение проверяется на соответствие списку поддерживаемых разрешений камеры.",
+        "pt": "Configurações específicas da câmera em `settings.*`: leia e controle a taxa de quadros, resolução, rotação, brilho automático e máscara de privacidade (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); a resolução é validada em relação à lista de resoluções suportadas pela câmera.",
+        "nl": "Per camera-apparaatinstellingen onder `settings.*`: lees en beheer de framesnelheid, resolutie, rotatie, automatische helderheid en privacymasker (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); de resolutie wordt gevalideerd aan de hand van de lijst met ondersteunde resoluties van de camera.",
+        "fr": "Paramètres de chaque appareil photo sous `settings.*` : lecture et contrôle de la fréquence d'images, de la résolution, de la rotation, de la luminosité automatique et du masque de confidentialité (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`) ; la résolution est validée par rapport à la liste des résolutions prises en charge par l'appareil photo.",
+        "it": "Impostazioni del dispositivo per ciascuna fotocamera in `settings.*`: lettura e controllo di framerate, risoluzione, rotazione, luminosità automatica e maschera della privacy (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); la risoluzione viene convalidata rispetto all'elenco supportato dalla fotocamera.",
+        "es": "Configuración del dispositivo por cámara en `settings.*`: lee y controla la velocidad de fotogramas, la resolución, la rotación, el brillo automático y la máscara de privacidad (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); la resolución se valida con la lista de resoluciones compatibles de la cámara.",
+        "pl": "Ustawienia poszczególnych kamer w `settings.*`: odczyt i sterowanie liczbą klatek na sekundę, rozdzielczością, obrotem, automatyczną jasnością i maską prywatności (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); rozdzielczość jest sprawdzana na podstawie listy obsługiwanych ustawień kamery.",
+        "uk": "Налаштування пристрою для кожної камери в розділі `settings.*`: зчитування та керування частотою кадрів, роздільною здатністю, обертанням, автоматичною яскравістю та маскою конфіденційності (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); роздільна здатність перевіряється на відповідність списку підтримуваних камерою параметрів.",
+        "zh-cn": "每个摄像头的设备设置位于 `settings.*` 下：读取和控制帧率、分辨率、旋转、自动亮度和隐私遮罩（`settings.framerate`、`settings.resolution`、`settings.availableResolutions`、`settings.rotation`、`settings.autoBrightness`、`settings.privacyMask`）；分辨率会根据摄像头支持的列表进行验证"
+      },
       "0.5.0": {
         "en": "MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth",
         "de": "MotionEye 0.44+ Unterstützung: Sitzungsanmeldung über POST /login (automatischer Fallback bei fehlgeschlagener URL-Signaturauthentifizierung); behält die Signaturauthentifizierung von Version 0.43.x bei",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono role obiektów do przeglądu repozytorium: `_info` jako kanał, kamera `mode` rola `level.effect`, `motion` tylko do odczytu (`sensor.motion`)",
         "uk": "Виправлені ролі об'єктів для перегляду репозиторію: `_info` як канал, роль `mode` камери `level.effect`, `motion` лише для читання (`sensor.motion`).",
         "zh-cn": "用于存储库审查的固定对象角色：`_info` 作为通道，相机 `mode` 角色为 `level.effect`，`motion` 只读（`sensor.motion`）"
-      },
-      "0.3.4": {
-        "en": "Fixed object structure for ioBroker repository review: `_info` as channel, `mode` role `value`, `motion` read-only (`sensor.motion`)",
-        "de": "Festgelegte Objektstruktur für die Überprüfung des ioBroker-Repositorys: `_info` als Kanal, `mode` Rolle `value`, `motion` schreibgeschützt (`sensor.motion`)",
-        "ru": "Исправлена структура объекта для проверки репозитория ioBroker: `_info` как канал, `mode` роль `value`, `motion` только для чтения (`sensor.motion`)",
-        "pt": "Estrutura de objeto fixa para revisão do repositório ioBroker: `_info` como canal, `mode` como função, `value` como valor, `motion` como somente leitura (`sensor.motion`)",
-        "nl": "Vaste objectstructuur voor ioBroker-repositorybeoordeling: `_info` als kanaal, `mode` rol `value`, `motion` alleen-lezen (`sensor.motion`)",
-        "fr": "Structure d'objet fixe pour la revue du dépôt ioBroker : `_info` en tant que canal, `mode` rôle `value`, `motion` en lecture seule (`sensor.motion`)",
-        "it": "Struttura fissa degli oggetti per la revisione del repository ioBroker: `_info` come canale, `mode` ruolo `value`, `motion` sola lettura (`sensor.motion`)",
-        "es": "Estructura de objeto corregida para la revisión del repositorio ioBroker: `_info` como canal, rol `mode` `value`, `motion` de solo lectura (`sensor.motion`)",
-        "pl": "Naprawiono strukturę obiektów do przeglądu repozytorium ioBroker: `_info` jako kanał, `mode` rola `value`, `motion` tylko do odczytu (`sensor.motion`)",
-        "uk": "Виправлено структуру об'єктів для огляду репозиторію ioBroker: `_info` як канал, `mode` роль `value`, `motion` лише для читання (`sensor.motion`)",
-        "zh-cn": "ioBroker 代码库审查的固定对象结构：`_info` 作为通道，`mode` 扮演 `value` 角色，`motion` 只读（`sensor.motion`）"
       }
     },
     "titleLang": {

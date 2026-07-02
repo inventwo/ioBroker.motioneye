@@ -134,7 +134,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.0 (2026-07-02)
 - (skvarel) Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation, auto brightness and privacy mask (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); resolution is validated against the camera's supported list
 
 ### 0.5.0 (2026-07-01)
@@ -150,10 +150,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.4.1 (2026-06-28)
 - (skvarel) Added Logs / Logging tab with optional verbose diagnostic logging for troubleshooting (e.g. unauthorized)
-
-### 0.4.0 (2026-06-28)
-- (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
-- (skvarel) Repository review fixes: timer value capping, self-scheduling status poll, removed unused help i18n keys, stream timing settings in expert mode
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
