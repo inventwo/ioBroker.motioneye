@@ -30,6 +30,7 @@ const {
 	buildResolutionPatch,
 	buildRotationPatch,
 	buildAutoBrightnessPatch,
+	buildPrivacyMaskPatch,
 } = require('./lib/deviceProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
@@ -59,7 +60,7 @@ const CAMERA_STATE_IDS = [
 /** Camera device parameters grouped under the `settings` sub-channel. */
 const CAMERA_SETTINGS_CHANNEL = 'settings';
 /** Writable device parameters handled via setDeviceParam (state id under `settings`). */
-const DEVICE_PARAMS = ['framerate', 'resolution', 'rotation', 'autoBrightness'];
+const DEVICE_PARAMS = ['framerate', 'resolution', 'rotation', 'autoBrightness', 'privacyMask'];
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -218,6 +219,7 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.settings.resolution');
 		this.subscribeStates('*.settings.rotation');
 		this.subscribeStates('*.settings.autoBrightness');
+		this.subscribeStates('*.settings.privacyMask');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -707,6 +709,17 @@ class Motioneye extends utils.Adapter {
 					def: false,
 				},
 			},
+			{
+				id: 'privacyMask',
+				common: {
+					name: `${camera.name} privacy mask`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
 		];
 
 		for (const state of states) {
@@ -923,13 +936,17 @@ class Motioneye extends utils.Adapter {
 		if (uiConfig.auto_brightness != null) {
 			await this.setStateAsync(`${settingsId}.autoBrightness`, normalizeBoolean(uiConfig.auto_brightness), true);
 		}
+
+		if (uiConfig.privacy_mask != null) {
+			await this.setStateAsync(`${settingsId}.privacyMask`, normalizeBoolean(uiConfig.privacy_mask), true);
+		}
 	}
 
 	/**
 	 * Write a camera device parameter to MotionEye (control path).
 	 *
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
-	 * @param {'framerate'|'resolution'|'rotation'|'autoBrightness'} param
+	 * @param {'framerate'|'resolution'|'rotation'|'autoBrightness'|'privacyMask'} param
 	 * @param {unknown} value
 	 */
 	async setDeviceParam(camera, param, value) {
@@ -954,6 +971,9 @@ class Motioneye extends utils.Adapter {
 				break;
 			case 'autoBrightness':
 				built = buildAutoBrightnessPatch(value);
+				break;
+			case 'privacyMask':
+				built = buildPrivacyMaskPatch(value);
 				break;
 			default:
 				return;
@@ -1168,7 +1188,7 @@ class Motioneye extends utils.Adapter {
 			try {
 				await this.setDeviceParam(
 					camera,
-					/** @type {'framerate'|'resolution'|'rotation'|'autoBrightness'} */ (param),
+					/** @type {'framerate'|'resolution'|'rotation'|'autoBrightness'|'privacyMask'} */ (param),
 					state.val,
 				);
 			} catch (error) {
