@@ -53,6 +53,19 @@ From **MotionEye 0.44** onwards, API authentication changed: instead of `_userna
 
 ---
 
+### Device settings (`settings.*`)
+
+From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instance>.<camera>.settings.*` (e.g. `framerate`, `resolution`, `rotation`, `autoBrightness`, `privacyMask`). Values are read during the status poll and can be written via datapoints.
+
+**Privacy mask (`settings.privacyMask`):**
+
+1. Draw the **mask regions** once in the MotionEye web UI (Video Device → Privacy mask).
+2. **Enable/disable** preferably only via the ioBroker datapoint `settings.privacyMask` — the adapter caches the drawn regions and re-sends them when enabling.
+3. If you turn the mask **off directly in MotionEye**, MotionEye discards the regions. Then you must redraw the mask in MotionEye, wait for a poll (or restart the instance) so the adapter caches the lines again.
+4. **Brightness/contrast/saturation/hue** are only available in MotionEye for local USB/v4l2 cameras, not for network (RTSP) cameras — therefore no datapoints in the adapter.
+
+---
+
 ### Test connection (admin UI)
 
 From the GitHub build / version **0.4.2** onwards, **Settings** includes a **Test connection** button. It checks host, port, username, and the **saved** password against `/config/list` — no SSH required.

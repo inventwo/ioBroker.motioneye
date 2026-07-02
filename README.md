@@ -64,7 +64,7 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `availableResolutions` | text | yes | no | Supported resolutions (comma-separated) |
 | `rotation` | level | yes | yes | Video rotation `0` / `90` / `180` / `270` |
 | `autoBrightness` | switch | yes | yes | Automatic brightness on/off |
-| `privacyMask` | switch | yes | yes | Privacy mask on/off (mask regions are drawn in the MotionEye UI) |
+| `privacyMask` | switch | yes | yes | Privacy mask on/off (mask regions are drawn in the MotionEye UI; see [FAQ](docs/en/faq.md#device-settings-settings)) |
 
 > Brightness / contrast / saturation / hue are only available for local v4l2/USB cameras in MotionEye, not for network (RTSP/MJPEG) cameras, so they are not exposed as datapoints.
 
