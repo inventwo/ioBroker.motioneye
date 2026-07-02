@@ -21,10 +21,15 @@ const {
 const {
 	FRAMERATE_MIN,
 	FRAMERATE_MAX,
+	VALID_ROTATIONS,
 	normalizeResolution,
 	parseAvailableResolutions,
+	normalizeRotation,
+	normalizeBoolean,
 	buildFrameratePatch,
 	buildResolutionPatch,
+	buildRotationPatch,
+	buildAutoBrightnessPatch,
 } = require('./lib/deviceProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
@@ -53,6 +58,8 @@ const CAMERA_STATE_IDS = [
 
 /** Camera device parameters grouped under the `settings` sub-channel. */
 const CAMERA_SETTINGS_CHANNEL = 'settings';
+/** Writable device parameters handled via setDeviceParam (state id under `settings`). */
+const DEVICE_PARAMS = ['framerate', 'resolution', 'rotation', 'autoBrightness'];
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -209,6 +216,8 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.streamPulse');
 		this.subscribeStates('*.settings.framerate');
 		this.subscribeStates('*.settings.resolution');
+		this.subscribeStates('*.settings.rotation');
+		this.subscribeStates('*.settings.autoBrightness');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -671,6 +680,33 @@ class Motioneye extends utils.Adapter {
 					def: '',
 				},
 			},
+			{
+				id: 'rotation',
+				common: {
+					name: `${camera.name} rotation`,
+					type: 'number',
+					role: 'level',
+					unit: '°',
+					read: true,
+					write: true,
+					def: 0,
+					states: VALID_ROTATIONS.reduce((acc, deg) => {
+						acc[deg] = `${deg}°`;
+						return acc;
+					}, /** @type {Record<number, string>} */ ({})),
+				},
+			},
+			{
+				id: 'autoBrightness',
+				common: {
+					name: `${camera.name} auto brightness`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
 		];
 
 		for (const state of states) {
@@ -876,13 +912,24 @@ class Motioneye extends utils.Adapter {
 				await this.setStateAsync(`${settingsId}.framerate`, framerate, true);
 			}
 		}
+
+		if (uiConfig.rotation != null) {
+			const rotation = normalizeRotation(uiConfig.rotation);
+			if (rotation != null) {
+				await this.setStateAsync(`${settingsId}.rotation`, rotation, true);
+			}
+		}
+
+		if (uiConfig.auto_brightness != null) {
+			await this.setStateAsync(`${settingsId}.autoBrightness`, normalizeBoolean(uiConfig.auto_brightness), true);
+		}
 	}
 
 	/**
-	 * Write framerate or resolution to MotionEye (control path).
+	 * Write a camera device parameter to MotionEye (control path).
 	 *
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
-	 * @param {'framerate'|'resolution'} param
+	 * @param {'framerate'|'resolution'|'rotation'|'autoBrightness'} param
 	 * @param {unknown} value
 	 */
 	async setDeviceParam(camera, param, value) {
@@ -894,10 +941,23 @@ class Motioneye extends utils.Adapter {
 			return;
 		}
 
-		const built =
-			param === 'framerate'
-				? buildFrameratePatch(value, { min: FRAMERATE_MIN, max: FRAMERATE_MAX })
-				: buildResolutionPatch(value, this.availableResolutionsByChannel.get(channelId) || []);
+		let built;
+		switch (param) {
+			case 'framerate':
+				built = buildFrameratePatch(value, { min: FRAMERATE_MIN, max: FRAMERATE_MAX });
+				break;
+			case 'resolution':
+				built = buildResolutionPatch(value, this.availableResolutionsByChannel.get(channelId) || []);
+				break;
+			case 'rotation':
+				built = buildRotationPatch(value);
+				break;
+			case 'autoBrightness':
+				built = buildAutoBrightnessPatch(value);
+				break;
+			default:
+				return;
+		}
 
 		if (!built.patch) {
 			this.log.warn(`${param} rejected for ${camera.name}: ${built.error}`);
@@ -1099,13 +1159,18 @@ class Motioneye extends utils.Adapter {
 			return;
 		}
 
-		if (
-			stateName === `${CAMERA_SETTINGS_CHANNEL}.framerate` ||
-			stateName === `${CAMERA_SETTINGS_CHANNEL}.resolution`
-		) {
-			const param = /** @type {'framerate'|'resolution'} */ (stateName.slice(CAMERA_SETTINGS_CHANNEL.length + 1));
+		const settingsPrefix = `${CAMERA_SETTINGS_CHANNEL}.`;
+		if (stateName.startsWith(settingsPrefix)) {
+			const param = stateName.slice(settingsPrefix.length);
+			if (!DEVICE_PARAMS.includes(param)) {
+				return;
+			}
 			try {
-				await this.setDeviceParam(camera, param, state.val);
+				await this.setDeviceParam(
+					camera,
+					/** @type {'framerate'|'resolution'|'rotation'|'autoBrightness'} */ (param),
+					state.val,
+				);
 			} catch (error) {
 				this.log.error(`set ${param} failed for ${camera.name}: ${error.message}`);
 				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);

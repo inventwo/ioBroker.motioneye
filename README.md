@@ -62,6 +62,10 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `framerate` | level | yes | yes | Capture framerate in fps |
 | `resolution` | text | yes | yes | Resolution `WxH` (e.g. `640x480`) |
 | `availableResolutions` | text | yes | no | Supported resolutions (comma-separated) |
+| `rotation` | level | yes | yes | Video rotation `0` / `90` / `180` / `270` |
+| `autoBrightness` | switch | yes | yes | Automatic brightness on/off |
+
+> Brightness / contrast / saturation / hue are only available for local v4l2/USB cameras in MotionEye, not for network (RTSP/MJPEG) cameras, so they are not exposed as datapoints.
 
 ### Instance (`motioneye.0._info.*`)
 
@@ -130,7 +134,7 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) Per-camera device settings under `settings.*`: read and control framerate and resolution (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`); resolution is validated against the camera's supported list
+- (skvarel) Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation and auto brightness (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`); resolution is validated against the camera's supported list
 
 ### 0.5.0 (2026-07-01)
 - (skvarel) MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth
