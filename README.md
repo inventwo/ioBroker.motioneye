@@ -54,6 +54,11 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `webhookUrl` | url | yes | no | URL written to MotionEye |
 | `motionEyeId` | value | yes | no | MotionEye camera ID |
 | `motionEyeName` | text | yes | no | Original name in MotionEye |
+
+### Per camera device settings (`motioneye.0.<name>.settings.*`)
+
+| State | Type | Read | Write | Description |
+|-------|------|------|-------|-------------|
 | `framerate` | level | yes | yes | Capture framerate in fps |
 | `resolution` | text | yes | yes | Resolution `WxH` (e.g. `640x480`) |
 | `availableResolutions` | text | yes | no | Supported resolutions (comma-separated) |
@@ -125,7 +130,7 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) Per-camera framerate and resolution: read via poll and control from ioBroker (`framerate`, `resolution`, `availableResolutions`); resolution is validated against the camera's supported list
+- (skvarel) Per-camera device settings under `settings.*`: read and control framerate and resolution (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`); resolution is validated against the camera's supported list
 
 ### 0.5.0 (2026-07-01)
 - (skvarel) MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth

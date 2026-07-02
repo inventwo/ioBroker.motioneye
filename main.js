@@ -49,10 +49,10 @@ const CAMERA_STATE_IDS = [
 	'webhookUrl',
 	'motionEyeId',
 	'motionEyeName',
-	'framerate',
-	'resolution',
-	'availableResolutions',
 ];
+
+/** Camera device parameters grouped under the `settings` sub-channel. */
+const CAMERA_SETTINGS_CHANNEL = 'settings';
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -207,8 +207,8 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.snapshot');
 		this.subscribeStates('*.stream');
 		this.subscribeStates('*.streamPulse');
-		this.subscribeStates('*.framerate');
-		this.subscribeStates('*.resolution');
+		this.subscribeStates('*.settings.framerate');
+		this.subscribeStates('*.settings.resolution');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -584,6 +584,57 @@ class Motioneye extends utils.Adapter {
 					def: '',
 				},
 			},
+		];
+
+		for (const state of states) {
+			const stateId = `${channelId}.${state.id}`;
+			await this.setObjectNotExistsAsync(stateId, {
+				type: 'state',
+				common: /** @type {ioBroker.StateCommon} */ (state.common),
+				native: {},
+			});
+		}
+
+		await this.ensureCameraSettingsObjects(camera);
+
+		await this.extendObjectAsync(`${channelId}.mode`, {
+			common: { role: CAMERA_MODE_ROLE },
+		});
+		await this.extendObjectAsync(`${channelId}.motion`, {
+			common: { write: false, role: 'sensor.motion' },
+		});
+
+		const streamUrlId = `${channelId}.streamUrl`;
+		const streamUrlName = `${camera.name} stream HTML`;
+		const streamUrlObject = await this.getObjectAsync(streamUrlId);
+		const currentStreamUrlName = streamUrlObject?.common?.name ? String(streamUrlObject.common.name) : '';
+		if (currentStreamUrlName && /\(inventwo\)|inventwo HTML/i.test(currentStreamUrlName)) {
+			await this.extendObjectAsync(streamUrlId, {
+				common: { name: streamUrlName },
+			});
+		}
+
+		const webhookUrl = this.getWebhookUrl(camera);
+		await this.setStateAsync(`${channelId}.webhookUrl`, webhookUrl, true);
+		await this.setStateAsync(`${channelId}.motionEyeId`, camera.motionEyeId, true);
+		await this.setStateAsync(`${channelId}.streamUrl`, '', true);
+	}
+
+	/**
+	 * Create the `settings` sub-channel and camera device parameter states.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 */
+	async ensureCameraSettingsObjects(camera) {
+		const settingsId = `${camera.channel}.${CAMERA_SETTINGS_CHANNEL}`;
+
+		await this.setObjectNotExistsAsync(settingsId, {
+			type: 'channel',
+			common: { name: `${camera.name} settings` },
+			native: {},
+		});
+
+		const states = [
 			{
 				id: 'framerate',
 				common: {
@@ -595,7 +646,7 @@ class Motioneye extends utils.Adapter {
 					max: FRAMERATE_MAX,
 					read: true,
 					write: true,
-					def: 0,
+					def: FRAMERATE_MIN,
 				},
 			},
 			{
@@ -623,35 +674,20 @@ class Motioneye extends utils.Adapter {
 		];
 
 		for (const state of states) {
-			const stateId = `${channelId}.${state.id}`;
-			await this.setObjectNotExistsAsync(stateId, {
+			await this.setObjectNotExistsAsync(`${settingsId}.${state.id}`, {
 				type: 'state',
 				common: /** @type {ioBroker.StateCommon} */ (state.common),
 				native: {},
 			});
 		}
 
-		await this.extendObjectAsync(`${channelId}.mode`, {
-			common: { role: CAMERA_MODE_ROLE },
-		});
-		await this.extendObjectAsync(`${channelId}.motion`, {
-			common: { write: false, role: 'sensor.motion' },
-		});
-
-		const streamUrlId = `${channelId}.streamUrl`;
-		const streamUrlName = `${camera.name} stream HTML`;
-		const streamUrlObject = await this.getObjectAsync(streamUrlId);
-		const currentStreamUrlName = streamUrlObject?.common?.name ? String(streamUrlObject.common.name) : '';
-		if (currentStreamUrlName && /\(inventwo\)|inventwo HTML/i.test(currentStreamUrlName)) {
-			await this.extendObjectAsync(streamUrlId, {
-				common: { name: streamUrlName },
-			});
+		// Clean up pre-settings-channel root states (unreleased 0.5.x dev builds).
+		for (const legacyId of ['framerate', 'resolution', 'availableResolutions']) {
+			const rootId = `${camera.channel}.${legacyId}`;
+			if (await this.getObjectAsync(rootId)) {
+				await this.delObjectAsync(rootId);
+			}
 		}
-
-		const webhookUrl = this.getWebhookUrl(camera);
-		await this.setStateAsync(`${channelId}.webhookUrl`, webhookUrl, true);
-		await this.setStateAsync(`${channelId}.motionEyeId`, camera.motionEyeId, true);
-		await this.setStateAsync(`${channelId}.streamUrl`, '', true);
 	}
 
 	async migrateLegacyCameraChannels() {
@@ -821,23 +857,23 @@ class Motioneye extends utils.Adapter {
 	 * @param {Record<string, unknown>} uiConfig
 	 */
 	async syncDeviceParams(camera, uiConfig) {
-		const channelId = camera.channel;
+		const settingsId = `${camera.channel}.${CAMERA_SETTINGS_CHANNEL}`;
 
 		const available = parseAvailableResolutions(uiConfig);
-		this.availableResolutionsByChannel.set(channelId, available);
-		await this.setStateAsync(`${channelId}.availableResolutions`, available.join(', '), true);
+		this.availableResolutionsByChannel.set(camera.channel, available);
+		await this.setStateAsync(`${settingsId}.availableResolutions`, available.join(', '), true);
 
 		if (uiConfig.resolution != null) {
 			const resolution = normalizeResolution(uiConfig.resolution);
 			if (resolution) {
-				await this.setStateAsync(`${channelId}.resolution`, resolution, true);
+				await this.setStateAsync(`${settingsId}.resolution`, resolution, true);
 			}
 		}
 
 		if (uiConfig.framerate != null) {
 			const framerate = Number(uiConfig.framerate);
 			if (Number.isFinite(framerate)) {
-				await this.setStateAsync(`${channelId}.framerate`, framerate, true);
+				await this.setStateAsync(`${settingsId}.framerate`, framerate, true);
 			}
 		}
 	}
@@ -851,6 +887,7 @@ class Motioneye extends utils.Adapter {
 	 */
 	async setDeviceParam(camera, param, value) {
 		const channelId = camera.channel;
+		const settingsId = `${channelId}.${CAMERA_SETTINGS_CHANNEL}`;
 
 		if (!this.config.useMotionEyeConfig) {
 			await this.setStateAsync(`${channelId}.status`, 'useMotionEyeConfig is disabled', true);
@@ -870,7 +907,7 @@ class Motioneye extends utils.Adapter {
 
 		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, built.patch);
 
-		await this.setStateAsync(`${channelId}.${param}`, built.value, true);
+		await this.setStateAsync(`${settingsId}.${param}`, built.value, true);
 		await this.setStateAsync(`${channelId}.status`, `${param}=${built.value}`, true);
 
 		if (result.changed) {
@@ -1062,11 +1099,15 @@ class Motioneye extends utils.Adapter {
 			return;
 		}
 
-		if (stateName === 'framerate' || stateName === 'resolution') {
+		if (
+			stateName === `${CAMERA_SETTINGS_CHANNEL}.framerate` ||
+			stateName === `${CAMERA_SETTINGS_CHANNEL}.resolution`
+		) {
+			const param = /** @type {'framerate'|'resolution'} */ (stateName.slice(CAMERA_SETTINGS_CHANNEL.length + 1));
 			try {
-				await this.setDeviceParam(camera, stateName, state.val);
+				await this.setDeviceParam(camera, param, state.val);
 			} catch (error) {
-				this.log.error(`set ${stateName} failed for ${camera.name}: ${error.message}`);
+				this.log.error(`set ${param} failed for ${camera.name}: ${error.message}`);
 				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
 			}
 		}
