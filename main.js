@@ -93,6 +93,8 @@ class Motioneye extends utils.Adapter {
 		this.camerasByChannel = new Map();
 		/** @type {Map<string, string[]>} Supported resolutions per channel (from last poll). */
 		this.availableResolutionsByChannel = new Map();
+		/** @type {Map<string, unknown[]>} Last known privacy mask regions per channel (to restore on re-enable). */
+		this.privacyMaskLinesByChannel = new Map();
 		this.webhookHost = '';
 		this._unloading = false;
 		this._serverVersionsFetched = false;
@@ -937,6 +939,10 @@ class Motioneye extends utils.Adapter {
 			await this.setStateAsync(`${settingsId}.autoBrightness`, normalizeBoolean(uiConfig.auto_brightness), true);
 		}
 
+		if (Array.isArray(uiConfig.privacy_mask_lines) && uiConfig.privacy_mask_lines.length) {
+			this.privacyMaskLinesByChannel.set(camera.channel, uiConfig.privacy_mask_lines);
+		}
+
 		if (uiConfig.privacy_mask != null) {
 			await this.setStateAsync(`${settingsId}.privacyMask`, normalizeBoolean(uiConfig.privacy_mask), true);
 		}
@@ -973,8 +979,8 @@ class Motioneye extends utils.Adapter {
 				built = buildAutoBrightnessPatch(value);
 				break;
 			case 'privacyMask':
-				built = buildPrivacyMaskPatch(value);
-				break;
+				await this.setPrivacyMask(camera, value);
+				return;
 			default:
 				return;
 		}
@@ -993,6 +999,61 @@ class Motioneye extends utils.Adapter {
 		if (result.changed) {
 			await this.setStateAsync(`${channelId}.lastAction`, `config/set ${param}=${built.value}`, true);
 			this.log.info(`${param} for ${camera.name}: ${built.value}`);
+		}
+	}
+
+	/**
+	 * Toggle the privacy mask. MotionEye rebuilds the mask file from
+	 * `privacy_mask_lines` only while the mask is enabled and drops the regions
+	 * when disabled, so we cache the regions and re-send them when enabling.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {unknown} value
+	 */
+	async setPrivacyMask(camera, value) {
+		const channelId = camera.channel;
+		const settingsId = `${channelId}.${CAMERA_SETTINGS_CHANNEL}`;
+
+		if (!this.config.useMotionEyeConfig) {
+			await this.setStateAsync(`${channelId}.status`, 'useMotionEyeConfig is disabled', true);
+			return;
+		}
+
+		const built = buildPrivacyMaskPatch(value);
+		const enabled = built.value;
+
+		// Capture the currently drawn regions before MotionEye drops them on disable.
+		try {
+			const uiConfig = await this.motionEyeApi.getCameraConfig(camera.motionEyeId);
+			if (Array.isArray(uiConfig.privacy_mask_lines) && uiConfig.privacy_mask_lines.length) {
+				this.privacyMaskLinesByChannel.set(channelId, uiConfig.privacy_mask_lines);
+			}
+		} catch {
+			// fall back to cached regions
+		}
+
+		/** @type {Record<string, unknown>} */
+		const patch = { ...built.patch };
+
+		if (enabled) {
+			const lines = this.privacyMaskLinesByChannel.get(channelId) || [];
+			if (lines.length) {
+				patch.privacy_mask_lines = lines;
+			} else {
+				this.log.warn(
+					`privacyMask enabled for ${camera.name} but no mask regions are known — draw the mask once in the MotionEye UI, then toggle again`,
+				);
+			}
+		}
+
+		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, patch);
+
+		await this.setStateAsync(`${settingsId}.privacyMask`, enabled, true);
+		await this.setStateAsync(`${channelId}.status`, `privacyMask=${enabled}`, true);
+
+		if (result.changed) {
+			await this.setStateAsync(`${channelId}.lastAction`, `config/set privacyMask=${enabled}`, true);
+			this.log.info(`privacyMask for ${camera.name}: ${enabled}`);
 		}
 	}
 
