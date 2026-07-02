@@ -18,6 +18,14 @@ const {
 	MODE_LABELS,
 	MEDIA_SETTINGS,
 } = require('./lib/modeProfiles');
+const {
+	FRAMERATE_MIN,
+	FRAMERATE_MAX,
+	normalizeResolution,
+	parseAvailableResolutions,
+	buildFrameratePatch,
+	buildResolutionPatch,
+} = require('./lib/deviceProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
@@ -41,6 +49,9 @@ const CAMERA_STATE_IDS = [
 	'webhookUrl',
 	'motionEyeId',
 	'motionEyeName',
+	'framerate',
+	'resolution',
+	'availableResolutions',
 ];
 
 class Motioneye extends utils.Adapter {
@@ -72,6 +83,8 @@ class Motioneye extends utils.Adapter {
 		this.camerasById = new Map();
 		/** @type {Map<string, import('./lib/cameraRegistry').ResolvedCamera>} */
 		this.camerasByChannel = new Map();
+		/** @type {Map<string, string[]>} Supported resolutions per channel (from last poll). */
+		this.availableResolutionsByChannel = new Map();
 		this.webhookHost = '';
 		this._unloading = false;
 		this._serverVersionsFetched = false;
@@ -194,6 +207,8 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.snapshot');
 		this.subscribeStates('*.stream');
 		this.subscribeStates('*.streamPulse');
+		this.subscribeStates('*.framerate');
+		this.subscribeStates('*.resolution');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -569,6 +584,42 @@ class Motioneye extends utils.Adapter {
 					def: '',
 				},
 			},
+			{
+				id: 'framerate',
+				common: {
+					name: `${camera.name} framerate`,
+					type: 'number',
+					role: 'level',
+					unit: 'fps',
+					min: FRAMERATE_MIN,
+					max: FRAMERATE_MAX,
+					read: true,
+					write: true,
+					def: 0,
+				},
+			},
+			{
+				id: 'resolution',
+				common: {
+					name: `${camera.name} resolution`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: true,
+					def: '',
+				},
+			},
+			{
+				id: 'availableResolutions',
+				common: {
+					name: `${camera.name} available resolutions`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
 		];
 
 		for (const state of states) {
@@ -763,6 +814,71 @@ class Motioneye extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * Update framerate / resolution states from a MotionEye UI config (read path).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {Record<string, unknown>} uiConfig
+	 */
+	async syncDeviceParams(camera, uiConfig) {
+		const channelId = camera.channel;
+
+		const available = parseAvailableResolutions(uiConfig);
+		this.availableResolutionsByChannel.set(channelId, available);
+		await this.setStateAsync(`${channelId}.availableResolutions`, available.join(', '), true);
+
+		if (uiConfig.resolution != null) {
+			const resolution = normalizeResolution(uiConfig.resolution);
+			if (resolution) {
+				await this.setStateAsync(`${channelId}.resolution`, resolution, true);
+			}
+		}
+
+		if (uiConfig.framerate != null) {
+			const framerate = Number(uiConfig.framerate);
+			if (Number.isFinite(framerate)) {
+				await this.setStateAsync(`${channelId}.framerate`, framerate, true);
+			}
+		}
+	}
+
+	/**
+	 * Write framerate or resolution to MotionEye (control path).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {'framerate'|'resolution'} param
+	 * @param {unknown} value
+	 */
+	async setDeviceParam(camera, param, value) {
+		const channelId = camera.channel;
+
+		if (!this.config.useMotionEyeConfig) {
+			await this.setStateAsync(`${channelId}.status`, 'useMotionEyeConfig is disabled', true);
+			return;
+		}
+
+		const built =
+			param === 'framerate'
+				? buildFrameratePatch(value, { min: FRAMERATE_MIN, max: FRAMERATE_MAX })
+				: buildResolutionPatch(value, this.availableResolutionsByChannel.get(channelId) || []);
+
+		if (!built.patch) {
+			this.log.warn(`${param} rejected for ${camera.name}: ${built.error}`);
+			await this.setStateAsync(`${channelId}.status`, `error: ${built.error}`, true);
+			return;
+		}
+
+		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, built.patch);
+
+		await this.setStateAsync(`${channelId}.${param}`, built.value, true);
+		await this.setStateAsync(`${channelId}.status`, `${param}=${built.value}`, true);
+
+		if (result.changed) {
+			await this.setStateAsync(`${channelId}.lastAction`, `config/set ${param}=${built.value}`, true);
+			this.log.info(`${param} for ${camera.name}: ${built.value}`);
+		}
+	}
+
 	async pollMotionEye() {
 		if (!this.motionEyeApi) {
 			return;
@@ -799,6 +915,7 @@ class Motioneye extends utils.Adapter {
 			const motionEyeName = String(uiConfig.name || uiConfig.id || camera.motionEyeId);
 
 			await this.setStateAsync(`${camera.channel}.motionEyeName`, motionEyeName, true);
+			await this.syncDeviceParams(camera, uiConfig);
 
 			const currentMode = await this.getStateAsync(`${camera.channel}.mode`);
 			const localMode = normalizeMode(currentMode && currentMode.val);
@@ -942,6 +1059,16 @@ class Motioneye extends utils.Adapter {
 				this.log.error(`streamPulse failed for ${camera.name}: ${error.message}`);
 			}
 			await this.setStateAsync(`${camera.channel}.streamPulse`, false, true);
+			return;
+		}
+
+		if (stateName === 'framerate' || stateName === 'resolution') {
+			try {
+				await this.setDeviceParam(camera, stateName, state.val);
+			} catch (error) {
+				this.log.error(`set ${stateName} failed for ${camera.name}: ${error.message}`);
+				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
+			}
 		}
 	}
 
