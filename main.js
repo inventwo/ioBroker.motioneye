@@ -634,6 +634,31 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
+	 * Cache privacy mask regions in memory and persist them to the settings channel's
+	 * native config, so they survive adapter restarts/updates (see setPrivacyMask).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {unknown[]} lines
+	 */
+	async cachePrivacyMaskLines(camera, lines) {
+		if (!Array.isArray(lines) || !lines.length) {
+			return;
+		}
+
+		const previous = this.privacyMaskLinesByChannel.get(camera.channel);
+		this.privacyMaskLinesByChannel.set(camera.channel, lines);
+
+		if (JSON.stringify(previous) === JSON.stringify(lines)) {
+			return;
+		}
+
+		const settingsId = `${camera.channel}.${CAMERA_SETTINGS_CHANNEL}`;
+		await this.extendObjectAsync(settingsId, {
+			native: { privacyMaskLines: lines },
+		});
+	}
+
+	/**
 	 * Create the `settings` sub-channel and camera device parameter states.
 	 *
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
@@ -646,6 +671,15 @@ class Motioneye extends utils.Adapter {
 			common: { name: `${camera.name} settings` },
 			native: {},
 		});
+
+		// Seed the in-memory cache from persisted native config — the object survives
+		// adapter restarts/updates, unlike a plain JS Map, so privacy mask regions
+		// are not lost when the adapter is updated (npm or GitHub).
+		const settingsObject = await this.getObjectAsync(settingsId);
+		const storedLines = settingsObject?.native?.privacyMaskLines;
+		if (Array.isArray(storedLines) && storedLines.length && !this.privacyMaskLinesByChannel.has(camera.channel)) {
+			this.privacyMaskLinesByChannel.set(camera.channel, storedLines);
+		}
 
 		const states = [
 			{
@@ -939,9 +973,7 @@ class Motioneye extends utils.Adapter {
 			await this.setStateAsync(`${settingsId}.autoBrightness`, normalizeBoolean(uiConfig.auto_brightness), true);
 		}
 
-		if (Array.isArray(uiConfig.privacy_mask_lines) && uiConfig.privacy_mask_lines.length) {
-			this.privacyMaskLinesByChannel.set(camera.channel, uiConfig.privacy_mask_lines);
-		}
+		await this.cachePrivacyMaskLines(camera, /** @type {unknown[]} */ (uiConfig.privacy_mask_lines));
 
 		if (uiConfig.privacy_mask != null) {
 			await this.setStateAsync(`${settingsId}.privacyMask`, normalizeBoolean(uiConfig.privacy_mask), true);
@@ -1025,11 +1057,9 @@ class Motioneye extends utils.Adapter {
 		// Capture the currently drawn regions before MotionEye drops them on disable.
 		try {
 			const uiConfig = await this.motionEyeApi.getCameraConfig(camera.motionEyeId);
-			if (Array.isArray(uiConfig.privacy_mask_lines) && uiConfig.privacy_mask_lines.length) {
-				this.privacyMaskLinesByChannel.set(channelId, uiConfig.privacy_mask_lines);
-			}
+			await this.cachePrivacyMaskLines(camera, /** @type {unknown[]} */ (uiConfig.privacy_mask_lines));
 		} catch {
-			// fall back to cached regions
+			// fall back to cached/persisted regions
 		}
 
 		/** @type {Record<string, unknown>} */

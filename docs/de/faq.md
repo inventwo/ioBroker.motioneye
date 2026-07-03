@@ -60,8 +60,8 @@ Ab Adapter **0.6.0** liegen Kamera-Parameter unter `motioneye.<Instanz>.<kamera>
 **Datenschutzmaske (`settings.privacyMask`):**
 
 1. Die **Maskenbereiche** zeichnest du einmalig in der MotionEye-Weboberfläche (Videogerät → Datenschutzmaske).
-2. **Ein-/Ausschalten** am besten nur über den ioBroker-Datenpunkt `settings.privacyMask` — der Adapter merkt sich die gezeichneten Bereiche und sendet sie beim Einschalten wieder mit.
-3. Schaltest du die Maske **direkt in MotionEye** aus, verwirft MotionEye die Bereiche. Danach hilft nur: Maske in MotionEye neu zeichnen, kurz warten (Poll) oder Instanz neu starten, damit der Adapter die Linien wieder cacht.
+2. **Ein-/Ausschalten** am besten nur über den ioBroker-Datenpunkt `settings.privacyMask` — der Adapter merkt sich die gezeichneten Bereiche (dauerhaft im Objekt, übersteht Adapter-Updates/-Neustarts ab **0.6.1**) und sendet sie beim Einschalten wieder mit.
+3. Schaltest du die Maske **direkt in MotionEye** aus, verwirft MotionEye die Bereiche sofort. Danach hilft nur: Maske in MotionEye neu zeichnen, kurz warten (Poll) oder Instanz neu starten, damit der Adapter die Linien wieder übernimmt.
 4. **Helligkeit/Kontrast/Sättigung/Farbton** gibt es in MotionEye nur für lokale USB-/v4l2-Kameras, nicht für Netzwerk-Kameras (RTSP) — deshalb keine Datenpunkte im Adapter.
 
 ---

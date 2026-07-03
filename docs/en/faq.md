@@ -60,8 +60,8 @@ From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instanc
 **Privacy mask (`settings.privacyMask`):**
 
 1. Draw the **mask regions** once in the MotionEye web UI (Video Device → Privacy mask).
-2. **Enable/disable** preferably only via the ioBroker datapoint `settings.privacyMask` — the adapter caches the drawn regions and re-sends them when enabling.
-3. If you turn the mask **off directly in MotionEye**, MotionEye discards the regions. Then you must redraw the mask in MotionEye, wait for a poll (or restart the instance) so the adapter caches the lines again.
+2. **Enable/disable** preferably only via the ioBroker datapoint `settings.privacyMask` — the adapter caches the drawn regions (persisted on the object, survives adapter updates/restarts from **0.6.1**) and re-sends them when enabling.
+3. If you turn the mask **off directly in MotionEye**, MotionEye discards the regions immediately. Then you must redraw the mask in MotionEye, wait for a poll (or restart the instance) so the adapter picks up the lines again.
 4. **Brightness/contrast/saturation/hue** are only available in MotionEye for local USB/v4l2 cameras, not for network (RTSP) cameras — therefore no datapoints in the adapter.
 
 ---
