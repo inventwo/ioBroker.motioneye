@@ -66,6 +66,17 @@ From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instanc
 
 ---
 
+### Text overlay (`overlay.*`)
+
+From adapter **0.7.0** onwards, the camera's text overlay lives under `motioneye.<instance>.<camera>.overlay.*` (`enabled`, `leftText`, `rightText`, `customLeftText`, `customRightText`, `textScale`).
+
+1. **`enabled`** is the master on/off switch for the overlay. When switched off, MotionEye clears the displayed text on the video — `leftText`/`rightText`/custom text are kept in the adapter and MotionEye config, ready for when you switch it back on.
+2. **`leftText`/`rightText`** accept one of `camera-name`, `timestamp`, `custom-text`, `disabled` (shown as a dropdown in ioBroker Admin/object view).
+3. **Custom text:** set `leftText` (or `rightText`) to `custom-text` **and** fill in `customLeftText` (or `customRightText`) — if the custom text field is still empty when you switch to `custom-text`, MotionEye shows empty text until you set it.
+4. **`textScale`** controls the text size (`1`–`10`, matches the slider in the MotionEye UI).
+
+---
+
 ### Test connection (admin UI)
 
 From the GitHub build / version **0.4.2** onwards, **Settings** includes a **Test connection** button. It checks host, port, username, and the **saved** password against `/config/list` — no SSH required.

@@ -68,6 +68,19 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 
 > Brightness / contrast / saturation / hue are only available for local v4l2/USB cameras in MotionEye, not for network (RTSP/MJPEG) cameras, so they are not exposed as datapoints.
 
+### Per camera text overlay (`motioneye.0.<name>.overlay.*`)
+
+| State | Type | Read | Write | Description |
+|-------|------|------|-------|-------------|
+| `enabled` | switch | yes | yes | Text overlay on/off |
+| `leftText` | text (dropdown) | yes | yes | `camera-name` / `timestamp` / `custom-text` / `disabled` |
+| `rightText` | text (dropdown) | yes | yes | Same options as `leftText` |
+| `customLeftText` | text | yes | yes | Used when `leftText = custom-text` |
+| `customRightText` | text | yes | yes | Used when `rightText = custom-text` |
+| `textScale` | level | yes | yes | Text size, `1`–`10` |
+
+> When setting `leftText`/`rightText` to `custom-text`, also set `customLeftText`/`customRightText` — otherwise MotionEye shows empty text. See [FAQ](docs/en/faq.md#text-overlay-overlay).
+
 ### Instance (`motioneye.0._info.*`)
 
 | State | Type | Description |
@@ -134,6 +147,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Per-camera text overlay under `overlay.*`: read and control overlay on/off, left/right text mode (camera name / timestamp / custom text / disabled), custom text strings, and text size (`overlay.enabled`, `overlay.leftText`, `overlay.rightText`, `overlay.customLeftText`, `overlay.customRightText`, `overlay.textScale`)
+
 ### 0.6.1 (2026-07-03)
 - (skvarel) Fixed privacy mask regions not surviving adapter restarts/updates: mask lines are now persisted to the settings channel's native config instead of only in memory
 

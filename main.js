@@ -31,6 +31,17 @@ const {
 	buildRotationPatch,
 	buildAutoBrightnessPatch,
 	buildPrivacyMaskPatch,
+	TEXT_POSITION_OPTIONS,
+	TEXT_SCALE_MIN,
+	TEXT_SCALE_MAX,
+	normalizeTextPosition,
+	normalizeTextScale,
+	buildTextOverlayPatch,
+	buildLeftTextPatch,
+	buildRightTextPatch,
+	buildCustomLeftTextPatch,
+	buildCustomRightTextPatch,
+	buildTextScalePatch,
 } = require('./lib/deviceProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
@@ -61,6 +72,18 @@ const CAMERA_STATE_IDS = [
 const CAMERA_SETTINGS_CHANNEL = 'settings';
 /** Writable device parameters handled via setDeviceParam (state id under `settings`). */
 const DEVICE_PARAMS = ['framerate', 'resolution', 'rotation', 'autoBrightness', 'privacyMask'];
+
+/** Text overlay parameters grouped under the `overlay` sub-channel. */
+const CAMERA_OVERLAY_CHANNEL = 'overlay';
+/** Writable overlay parameters handled via setOverlayParam (state id under `overlay`). */
+const OVERLAY_PARAMS = ['enabled', 'leftText', 'rightText', 'customLeftText', 'customRightText', 'textScale'];
+/** Human-readable labels for the left_text/right_text enum (MotionEye UI config). */
+const TEXT_POSITION_LABELS = {
+	'camera-name': 'Camera name',
+	timestamp: 'Timestamp',
+	'custom-text': 'Custom text',
+	disabled: 'Disabled',
+};
 
 class Motioneye extends utils.Adapter {
 	/**
@@ -222,6 +245,12 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.settings.rotation');
 		this.subscribeStates('*.settings.autoBrightness');
 		this.subscribeStates('*.settings.privacyMask');
+		this.subscribeStates('*.overlay.enabled');
+		this.subscribeStates('*.overlay.leftText');
+		this.subscribeStates('*.overlay.rightText');
+		this.subscribeStates('*.overlay.customLeftText');
+		this.subscribeStates('*.overlay.customRightText');
+		this.subscribeStates('*.overlay.textScale');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -609,6 +638,7 @@ class Motioneye extends utils.Adapter {
 		}
 
 		await this.ensureCameraSettingsObjects(camera);
+		await this.ensureCameraOverlayObjects(camera);
 
 		await this.extendObjectAsync(`${channelId}.mode`, {
 			common: { role: CAMERA_MODE_ROLE },
@@ -772,6 +802,107 @@ class Motioneye extends utils.Adapter {
 			if (await this.getObjectAsync(rootId)) {
 				await this.delObjectAsync(rootId);
 			}
+		}
+	}
+
+	/**
+	 * Create the `overlay` sub-channel and camera text overlay states.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 */
+	async ensureCameraOverlayObjects(camera) {
+		const overlayId = `${camera.channel}.${CAMERA_OVERLAY_CHANNEL}`;
+
+		await this.setObjectNotExistsAsync(overlayId, {
+			type: 'channel',
+			common: { name: `${camera.name} text overlay` },
+			native: {},
+		});
+
+		const textPositionStates = TEXT_POSITION_OPTIONS.reduce((acc, option) => {
+			acc[option] = TEXT_POSITION_LABELS[option] || option;
+			return acc;
+		}, /** @type {Record<string, string>} */ ({}));
+
+		const states = [
+			{
+				id: 'enabled',
+				common: {
+					name: `${camera.name} text overlay enabled`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+			{
+				id: 'leftText',
+				common: {
+					name: `${camera.name} left text`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: true,
+					def: 'camera-name',
+					states: textPositionStates,
+				},
+			},
+			{
+				id: 'rightText',
+				common: {
+					name: `${camera.name} right text`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: true,
+					def: 'timestamp',
+					states: textPositionStates,
+				},
+			},
+			{
+				id: 'customLeftText',
+				common: {
+					name: `${camera.name} custom left text`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: true,
+					def: '',
+				},
+			},
+			{
+				id: 'customRightText',
+				common: {
+					name: `${camera.name} custom right text`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: true,
+					def: '',
+				},
+			},
+			{
+				id: 'textScale',
+				common: {
+					name: `${camera.name} text size`,
+					type: 'number',
+					role: 'level',
+					min: TEXT_SCALE_MIN,
+					max: TEXT_SCALE_MAX,
+					read: true,
+					write: true,
+					def: TEXT_SCALE_MIN,
+				},
+			},
+		];
+
+		for (const state of states) {
+			await this.setObjectNotExistsAsync(`${overlayId}.${state.id}`, {
+				type: 'state',
+				common: /** @type {ioBroker.StateCommon} */ (state.common),
+				native: {},
+			});
 		}
 	}
 
@@ -981,6 +1112,49 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
+	 * Update text overlay states from a MotionEye UI config (read path).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {Record<string, unknown>} uiConfig
+	 */
+	async syncOverlayParams(camera, uiConfig) {
+		const overlayId = `${camera.channel}.${CAMERA_OVERLAY_CHANNEL}`;
+
+		if (uiConfig.text_overlay != null) {
+			await this.setStateAsync(`${overlayId}.enabled`, normalizeBoolean(uiConfig.text_overlay), true);
+		}
+
+		if (uiConfig.left_text != null) {
+			const leftText = normalizeTextPosition(uiConfig.left_text);
+			if (leftText) {
+				await this.setStateAsync(`${overlayId}.leftText`, leftText, true);
+			}
+		}
+
+		if (uiConfig.right_text != null) {
+			const rightText = normalizeTextPosition(uiConfig.right_text);
+			if (rightText) {
+				await this.setStateAsync(`${overlayId}.rightText`, rightText, true);
+			}
+		}
+
+		if (uiConfig.custom_left_text != null) {
+			await this.setStateAsync(`${overlayId}.customLeftText`, String(uiConfig.custom_left_text), true);
+		}
+
+		if (uiConfig.custom_right_text != null) {
+			await this.setStateAsync(`${overlayId}.customRightText`, String(uiConfig.custom_right_text), true);
+		}
+
+		if (uiConfig.text_scale != null) {
+			const textScale = normalizeTextScale(uiConfig.text_scale);
+			if (textScale != null) {
+				await this.setStateAsync(`${overlayId}.textScale`, textScale, true);
+			}
+		}
+	}
+
+	/**
 	 * Write a camera device parameter to MotionEye (control path).
 	 *
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
@@ -1087,6 +1261,63 @@ class Motioneye extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * Write a camera text overlay parameter to MotionEye (control path).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {'enabled'|'leftText'|'rightText'|'customLeftText'|'customRightText'|'textScale'} param
+	 * @param {unknown} value
+	 */
+	async setOverlayParam(camera, param, value) {
+		const channelId = camera.channel;
+		const overlayId = `${channelId}.${CAMERA_OVERLAY_CHANNEL}`;
+
+		if (!this.config.useMotionEyeConfig) {
+			await this.setStateAsync(`${channelId}.status`, 'useMotionEyeConfig is disabled', true);
+			return;
+		}
+
+		let built;
+		switch (param) {
+			case 'enabled':
+				built = buildTextOverlayPatch(value);
+				break;
+			case 'leftText':
+				built = buildLeftTextPatch(value);
+				break;
+			case 'rightText':
+				built = buildRightTextPatch(value);
+				break;
+			case 'customLeftText':
+				built = buildCustomLeftTextPatch(value);
+				break;
+			case 'customRightText':
+				built = buildCustomRightTextPatch(value);
+				break;
+			case 'textScale':
+				built = buildTextScalePatch(value);
+				break;
+			default:
+				return;
+		}
+
+		if (!built.patch) {
+			this.log.warn(`${param} rejected for ${camera.name}: ${built.error}`);
+			await this.setStateAsync(`${channelId}.status`, `error: ${built.error}`, true);
+			return;
+		}
+
+		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, built.patch);
+
+		await this.setStateAsync(`${overlayId}.${param}`, built.value, true);
+		await this.setStateAsync(`${channelId}.status`, `${param}=${built.value}`, true);
+
+		if (result.changed) {
+			await this.setStateAsync(`${channelId}.lastAction`, `config/set ${param}=${built.value}`, true);
+			this.log.info(`${param} for ${camera.name}: ${built.value}`);
+		}
+	}
+
 	async pollMotionEye() {
 		if (!this.motionEyeApi) {
 			return;
@@ -1124,6 +1355,7 @@ class Motioneye extends utils.Adapter {
 
 			await this.setStateAsync(`${camera.channel}.motionEyeName`, motionEyeName, true);
 			await this.syncDeviceParams(camera, uiConfig);
+			await this.syncOverlayParams(camera, uiConfig);
 
 			const currentMode = await this.getStateAsync(`${camera.channel}.mode`);
 			const localMode = normalizeMode(currentMode && currentMode.val);
@@ -1280,6 +1512,27 @@ class Motioneye extends utils.Adapter {
 				await this.setDeviceParam(
 					camera,
 					/** @type {'framerate'|'resolution'|'rotation'|'autoBrightness'|'privacyMask'} */ (param),
+					state.val,
+				);
+			} catch (error) {
+				this.log.error(`set ${param} failed for ${camera.name}: ${error.message}`);
+				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
+			}
+			return;
+		}
+
+		const overlayPrefix = `${CAMERA_OVERLAY_CHANNEL}.`;
+		if (stateName.startsWith(overlayPrefix)) {
+			const param = stateName.slice(overlayPrefix.length);
+			if (!OVERLAY_PARAMS.includes(param)) {
+				return;
+			}
+			try {
+				await this.setOverlayParam(
+					camera,
+					/** @type {'enabled'|'leftText'|'rightText'|'customLeftText'|'customRightText'|'textScale'} */ (
+						param
+					),
 					state.val,
 				);
 			} catch (error) {

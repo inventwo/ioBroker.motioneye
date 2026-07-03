@@ -66,6 +66,17 @@ Ab Adapter **0.6.0** liegen Kamera-Parameter unter `motioneye.<Instanz>.<kamera>
 
 ---
 
+### Textüberlagerung (`overlay.*`)
+
+Ab Adapter **0.7.0** liegt die Textüberlagerung der Kamera unter `motioneye.<Instanz>.<kamera>.overlay.*` (`enabled`, `leftText`, `rightText`, `customLeftText`, `customRightText`, `textScale`).
+
+1. **`enabled`** ist der Hauptschalter für die Überlagerung. Schaltest du ihn aus, entfernt MotionEye den angezeigten Text im Video — `leftText`/`rightText`/der Benutzertext bleiben im Adapter und in der MotionEye-Config erhalten und werden beim erneuten Einschalten wieder verwendet.
+2. **`leftText`/`rightText`** akzeptieren einen der Werte `camera-name`, `timestamp`, `custom-text`, `disabled` (in der ioBroker-Admin/Objektansicht als Dropdown dargestellt).
+3. **Benutzerdefinierter Text:** Setze `leftText` (bzw. `rightText`) auf `custom-text` **und** trage den Text in `customLeftText` (bzw. `customRightText`) ein — ist das Textfeld beim Umschalten auf `custom-text` noch leer, zeigt MotionEye zunächst keinen Text an.
+4. **`textScale`** steuert die Textgröße (`1`–`10`, entspricht dem Schieberegler in der MotionEye-Oberfläche).
+
+---
+
 ### Verbindung testen (Admin)
 
 Ab GitHub-Stand / Version **0.4.2** gibt es unter **Einstellungen** den Button **Verbindung testen**. Er prüft Host, Port, Benutzer und das **gespeicherte** Passwort gegen `/config/list` — ohne SSH.
