@@ -64,6 +64,8 @@ Ab Adapter **0.6.0** liegen Kamera-Parameter unter `motioneye.<Instanz>.<kamera>
 3. Schaltest du die Maske **direkt in MotionEye** aus, verwirft MotionEye die Bereiche sofort. Danach hilft nur: Maske in MotionEye neu zeichnen, kurz warten (Poll) oder Instanz neu starten, damit der Adapter die Linien wieder übernimmt.
 4. **Helligkeit/Kontrast/Sättigung/Farbton** gibt es in MotionEye nur für lokale USB-/v4l2-Kameras, nicht für Netzwerk-Kameras (RTSP) — deshalb keine Datenpunkte im Adapter.
 
+**Mehrere Einstellungen gleichzeitig ändern:** Ab Adapter **0.7.0** werden Config-Schreibvorgänge pro Kamera in eine Warteschlange gestellt. Wenn du mehrere `settings.*`/`overlay.*`-Datenpunkte derselben Kamera fast gleichzeitig setzt (z. B. per Skript oder Mehrfachauswahl), geht dadurch keine der Änderungen mehr verloren. In älteren Versionen: Datenpunkte einzeln nacheinander setzen und `lastAction` abwarten, bevor der nächste geändert wird.
+
 ---
 
 ### Textüberlagerung (`overlay.*`)

@@ -64,6 +64,8 @@ From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instanc
 3. If you turn the mask **off directly in MotionEye**, MotionEye discards the regions immediately. Then you must redraw the mask in MotionEye, wait for a poll (or restart the instance) so the adapter picks up the lines again.
 4. **Brightness/contrast/saturation/hue** are only available in MotionEye for local USB/v4l2 cameras, not for network (RTSP) cameras — therefore no datapoints in the adapter.
 
+**Changing several settings at once:** From adapter **0.7.0**, config writes are queued per camera, so setting multiple `settings.*`/`overlay.*` datapoints for the same camera at nearly the same time (e.g. via a script or batch edit) no longer risks one change silently overwriting another. On older versions, change one datapoint at a time and wait for `lastAction` to update before changing the next.
+
 ---
 
 ### Text overlay (`overlay.*`)
