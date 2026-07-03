@@ -74,7 +74,7 @@ From adapter **0.7.0** onwards, the camera's text overlay lives under `motioneye
 
 1. **`enabled`** is the master on/off switch for the overlay. When switched off, MotionEye clears the displayed text on the video — `leftText`/`rightText`/custom text are kept in the adapter and MotionEye config, ready for when you switch it back on.
 2. **`leftText`/`rightText`** accept one of `camera-name`, `timestamp`, `custom-text`, `disabled` (shown as a dropdown in ioBroker Admin/object view).
-3. **Custom text:** set `leftText` (or `rightText`) to `custom-text` **and** fill in `customLeftText` (or `customRightText`) — if the custom text field is still empty when you switch to `custom-text`, MotionEye shows empty text until you set it.
+3. **Custom text:** set `leftText` (or `rightText`) to `custom-text` and fill in `customLeftText` (or `customRightText`) — in either order. MotionEye only stores the custom text while the mode is already `custom-text`, so the adapter always sends both fields together in one request to avoid the text getting silently dropped.
 4. **`textScale`** controls the text size (`1`–`10`, matches the slider in the MotionEye UI).
 
 ---

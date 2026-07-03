@@ -74,7 +74,7 @@ Ab Adapter **0.7.0** liegt die Textüberlagerung der Kamera unter `motioneye.<In
 
 1. **`enabled`** ist der Hauptschalter für die Überlagerung. Schaltest du ihn aus, entfernt MotionEye den angezeigten Text im Video — `leftText`/`rightText`/der Benutzertext bleiben im Adapter und in der MotionEye-Config erhalten und werden beim erneuten Einschalten wieder verwendet.
 2. **`leftText`/`rightText`** akzeptieren einen der Werte `camera-name`, `timestamp`, `custom-text`, `disabled` (in der ioBroker-Admin/Objektansicht als Dropdown dargestellt).
-3. **Benutzerdefinierter Text:** Setze `leftText` (bzw. `rightText`) auf `custom-text` **und** trage den Text in `customLeftText` (bzw. `customRightText`) ein — ist das Textfeld beim Umschalten auf `custom-text` noch leer, zeigt MotionEye zunächst keinen Text an.
+3. **Benutzerdefinierter Text:** Setze `leftText` (bzw. `rightText`) auf `custom-text` und trage den Text in `customLeftText` (bzw. `customRightText`) ein — die Reihenfolge spielt keine Rolle. MotionEye speichert den Benutzertext nur dann dauerhaft, wenn der Modus bereits `custom-text` ist, deshalb sendet der Adapter beide Werte immer gemeinsam in einer Anfrage, damit der Text nicht verloren geht.
 4. **`textScale`** steuert die Textgröße (`1`–`10`, entspricht dem Schieberegler in der MotionEye-Oberfläche).
 
 ---

@@ -149,6 +149,8 @@ If you like our work and would like to support us, we appreciate any donation.
 -->
 ### **WORK IN PROGRESS**
 - (skvarel) Per-camera text overlay under `overlay.*`: read and control overlay on/off, left/right text mode (camera name / timestamp / custom text / disabled), custom text strings, and text size (`overlay.enabled`, `overlay.leftText`, `overlay.rightText`, `overlay.customLeftText`, `overlay.customRightText`, `overlay.textScale`)
+- (skvarel) Fixed a race condition where setting two `settings.*`/`overlay.*` datapoints for the same camera at nearly the same time could silently drop one of the changes ("lost update"); config writes per camera are now serialized
+- (skvarel) Fixed custom overlay text being dropped: MotionEye only persists `customLeftText`/`customRightText` while `leftText`/`rightText` is already `custom-text` at save time, so the adapter now always writes both fields of a side together
 
 ### 0.6.1 (2026-07-03)
 - (skvarel) Fixed privacy mask regions not surviving adapter restarts/updates: mask lines are now persisted to the settings channel's native config instead of only in memory

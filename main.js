@@ -1277,22 +1277,19 @@ class Motioneye extends utils.Adapter {
 			return;
 		}
 
+		if (param === 'leftText' || param === 'customLeftText') {
+			await this.setTextOverlaySide(camera, 'left', param, value);
+			return;
+		}
+		if (param === 'rightText' || param === 'customRightText') {
+			await this.setTextOverlaySide(camera, 'right', param, value);
+			return;
+		}
+
 		let built;
 		switch (param) {
 			case 'enabled':
 				built = buildTextOverlayPatch(value);
-				break;
-			case 'leftText':
-				built = buildLeftTextPatch(value);
-				break;
-			case 'rightText':
-				built = buildRightTextPatch(value);
-				break;
-			case 'customLeftText':
-				built = buildCustomLeftTextPatch(value);
-				break;
-			case 'customRightText':
-				built = buildCustomRightTextPatch(value);
 				break;
 			case 'textScale':
 				built = buildTextScalePatch(value);
@@ -1315,6 +1312,62 @@ class Motioneye extends utils.Adapter {
 		if (result.changed) {
 			await this.setStateAsync(`${channelId}.lastAction`, `config/set ${param}=${built.value}`, true);
 			this.log.info(`${param} for ${camera.name}: ${built.value}`);
+		}
+	}
+
+	/**
+	 * MotionEye only persists `custom_left_text`/`custom_right_text` while `left_text`/
+	 * `right_text` already equals `custom-text` *at save time* — otherwise it's silently
+	 * discarded. Saving the position and the custom text as two separate requests can
+	 * therefore lose the custom text (whichever field is saved second overwrites the
+	 * other with a stale value fetched before the first save applied). Always resolve
+	 * and send both fields of a side together, in one request.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {'left'|'right'} side
+	 * @param {'leftText'|'customLeftText'|'rightText'|'customRightText'} param
+	 * @param {unknown} value
+	 */
+	async setTextOverlaySide(camera, side, param, value) {
+		const channelId = camera.channel;
+		const overlayId = `${channelId}.${CAMERA_OVERLAY_CHANNEL}`;
+		const positionId = side === 'left' ? 'leftText' : 'rightText';
+		const customId = side === 'left' ? 'customLeftText' : 'customRightText';
+		const defaultPosition = side === 'left' ? 'camera-name' : 'timestamp';
+
+		const positionValue =
+			param === positionId
+				? value
+				: ((await this.getStateAsync(`${overlayId}.${positionId}`))?.val ?? defaultPosition);
+		const customValue =
+			param === customId ? value : ((await this.getStateAsync(`${overlayId}.${customId}`))?.val ?? '');
+
+		const positionBuilt = side === 'left' ? buildLeftTextPatch(positionValue) : buildRightTextPatch(positionValue);
+		if (!positionBuilt.patch) {
+			this.log.warn(`${positionId} rejected for ${camera.name}: ${positionBuilt.error}`);
+			await this.setStateAsync(`${channelId}.status`, `error: ${positionBuilt.error}`, true);
+			return;
+		}
+
+		const customBuilt =
+			side === 'left' ? buildCustomLeftTextPatch(customValue) : buildCustomRightTextPatch(customValue);
+		const patch = { ...positionBuilt.patch, ...customBuilt.patch };
+
+		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, patch);
+
+		await this.setStateAsync(`${overlayId}.${positionId}`, positionBuilt.value, true);
+		await this.setStateAsync(`${overlayId}.${customId}`, customBuilt.value, true);
+		await this.setStateAsync(`${channelId}.status`, `${param}=${value}`, true);
+
+		if (result.changed) {
+			await this.setStateAsync(
+				`${channelId}.lastAction`,
+				`config/set ${positionId}=${positionBuilt.value}`,
+				true,
+			);
+			this.log.info(
+				`${positionId} for ${camera.name}: ${positionBuilt.value} (${customId}=${customBuilt.value})`,
+			);
 		}
 	}
 
