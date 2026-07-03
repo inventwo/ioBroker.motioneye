@@ -134,8 +134,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.6.1 (2026-07-03)
 - (skvarel) Fixed privacy mask regions not surviving adapter restarts/updates: mask lines are now persisted to the settings channel's native config instead of only in memory
 
 ### 0.6.0 (2026-07-02)
@@ -151,9 +150,6 @@ If you like our work and would like to support us, we appreciate any donation.
 - (skvarel) FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting
 - (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection'
 - (skvarel) Verbose unauthorized hints: web login URL and simple-password troubleshooting
-
-### 0.4.1 (2026-06-28)
-- (skvarel) Added Logs / Logging tab with optional verbose diagnostic logging for troubleshooting (e.g. unauthorized)
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)

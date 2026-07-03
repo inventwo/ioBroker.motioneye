@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.4.1 (2026-06-28)
+- (skvarel) Added Logs / Logging tab with optional verbose diagnostic logging for troubleshooting (e.g. unauthorized)
+
 ## 0.4.0 (2026-06-28)
 - (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
 - (skvarel) Repository review fixes: timer value capping, self-scheduling status poll, removed unused help i18n keys, stream timing settings in expert mode

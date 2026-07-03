@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "news": {
+      "0.6.1": {
+        "en": "Fixed privacy mask regions not surviving adapter restarts/updates: mask lines are now persisted to the settings channel's native config instead of only in memory",
+        "de": "Behobenes Problem mit Datenschutzmaskenbereichen, die nach Neustarts/Aktualisierungen des Adapters nicht erhalten blieben: Maskenzeilen werden nun in der nativen Konfiguration des Einstellungskanals gespeichert, anstatt nur im Arbeitsspeicher.",
+        "ru": "Исправлена ошибка, из-за которой области маски конфиденциальности не сохранялись после перезапуска/обновления адаптера: теперь строки маски сохраняются в собственном конфигурационном файле канала настроек, а не только в памяти.",
+        "pt": "Corrigido o problema em que as regiões da máscara de privacidade não persistiam após reinicializações/atualizações do adaptador: as linhas da máscara agora são persistidas na configuração nativa do canal de configurações, em vez de apenas na memória.",
+        "nl": "Het probleem is opgelost waarbij de privacymaskerregio's niet behouden bleven na herstarts/updates van de adapter: de maskerlijnen worden nu opgeslagen in de native configuratie van het instellingenkanaal in plaats van alleen in het geheugen.",
+        "fr": "Correction d'un problème où les zones de masque de confidentialité ne résistaient pas aux redémarrages/mises à jour de l'adaptateur : les lignes de masque sont désormais enregistrées dans la configuration native du canal des paramètres et non plus seulement en mémoire.",
+        "it": "Risolto il problema per cui le regioni della maschera di privacy non venivano salvate dopo i riavvii/aggiornamenti dell'adattatore: le righe della maschera ora vengono salvate nella configurazione nativa del canale delle impostazioni anziché solo in memoria.",
+        "es": "Se solucionó el problema por el cual las regiones de máscara de privacidad no se conservaban tras los reinicios/actualizaciones del adaptador: ahora las líneas de máscara se guardan en la configuración nativa del canal de configuración en lugar de solo en la memoria.",
+        "pl": "Naprawiono obszary maski prywatności, które nie zachowywały się po ponownym uruchomieniu/aktualizacji adaptera: linie maski są teraz zapisywane w natywnej konfiguracji kanału ustawień, a nie tylko w pamięci",
+        "uk": "Виправлено проблеми з маскуванням конфіденційності, які не зберігаються після перезапуску/оновлення адаптера: рядки маски тепер зберігаються в власній конфігурації каналу налаштувань, а не лише в пам'яті.",
+        "zh-cn": "修复了隐私掩码区域在适配器重启/更新后无法保留的问题：现在掩码行会持久化到设置通道的本地配置中，而不仅仅是保存在内存中。"
+      },
       "0.6.0": {
         "en": "Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation, auto brightness and privacy mask (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); resolution is validated against the camera's supported list",
         "de": "Gerätespezifische Kameraeinstellungen unter `settings.*`: Bildrate, Auflösung, Drehung, automatische Helligkeit und Datenschutzmaske lesen und steuern (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); die Auflösung wird anhand der Liste der von der Kamera unterstützten Auflösungen validiert.",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga admin > = 7.8.23 teraz.\nRepozytorium review fixes: timer value capping, self-scheduling status poll, usunięty niewykorzystany help i18n Keys, ustawienia czasu strumienia w trybie ekspertów",
         "uk": "Адаптер вимагає адміністратора >= 7.8.23 тепер.\nРепозиторійна рецензія фіксує: блокування значень таймера, опитування статусу самозабезпечення, видалення невикористаної допомоги i18n ключів, налаштування термінів потоку в експертному режимі",
         "zh-cn": "适配器需要管理员 \\ 7.8.23现在.\n仓库审查修正:定时器值封顶,自定时间状态民调,移除未使用的帮助 i18n 密钥, 专家模式中的流时设置"
-      },
-      "0.3.5": {
-        "en": "Fixed object roles for repository review: `_info` as channel, camera `mode` role `level.effect`, `motion` read-only (`sensor.motion`)",
-        "de": "Festgelegte Objektrollen für die Repository-Überprüfung: `_info` als Kanal, Kamera-`mode`-Rolle `level.effect`, `motion`-schreibgeschützt (`sensor.motion`)",
-        "ru": "Исправлены роли объектов для проверки репозитория: `_info` как канал, роль `mode` камеры `level.effect`, `motion` только для чтения (`sensor.motion`).",
-        "pt": "Funções de objeto fixas para revisão do repositório: `_info` como canal, câmera `mode` função `level.effect`, `motion` somente leitura (`sensor.motion`)",
-        "nl": "Vaste objectrollen voor repository-evaluatie: `_info` als kanaal, camera `mode` rol `level.effect`, `motion` alleen-lezen (`sensor.motion`)",
-        "fr": "Rôles fixes des objets pour la revue du dépôt : `_info` en tant que canal, `mode` de la caméra en tant que rôle `level.effect`, `motion` en lecture seule (`sensor.motion`)",
-        "it": "Ruoli fissi degli oggetti per la revisione del repository: `_info` come canale, ruolo `mode` della telecamera `level.effect`, `motion` sola lettura (`sensor.motion`)",
-        "es": "Roles de objetos fijos para la revisión del repositorio: `_info` como canal, rol de modo de cámara `level.effect`, solo lectura de `motion` (`sensor.motion`)",
-        "pl": "Naprawiono role obiektów do przeglądu repozytorium: `_info` jako kanał, kamera `mode` rola `level.effect`, `motion` tylko do odczytu (`sensor.motion`)",
-        "uk": "Виправлені ролі об'єктів для перегляду репозиторію: `_info` як канал, роль `mode` камери `level.effect`, `motion` лише для читання (`sensor.motion`).",
-        "zh-cn": "用于存储库审查的固定对象角色：`_info` 作为通道，相机 `mode` 角色为 `level.effect`，`motion` 只读（`sensor.motion`）"
       }
     },
     "titleLang": {
