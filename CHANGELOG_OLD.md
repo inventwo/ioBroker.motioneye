@@ -1,6 +1,11 @@
 # Older changes
 
 _No released versions yet._
+## 0.4.2 (2026-06-30)
+- (skvarel) FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting
+- (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection'
+- (skvarel) Verbose unauthorized hints: web login URL and simple-password troubleshooting
+
 ## 0.4.1 (2026-06-28)
 - (skvarel) Added Logs / Logging tab with optional verbose diagnostic logging for troubleshooting (e.g. unauthorized)
 
