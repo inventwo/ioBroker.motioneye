@@ -83,6 +83,18 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 
 > These datapoints can also be preset per camera on the **Overlay** config tab (handy when configuring many cameras at once). See [Configuration](#configuration) and [FAQ](docs/en/faq.md#text-overlay-overlay).
 
+### Per camera storage (`motioneye.0.<name>.storage.*`)
+
+| State | Type | Read | Write | Description |
+|-------|------|------|-------|-------------|
+| `snapshotCount` | value | yes | no | Number of stored snapshots |
+| `videoCount` | value | yes | no | Number of stored video clips |
+| `usedSpaceMb` | value | yes | no | Occupied space (snapshots + videos), in MB |
+| `lastRefresh` | text | yes | no | Timestamp of the last successful refresh |
+| `refresh` | button | no | yes | Trigger a refresh now |
+
+> Refreshing requires MotionEye to recursively scan and check every stored file, which can be slow for cameras with large media libraries. Not part of the regular status poll — refresh manually via `refresh`, or enable a slow auto-refresh via `storagePollIntervalSec` (default: disabled). See [FAQ](docs/en/faq.md#storage-storage).
+
 ### Instance (`motioneye.0._info.*`)
 
 | State | Type | Description |
@@ -133,6 +145,7 @@ Details: [FAQ EN](docs/en/faq.md#motioneye-044-adapter-050) · [FAQ DE](docs/de/
 | `webhookPort` | `8090` | Built-in webhook listener port |
 | `motionResetMs` | `15000` | Auto-reset for `.motion` after webhook |
 | `statusPollIntervalSec` | `300` | MotionEye status poll interval |
+| `storagePollIntervalSec` | `0` | Auto-refresh interval for `storage.*` (0 = disabled, use `storage.refresh` on demand instead) |
 | `useMotionEyeConfig` | `true` | Write mode, webhook URLs, and stream on/off to MotionEye (leave enabled for normal use) |
 
 Per camera (Cameras tab): optional **Media folder** name under `/var/lib/motioneye` (e.g. `Bambu` instead of default `Camera8`). Applied on adapter start when config sync is enabled. Does not rename existing folders on disk.
@@ -159,6 +172,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Per-camera storage stats under `storage.*`: snapshot count, video count, and occupied space in MB (`storage.snapshotCount`, `storage.videoCount`, `storage.usedSpaceMb`, `storage.lastRefresh`), refreshed on demand via `storage.refresh` or optionally on a slow auto-refresh interval (`storagePollIntervalSec`, default: disabled)
+
 ### 0.8.0 (2026-07-04)
 - (skvarel) New **Overlay** config tab: preset `overlay.*` (enabled/leftText/rightText/customLeftText/customRightText/textScale) per camera in a table, with a button to apply the table to already-running cameras immediately; values only ever flow from the config table to the datapoints, never back, so live datapoint changes are never overwritten on a restart
 

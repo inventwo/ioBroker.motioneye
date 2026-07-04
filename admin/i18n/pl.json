@@ -71,6 +71,8 @@
 	"paypal_donate": "Przekaż darowiznę za pomocą PayPal",
 	"requestTimeoutMs": "Limit czasu żądania API (ms)",
 	"statusPollIntervalSec": "Interwał sondowania stanu (sekundy)",
+	"storagePollIntervalSec": "Interwał automatycznego odświeżania statystyk przechowywania (sekundy)",
+	"storagePollIntervalSec_help": "0 = wyłączone (zalecane ustawienie domyślne). Wyświetlanie migawek/wideo na liście wymaga przeskanowania przez MotionEye i użycia funkcji stat() każdego zapisanego pliku, co może być powolne w przypadku kamer z dużymi bibliotekami multimediów — w tym przypadku należy użyć punktu danych Storage.refresh każdej kamery w celu odświeżenia na żądanie, a nie krótkiego interwału.",
 	"streamAutoOffMs": "Automatyczne wyłączanie impulsu strumieniowego (ms)",
 	"streamAutoOffMs_help": "Używany tylko przez streamPulse — strumień wyłącza się po upływie tego czasu (0 = nigdy)",
 	"streamReadyTimeoutMs": "Limit czasu gotowości strumienia (ms)",

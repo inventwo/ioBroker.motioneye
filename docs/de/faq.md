@@ -88,6 +88,18 @@ Ab der nächsten Adapter-Version zeigt der Konfigurations-Tab **Overlay** eine Z
 
 ---
 
+### Speicherplatz (`storage.*`)
+
+Ab der nächsten Adapter-Version zeigt `motioneye.<Instanz>.<kamera>.storage.*` an, wie viele Snapshots/Videoclips aktuell gespeichert sind und wie viel Platz sie belegen (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh` sowie der Trigger `refresh`).
+
+1. **Warum das nicht automatisch läuft:** Um diese Werte zu ermitteln, muss MotionEye den Medienordner der Kamera rekursiv durchsuchen und jede einzelne gespeicherte Datei prüfen — bei Kameras mit großen Medienarchiven (tausende Snapshots/Clips) kann das etwas dauern und den MotionEye-Server merklich belasten. Deshalb ist das **nicht** Teil des normalen Status-Polls (`statusPollIntervalSec`).
+2. **Manuell aktualisieren:** Setze `storage.refresh` bei der gewünschten Kamera auf `true` — der Adapter holt die aktuellen Werte und setzt `refresh` danach automatisch wieder auf `false`.
+3. **Optionale automatische Aktualisierung:** Stelle unter **Einstellungen → Speicherplatz-Statistik Auto-Aktualisierung** (`storagePollIntervalSec`) einen Wert größer `0` ein (z. B. `3600` für stündlich), damit alle Kameras automatisch in diesem Intervall aktualisiert werden. Standard ist `0` (deaktiviert) — ein kurzes Intervall nur verwenden, wenn der MotionEye-Server das verlässlich verarbeiten kann.
+4. **`usedSpaceMb` ist eine Näherung:** MotionEye liefert pro Datei nur eine bereits gerundete Größenangabe (z. B. `"1.2 MB"`), keine exakten Byte-Werte. Die Summe hat daher einen kleinen Rundungsfehler — ausreichend genau, um Speichertrends zu erkennen, aber keine exakte Belegungsanzeige.
+5. Schlägt eine Aktualisierung fehl (z. B. weil MotionEye bei einem sehr großen Ordner ein Timeout auslöst), bleiben die vorherigen Werte erhalten und der Fehler wird in `status` geschrieben — später erneut versuchen oder das **API-Anfrage-Timeout** (`requestTimeoutMs`) in den Einstellungen erhöhen.
+
+---
+
 ### Verbindung testen (Admin)
 
 Ab GitHub-Stand / Version **0.4.2** gibt es unter **Einstellungen** den Button **Verbindung testen**. Er prüft Host, Port, Benutzer und das **gespeicherte** Passwort gegen `/config/list` — ohne SSH.

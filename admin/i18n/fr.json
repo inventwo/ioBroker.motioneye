@@ -71,6 +71,8 @@
 	"paypal_donate": "Faites un don avec PayPal",
 	"requestTimeoutMs": "Délai d'expiration de la requête API (ms)",
 	"statusPollIntervalSec": "Intervalle d'interrogation d'état (secondes)",
+	"storagePollIntervalSec": "Intervalle d'actualisation automatique des statistiques de stockage (secondes)",
+	"storagePollIntervalSec_help": "0 = désactivé (valeur par défaut recommandée). La liste des instantanés/vidéos nécessite que MotionEye analyse et stat() chaque fichier stocké, ce qui peut être lent pour les caméras dotées de grandes bibliothèques multimédias : utilisez le point de données storage.refresh de chaque caméra pour une actualisation à la demande au lieu d'un court intervalle ici.",
 	"streamAutoOffMs": "Arrêt automatique des impulsions de flux (ms)",
 	"streamAutoOffMs_help": "Utilisé uniquement par streamPulse — le flux s'éteint après cette durée (0 = jamais)",
 	"streamReadyTimeoutMs": "Délai d'expiration de la diffusion (ms)",

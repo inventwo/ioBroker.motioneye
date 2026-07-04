@@ -88,6 +88,18 @@ From the next adapter release onwards, the **Overlay** config tab shows one tabl
 
 ---
 
+### Storage (`storage.*`)
+
+From the next adapter release onwards, `motioneye.<instance>.<camera>.storage.*` reports how many snapshots/video clips are currently stored and how much space they occupy (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh`, and the `refresh` trigger).
+
+1. **Why it's not automatic:** getting these numbers requires MotionEye to recursively scan the camera's media folder and check every single stored file — for cameras with a large media library (thousands of snapshots/clips) this can take a while and put noticeable load on the MotionEye server. That's why it is **not** part of the regular status poll (`statusPollIntervalSec`).
+2. **Manual refresh:** set `storage.refresh` to `true` on the camera you want to update — the adapter fetches the current numbers and resets `refresh` back to `false` when done.
+3. **Optional auto-refresh:** set **Settings → Storage stats auto-refresh interval** (`storagePollIntervalSec`) to a value greater than `0` (e.g. `3600` for hourly) to refresh all cameras automatically on that interval. Default is `0` (disabled) — only use a short interval if you know your MotionEye server can handle it.
+4. **`usedSpaceMb` is an approximation:** MotionEye only reports a pre-rounded size string per file (e.g. `"1.2 MB"`), not exact byte counts, so the total has a small rounding error — accurate enough to see storage trends, not meant as an exact disk-usage report.
+5. If a refresh fails (e.g. MotionEye times out on a very large folder), the previous values are kept and the error is written to `status`; try again later or increase **API request timeout** (`requestTimeoutMs`) in Settings.
+
+---
+
 ### Test connection (admin UI)
 
 From the GitHub build / version **0.4.2** onwards, **Settings** includes a **Test connection** button. It checks host, port, username, and the **saved** password against `/config/list` — no SSH required.

@@ -8,6 +8,7 @@ const utils = require('@iobroker/adapter-core');
 const { createMotionEyeApi } = require('./lib/motionEyeApi');
 const { createMotionApi } = require('./lib/motionApi');
 const { buildStoragePatch } = require('./lib/mediaStorage');
+const { summarizeMediaList, bytesToMb } = require('./lib/mediaUsage');
 const { INFO_STATE_LABELS } = require('./lib/infoLabels');
 const { mergeMotionEyeCameras, parseLoadCamerasMessage } = require('./lib/cameraDiscovery');
 const { resolveCameras, resolveLegacyCameras, buildWebhookUrl } = require('./lib/cameraRegistry');
@@ -77,6 +78,11 @@ const DEVICE_PARAMS = ['framerate', 'resolution', 'rotation', 'autoBrightness', 
 const CAMERA_OVERLAY_CHANNEL = 'overlay';
 /** Writable overlay parameters handled via setOverlayParam (state id under `overlay`). */
 const OVERLAY_PARAMS = ['enabled', 'leftText', 'rightText', 'customLeftText', 'customRightText', 'textScale'];
+
+/** Snapshot/video count + occupied space grouped under the `storage` sub-channel. */
+const CAMERA_STORAGE_CHANNEL = 'storage';
+/** Floor for storagePollIntervalSec when auto-refresh is enabled (media listing is expensive). */
+const STORAGE_POLL_MIN_SEC = 300;
 /** Human-readable labels for the left_text/right_text enum (MotionEye UI config). */
 const TEXT_POSITION_LABELS = {
 	'camera-name': 'Camera name',
@@ -109,6 +115,7 @@ class Motioneye extends utils.Adapter {
 		this.streamManager = undefined;
 		this.webhookServer = undefined;
 		this.pollInterval = undefined;
+		this.storagePollInterval = undefined;
 		this.motionResetTimers = {};
 		/** @type {Map<string, import('./lib/cameraRegistry').ResolvedCamera>} */
 		this.camerasById = new Map();
@@ -251,6 +258,7 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.overlay.customLeftText');
 		this.subscribeStates('*.overlay.customRightText');
 		this.subscribeStates('*.overlay.textScale');
+		this.subscribeStates('*.storage.refresh');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -269,6 +277,30 @@ class Motioneye extends utils.Adapter {
 			}, pollSec * 1000);
 		};
 		schedulePoll();
+
+		// Off by default (0) — media listing requires MotionEye to recursively stat()
+		// every stored file, which can be slow with large media libraries. Use the
+		// per-camera storage.refresh trigger for on-demand refreshes instead.
+		const storagePollSecRaw = Math.floor(Number(this.config.storagePollIntervalSec)) || 0;
+		if (storagePollSecRaw > 0) {
+			const storagePollSec = Math.min(
+				Math.max(STORAGE_POLL_MIN_SEC, storagePollSecRaw),
+				Math.floor(MAX_TIMER_MS / 1000),
+			);
+			const scheduleStoragePoll = () => {
+				this.storagePollInterval = this.setTimeout(async () => {
+					try {
+						await this.refreshAllCameraStorage();
+					} catch (error) {
+						this.log.warn(`Storage poll failed: ${error.message}`);
+					}
+					if (!this._unloading) {
+						scheduleStoragePoll();
+					}
+				}, storagePollSec * 1000);
+			};
+			scheduleStoragePoll();
+		}
 
 		this.log.info('MotionEye adapter ready');
 	}
@@ -639,6 +671,7 @@ class Motioneye extends utils.Adapter {
 
 		await this.ensureCameraSettingsObjects(camera);
 		await this.ensureCameraOverlayObjects(camera);
+		await this.ensureCameraStorageObjects(camera);
 
 		await this.extendObjectAsync(`${channelId}.mode`, {
 			common: { role: CAMERA_MODE_ROLE },
@@ -907,6 +940,138 @@ class Motioneye extends utils.Adapter {
 				common: /** @type {ioBroker.StateCommon} */ (state.common),
 				native: {},
 			});
+		}
+	}
+
+	/**
+	 * Create the `storage` sub-channel: snapshot/video counts and occupied space
+	 * (read-only, filled in by refreshCameraStorage) plus a manual refresh trigger.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 */
+	async ensureCameraStorageObjects(camera) {
+		const storageId = `${camera.channel}.${CAMERA_STORAGE_CHANNEL}`;
+
+		await this.setObjectNotExistsAsync(storageId, {
+			type: 'channel',
+			common: { name: `${camera.name} storage` },
+			native: {},
+		});
+
+		const states = [
+			{
+				id: 'snapshotCount',
+				common: {
+					name: `${camera.name} snapshot count`,
+					type: 'number',
+					role: 'value',
+					read: true,
+					write: false,
+					def: 0,
+				},
+			},
+			{
+				id: 'videoCount',
+				common: {
+					name: `${camera.name} video count`,
+					type: 'number',
+					role: 'value',
+					read: true,
+					write: false,
+					def: 0,
+				},
+			},
+			{
+				id: 'usedSpaceMb',
+				common: {
+					name: `${camera.name} occupied space`,
+					type: 'number',
+					role: 'value',
+					unit: 'MB',
+					read: true,
+					write: false,
+					def: 0,
+				},
+			},
+			{
+				id: 'lastRefresh',
+				common: {
+					name: `${camera.name} storage last refresh`,
+					type: 'string',
+					role: 'date',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
+				id: 'refresh',
+				common: {
+					name: `${camera.name} storage refresh trigger`,
+					type: 'boolean',
+					role: 'button',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+		];
+
+		for (const state of states) {
+			await this.setObjectNotExistsAsync(`${storageId}.${state.id}`, {
+				type: 'state',
+				common: /** @type {ioBroker.StateCommon} */ (state.common),
+				native: {},
+			});
+		}
+	}
+
+	/**
+	 * Fetch snapshot/video counts and occupied space from MotionEye's media list API
+	 * for one camera and write them to the `storage` sub-channel. This requires
+	 * MotionEye to recursively scan and stat() every stored file — deliberately not
+	 * called on every status poll (see storagePollIntervalSec / storage.refresh).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 */
+	async refreshCameraStorage(camera) {
+		const storageId = `${camera.channel}.${CAMERA_STORAGE_CHANNEL}`;
+
+		try {
+			const [pictures, movies] = await Promise.all([
+				this.motionEyeApi.listPictures(camera.motionEyeId),
+				this.motionEyeApi.listMovies(camera.motionEyeId),
+			]);
+
+			const pictureSummary = summarizeMediaList(pictures);
+			const movieSummary = summarizeMediaList(movies);
+			const usedSpaceMb = bytesToMb(pictureSummary.totalBytes + movieSummary.totalBytes);
+
+			await this.setStateAsync(`${storageId}.snapshotCount`, pictureSummary.count, true);
+			await this.setStateAsync(`${storageId}.videoCount`, movieSummary.count, true);
+			await this.setStateAsync(`${storageId}.usedSpaceMb`, usedSpaceMb, true);
+			await this.setStateAsync(`${storageId}.lastRefresh`, new Date().toISOString(), true);
+
+			this.log.info(
+				`Storage refreshed for ${camera.name}: ${pictureSummary.count} snapshot(s), ${movieSummary.count} video(s), ${usedSpaceMb} MB`,
+			);
+		} catch (error) {
+			this.log.warn(`Storage refresh failed for ${camera.name}: ${error.message}`);
+			await this.setStateAsync(
+				`${camera.channel}.status`,
+				`error: storage refresh failed: ${error.message}`,
+				true,
+			);
+		}
+	}
+
+	/**
+	 * Refresh storage stats for all running cameras, sequentially (avoids hammering
+	 * MotionEye with N concurrent recursive directory scans).
+	 */
+	async refreshAllCameraStorage() {
+		for (const camera of this.camerasById.values()) {
+			await this.refreshCameraStorage(camera);
 		}
 	}
 
@@ -1599,6 +1764,12 @@ class Motioneye extends utils.Adapter {
 			return;
 		}
 
+		if (stateName === `${CAMERA_STORAGE_CHANNEL}.refresh` && state.val === true) {
+			await this.refreshCameraStorage(camera);
+			await this.setStateAsync(`${camera.channel}.${CAMERA_STORAGE_CHANNEL}.refresh`, false, true);
+			return;
+		}
+
 		const settingsPrefix = `${CAMERA_SETTINGS_CHANNEL}.`;
 		if (stateName.startsWith(settingsPrefix)) {
 			const param = stateName.slice(settingsPrefix.length);
@@ -1836,6 +2007,11 @@ class Motioneye extends utils.Adapter {
 			if (this.pollInterval) {
 				this.clearTimeout(this.pollInterval);
 				this.pollInterval = undefined;
+			}
+
+			if (this.storagePollInterval) {
+				this.clearTimeout(this.storagePollInterval);
+				this.storagePollInterval = undefined;
 			}
 
 			for (const timerId of Object.keys(this.motionResetTimers)) {

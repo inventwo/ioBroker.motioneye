@@ -183,6 +183,19 @@
 					"lg": 4,
 					"xl": 4
 				},
+				"storagePollIntervalSec": {
+					"type": "number",
+					"label": "storagePollIntervalSec",
+					"min": 0,
+					"max": 604800,
+					"default": 0,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "storagePollIntervalSec_help"
+				},
 				"_streamHeader": {
 					"type": "header",
 					"text": "header_stream",

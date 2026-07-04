@@ -71,6 +71,8 @@
 	"paypal_donate": "Falls du uns unterstützen möchtest.",
 	"requestTimeoutMs": "API-Anfrage-Timeout (ms)",
 	"statusPollIntervalSec": "Status-Abfrageintervall (Sekunden)",
+	"storagePollIntervalSec": "Speicherplatz-Statistik Auto-Aktualisierung (Sekunden)",
+	"storagePollIntervalSec_help": "0 = deaktiviert (empfohlener Standard). Das Auflisten von Snapshots/Videos erfordert, dass MotionEye jede gespeicherte Datei durchsucht und deren Größe abfragt — das kann bei Kameras mit großen Medienarchiven spürbar dauern. Nutze stattdessen den Datenpunkt storage.refresh je Kamera für eine Aktualisierung auf Abruf, statt hier ein kurzes Intervall zu setzen.",
 	"streamAutoOffMs": "Stream-Pulse Auto-Aus (ms)",
 	"streamAutoOffMs_help": "Nur für streamPulse — der Stream schaltet nach dieser Dauer wieder aus (0 = nie)",
 	"streamReadyTimeoutMs": "Stream-Bereitschaftszeitüberschreitung (ms)",

@@ -71,6 +71,8 @@
 	"paypal_donate": "Doneer met PayPal",
 	"requestTimeoutMs": "Time-out van API-verzoek (ms)",
 	"statusPollIntervalSec": "Status poll-interval (seconden)",
+	"storagePollIntervalSec": "Interval voor automatisch vernieuwen van opslagstatistieken (seconden)",
+	"storagePollIntervalSec_help": "0 = uitgeschakeld (aanbevolen standaard). Voor het weergeven van snapshots/video's moet MotionEye elk opgeslagen bestand scannen en stat()en, wat traag kan zijn voor camera's met grote mediabibliotheken. Gebruik hier het storage.refresh-datapunt van elke camera voor een vernieuwing op aanvraag in plaats van een kort interval.",
 	"streamAutoOffMs": "Automatische uitschakeling van streampuls (ms)",
 	"streamAutoOffMs_help": "Alleen gebruikt door streamPulse: de stream wordt na deze duur uitgeschakeld (0 = nooit)",
 	"streamReadyTimeoutMs": "Time-out voor gereed streamen (ms)",

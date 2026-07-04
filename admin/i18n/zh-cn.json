@@ -71,6 +71,8 @@
 	"paypal_donate": "通过 PayPal 捐赠",
 	"requestTimeoutMs": "API请求超时（毫秒）",
 	"statusPollIntervalSec": "状态轮询间隔（秒）",
+	"storagePollIntervalSec": "存储统计数据自动刷新间隔（秒）",
+	"storagePollIntervalSec_help": "0 = 禁用（推荐默认值）。列出快照/视频需要 MotionEye 扫描并 stat() 每个存储的文件，这对于具有大型媒体库的相机来说可能很慢 - 使用每个相机的 storage.refresh 数据点进行按需刷新，而不是在此处使用短间隔。",
 	"streamAutoOffMs": "流脉冲自动关闭（ms）",
 	"streamAutoOffMs_help": "仅由streamPulse使用-流在此持续时间后关闭（0=从不）",
 	"streamReadyTimeoutMs": "流就绪超时（毫秒）",

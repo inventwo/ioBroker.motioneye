@@ -71,6 +71,8 @@
 	"paypal_donate": "Donate with PayPal",
 	"requestTimeoutMs": "API request timeout (ms)",
 	"statusPollIntervalSec": "Status poll interval (seconds)",
+	"storagePollIntervalSec": "Storage stats auto-refresh interval (seconds)",
+	"storagePollIntervalSec_help": "0 = disabled (recommended default). Listing snapshots/videos requires MotionEye to scan and stat() every stored file, which can be slow for cameras with large media libraries — use each camera's storage.refresh datapoint for an on-demand refresh instead of a short interval here.",
 	"test_connection_button": "Test connection",
 	"test_connection_help": "Checks host, port, username, and saved password against the MotionEye config API (/config/list). The adapter instance must be running. On success, camera count is written to the adapter log.",
 	"test_connection_result_success": "MotionEye API reachable and authenticated. See adapter log for camera count and version.",
