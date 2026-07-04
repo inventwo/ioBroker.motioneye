@@ -278,11 +278,12 @@ class Motioneye extends utils.Adapter {
 		};
 		schedulePoll();
 
-		// Off by default (0) — media listing requires MotionEye to recursively stat()
-		// every stored file, which can be slow with large media libraries. Use the
-		// per-camera storage.refresh trigger for on-demand refreshes instead.
+		// Off by default — media listing requires MotionEye to recursively stat() every
+		// stored file, which can be slow with large media libraries. Use the per-camera
+		// storage.refresh trigger for on-demand refreshes instead. When enabled, only
+		// cameras with storageAutoRefresh !== false (Storage config tab) are included.
 		const storagePollSecRaw = Math.floor(Number(this.config.storagePollIntervalSec)) || 0;
-		if (storagePollSecRaw > 0) {
+		if (this.config.storagePollEnabled && storagePollSecRaw > 0) {
 			const storagePollSec = Math.min(
 				Math.max(STORAGE_POLL_MIN_SEC, storagePollSecRaw),
 				Math.floor(MAX_TIMER_MS / 1000),
@@ -1066,11 +1067,15 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
-	 * Refresh storage stats for all running cameras, sequentially (avoids hammering
-	 * MotionEye with N concurrent recursive directory scans).
+	 * Refresh storage stats for all running cameras that opted into the auto-refresh
+	 * interval (storageAutoRefresh !== false, Storage config tab), sequentially
+	 * (avoids hammering MotionEye with N concurrent recursive directory scans).
 	 */
 	async refreshAllCameraStorage() {
 		for (const camera of this.camerasById.values()) {
+			if (camera.storageAutoRefresh === false) {
+				continue;
+			}
 			await this.refreshCameraStorage(camera);
 		}
 	}
@@ -1836,6 +1841,8 @@ class Motioneye extends utils.Adapter {
 			await this.handleTestConnection(obj);
 		} else if (obj.command === 'applyOverlayNow') {
 			await this.handleApplyOverlayNow(obj);
+		} else if (obj.command === 'refreshStorageNow') {
+			await this.handleRefreshStorageNow(obj);
 		}
 	}
 
@@ -1995,6 +2002,39 @@ class Motioneye extends utils.Adapter {
 
 		this.log.info(`Applied Overlay config table to ${appliedCameras} camera(s), ${appliedFields} field(s)`);
 		this.replyToMessage(obj, { result: appliedCameras > 0 ? 'applied' : 'none', appliedCameras, appliedFields });
+	}
+
+	/**
+	 * Refreshes storage stats for every camera in the Storage config table that matches
+	 * a currently running camera (button "Refresh storage stats now"). Unlike the
+	 * automatic interval, this ignores each row's storageAutoRefresh flag — an explicit
+	 * manual request always refreshes every matched camera.
+	 *
+	 * @param {ioBroker.Message} obj
+	 */
+	async handleRefreshStorageNow(obj) {
+		if (!this.motionEyeApi) {
+			this.replyToMessage(obj, { error: 'Adapter instance is not running' });
+			return;
+		}
+
+		const payload = parseLoadCamerasMessage(obj.message);
+		const rows = Array.isArray(payload.cameras) ? payload.cameras : this.config.cameras || [];
+		const resolvedRows = resolveCameras(rows, this.config.defaultMode || 'off');
+		const runningCameras = [...this.camerasById.values()];
+
+		let refreshed = 0;
+		for (const row of resolvedRows) {
+			const camera = runningCameras.find(entry => entry.motionEyeId === row.motionEyeId);
+			if (!camera) {
+				continue;
+			}
+			await this.refreshCameraStorage(camera);
+			refreshed += 1;
+		}
+
+		this.log.info(`refreshStorageNow: refreshed storage stats for ${refreshed} camera(s)`);
+		this.replyToMessage(obj, { result: refreshed > 0 ? 'refreshed' : 'none', refreshed });
 	}
 
 	/**

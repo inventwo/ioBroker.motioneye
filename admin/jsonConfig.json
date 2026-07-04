@@ -183,12 +183,24 @@
 					"lg": 4,
 					"xl": 4
 				},
+				"storagePollEnabled": {
+					"type": "checkbox",
+					"label": "storagePollEnabled",
+					"default": false,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "storagePollEnabled_help"
+				},
 				"storagePollIntervalSec": {
 					"type": "number",
 					"label": "storagePollIntervalSec",
-					"min": 0,
+					"min": 300,
 					"max": 604800,
-					"default": 0,
+					"default": 3600,
+					"disabled": "!data.storagePollEnabled",
 					"xs": 12,
 					"sm": 6,
 					"md": 4,
@@ -540,6 +552,80 @@
 							"max": 10,
 							"default": 0,
 							"tooltip": "camera_textScale_help"
+						}
+					]
+				}
+			}
+		},
+		"_storage": {
+			"type": "panel",
+			"label": "tab_storage",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTIsM0M3LjU4LDMgNCw0Ljc5IDQsN0M0LDkuMjEgNy41OCwxMSAxMiwxMUMxNi40MiwxMSAyMCw5LjIxIDIwLDdDMjAsNC43OSAxNi40MiwzIDEyLDNNNCw5VjEyQzQsMTQuMjEgNy41OCwxNiAxMiwxNkMxNi40MiwxNiAyMCwxNC4yMSAyMCwxMlY5QzIwLDExLjIxIDE2LjQyLDEzIDEyLDEzQzcuNTgsMTMgNCwxMS4yMSA0LDlNNCwxNFYxN0M0LDE5LjIxIDcuNTgsMjEgMTIsMjFDMTYuNDIsMjEgMjAsMTkuMjEgMjAsMTdWMTRDMjAsMTYuMjEgMTYuNDIsMTggMTIsMThDNy41OCwxOCA0LDE2LjIxIDQsMTRaIi8+PC9zdmc+",
+			"items": {
+				"_storageHeader": {
+					"type": "header",
+					"text": "header_storage",
+					"size": 3
+				},
+				"_storageInfo": {
+					"type": "staticText",
+					"text": "storage_info",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginBottom": "10px"
+					}
+				},
+				"_refreshStorageNow": {
+					"type": "sendTo",
+					"label": "refresh_storage_button",
+					"help": "refresh_storage_help",
+					"command": "refreshStorageNow",
+					"variant": "contained",
+					"showProcess": true,
+					"timeout": 120000,
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"jsonData": "{\"camerasPayload\":\"${encodeURIComponent(JSON.stringify(data.cameras || []))}\"}",
+					"result": {
+						"refreshed": "refresh_storage_result_refreshed",
+						"none": "refresh_storage_result_none"
+					}
+				},
+				"cameras": {
+					"type": "table",
+					"newLine": true,
+					"label": "storage_table",
+					"noDelete": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"items": [
+						{
+							"type": "text",
+							"attr": "name",
+							"title": "storage_camera_name",
+							"width": "70%",
+							"readOnly": true
+						},
+						{
+							"type": "checkbox",
+							"attr": "storageAutoRefresh",
+							"title": "camera_storageAutoRefresh",
+							"width": "30%",
+							"default": true,
+							"tooltip": "camera_storageAutoRefresh_help"
 						}
 					]
 				}

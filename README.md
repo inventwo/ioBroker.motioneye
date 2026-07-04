@@ -93,7 +93,7 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `lastRefresh` | text | yes | no | Timestamp of the last successful refresh |
 | `refresh` | button | no | yes | Trigger a refresh now |
 
-> Refreshing requires MotionEye to recursively scan and check every stored file, which can be slow for cameras with large media libraries. Not part of the regular status poll — refresh manually via `refresh`, or enable a slow auto-refresh via `storagePollIntervalSec` (default: disabled). See [FAQ](docs/en/faq.md#storage-storage).
+> Refreshing requires MotionEye to recursively scan and check every stored file, which can be slow for cameras with large media libraries. Not part of the regular status poll — refresh manually via `refresh`, or enable a slow auto-refresh in **Settings** (`storagePollEnabled` + `storagePollIntervalSec`, default: disabled). The **Storage** config tab lets you exclude individual cameras from that auto-refresh while keeping the manual `refresh` datapoint available. See [FAQ](docs/en/faq.md#storage-storage).
 
 ### Instance (`motioneye.0._info.*`)
 
@@ -145,7 +145,8 @@ Details: [FAQ EN](docs/en/faq.md#motioneye-044-adapter-050) · [FAQ DE](docs/de/
 | `webhookPort` | `8090` | Built-in webhook listener port |
 | `motionResetMs` | `15000` | Auto-reset for `.motion` after webhook |
 | `statusPollIntervalSec` | `300` | MotionEye status poll interval |
-| `storagePollIntervalSec` | `0` | Auto-refresh interval for `storage.*` (0 = disabled, use `storage.refresh` on demand instead) |
+| `storagePollEnabled` | `false` | Enable the auto-refresh interval for `storage.*` (off by default, use `storage.refresh` on demand instead) |
+| `storagePollIntervalSec` | `3600` | Auto-refresh interval when `storagePollEnabled` is on |
 | `useMotionEyeConfig` | `true` | Write mode, webhook URLs, and stream on/off to MotionEye (leave enabled for normal use) |
 
 Per camera (Cameras tab): optional **Media folder** name under `/var/lib/motioneye` (e.g. `Bambu` instead of default `Camera8`). Applied on adapter start when config sync is enabled. Does not rename existing folders on disk.
@@ -160,6 +161,15 @@ A dedicated **Overlay** tab presets the `overlay.*` datapoints (enable, left/rig
 
 See [FAQ](docs/en/faq.md#text-overlay-overlay) for details.
 
+### Storage tab
+
+A dedicated **Storage** tab lists one row per camera with an **Auto-refresh** checkbox (on by default), plus a **Refresh storage stats now** button:
+
+- **Auto-refresh checkbox**: whether this camera is included when the global auto-refresh interval (`storagePollEnabled` + `storagePollIntervalSec` in Settings) runs. Uncheck it for unimportant cameras with large media libraries — their `storage.*` datapoints still update any time via the `storage.refresh` trigger.
+- **Refresh storage stats now**: immediately refreshes every camera in the table — no save/restart required, and ignores the Auto-refresh checkbox (a manual click always refreshes).
+
+See [FAQ](docs/en/faq.md#storage-storage) for details.
+
 ## Support
 
 If you like our work and would like to support us, we appreciate any donation.
@@ -173,7 +183,8 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) Per-camera storage stats under `storage.*`: snapshot count, video count, and occupied space in MB (`storage.snapshotCount`, `storage.videoCount`, `storage.usedSpaceMb`, `storage.lastRefresh`), refreshed on demand via `storage.refresh` or optionally on a slow auto-refresh interval (`storagePollIntervalSec`, default: disabled)
+- (skvarel) Per-camera storage stats under `storage.*`: snapshot count, video count, and occupied space in MB (`storage.snapshotCount`, `storage.videoCount`, `storage.usedSpaceMb`, `storage.lastRefresh`), refreshed on demand via `storage.refresh`
+- (skvarel) New **Storage** config tab: per-camera "Auto-refresh" checkbox (exclude unimportant cameras from the automatic refresh) plus a button to refresh all cameras immediately; the global auto-refresh interval itself is a separate on/off switch (`storagePollEnabled`) with its own interval (`storagePollIntervalSec`) in Settings, off by default
 
 ### 0.8.0 (2026-07-04)
 - (skvarel) New **Overlay** config tab: preset `overlay.*` (enabled/leftText/rightText/customLeftText/customRightText/textScale) per camera in a table, with a button to apply the table to already-running cameras immediately; values only ever flow from the config table to the datapoints, never back, so live datapoint changes are never overwritten on a restart
