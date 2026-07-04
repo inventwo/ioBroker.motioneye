@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.4.3 (2026-06-30)
+- (skvarel) Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)
+
 ## 0.4.2 (2026-06-30)
 - (skvarel) FAQ: connection test button, SSH node path on ioBroker host, GitHub install, web-login vs API troubleshooting
 - (skvarel) Trim MotionEye host/user/password before API calls; admin button 'Test connection'

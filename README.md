@@ -159,7 +159,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.8.0 (2026-07-04)
 - (skvarel) New **Overlay** config tab: preset `overlay.*` (enabled/leftText/rightText/customLeftText/customRightText/textScale) per camera in a table, with a button to apply the table to already-running cameras immediately; values only ever flow from the config table to the datapoints, never back, so live datapoint changes are never overwritten on a restart
 
 ### 0.7.0 (2026-07-03)
@@ -174,9 +174,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.5.0 (2026-07-01)
 - (skvarel) MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth
-
-### 0.4.3 (2026-06-30)
-- (skvarel) Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
