@@ -62,6 +62,7 @@
 	"motionPort_help": "Porta Motion webcontrol para instantâneos (padrão 7999)",
 	"motionResetMs": "Redefinição automática de movimento (ms)",
 	"motionResetMs_help": "Quanto tempo o estado .motion permanece verdadeiro após um webhook (padrão 15.000)",
+	"overlay_camera_name": "Nome da câmera",
 	"overlay_info": "Valores predefinidos de sobreposição de texto para câmeras na guia Câmeras — uma linha por câmera. Esta tabela entra em vigor de duas maneiras:\n• Nova câmera: os campos preenchidos tornam-se o valor inicial na primeira vez que os pontos de dados de sobreposição da câmera são criados.\n• Câmera existente: os campos preenchidos só serão aplicados quando você clicar em \"Aplicar configurações de sobreposição agora\" abaixo.\n\nCampos vazios sempre significam \"deixar inalterados\" — eles nunca substituem um valor existente. Esta tabela é unidirecional: ela nunca lê as alterações feitas posteriormente por meio dos pontos de dados overlay.*, portanto, não reverterá inesperadamente as alterações em tempo real na reinicialização do adaptador.",
 	"overlay_off": "Desligado",
 	"overlay_on": "Sobre",

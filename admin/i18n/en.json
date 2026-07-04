@@ -63,6 +63,7 @@
 	"motionResetMs": "Motion auto-reset (ms)",
 	"motionResetMs_help": "How long the .motion state stays true after a webhook (default 15000)",
 	"overlay_info": "Preset text overlay values for cameras from the Cameras tab — one row per camera. Two ways this table takes effect:\n• New camera: filled-in fields become the initial value the very first time the camera's overlay datapoints are created.\n• Existing camera: filled-in fields are only applied when you click \"Apply overlay settings now\" below.\n\nEmpty fields always mean \"leave unchanged\" — they never overwrite an existing value. This table is one-way: it never reads back changes you make later via the overlay.* datapoints, so it won't unexpectedly revert live changes on an adapter restart.",
+	"overlay_camera_name": "Camera name",
 	"overlay_off": "Off",
 	"overlay_on": "On",
 	"overlay_table": "Overlay",

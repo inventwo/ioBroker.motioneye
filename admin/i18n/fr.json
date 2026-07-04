@@ -62,6 +62,7 @@
 	"motionPort_help": "Port Motion WebControl pour les instantanés (7999 par défaut)",
 	"motionResetMs": "Réinitialisation automatique du mouvement (ms)",
 	"motionResetMs_help": "Combien de temps l'état .motion reste vrai après un webhook (par défaut 15 000)",
+	"overlay_camera_name": "Nom de la caméra",
 	"overlay_info": "Valeurs de superposition de texte prédéfinies pour les caméras à partir de l'onglet Caméras : une ligne par caméra. Ce tableau prend effet de deux manières :\n• Nouvelle caméra : les champs remplis deviennent la valeur initiale dès la première création des points de données de superposition de la caméra.\n• Caméra existante : les champs remplis ne sont appliqués que lorsque vous cliquez sur \"Appliquer les paramètres de superposition maintenant\" ci-dessous.\n\nLes champs vides signifient toujours \"laisser inchangé\" : ils n'écrasent jamais une valeur existante. Cette table est à sens unique : elle ne relit jamais les modifications que vous apportez ultérieurement via les points de données overlay.*, de sorte qu'elle n'annulera pas de manière inattendue les modifications en direct lors d'un redémarrage de l'adaptateur.",
 	"overlay_off": "Désactivé",
 	"overlay_on": "Sur",

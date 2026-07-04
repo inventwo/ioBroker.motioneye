@@ -62,6 +62,7 @@
 	"motionPort_help": "Port kontroli ruchu internetowego dla migawek (domyślnie 7999)",
 	"motionResetMs": "Automatyczne resetowanie ruchu (ms)",
 	"motionResetMs_help": "Jak długo stan .motion pozostaje prawdziwy po webhooku (domyślnie 15000)",
+	"overlay_camera_name": "Nazwa aparatu",
 	"overlay_info": "Wstępnie ustawione wartości nakładki tekstowej dla kamer z zakładki Kamery — jeden wiersz na kamerę. Ta tabela działa na dwa sposoby:\n• Nowa kamera: wypełnione pola stają się wartością początkową już przy pierwszym utworzeniu nałożonych punktów danych kamery.\n• Istniejąca kamera: wypełnione pola zostaną zastosowane dopiero po kliknięciu przycisku „Zastosuj ustawienia nakładki teraz” poniżej.\n\nPuste pola zawsze oznaczają „pozostaw bez zmian” — nigdy nie zastępują istniejącej wartości. Ta tabela jest jednokierunkowa: nigdy nie odczytuje zmian wprowadzonych później za pomocą punktów danych nakładki.*, więc nie spowoduje nieoczekiwanego cofnięcia bieżących zmian po ponownym uruchomieniu adaptera.",
 	"overlay_off": "Wyłączony",
 	"overlay_on": "NA",

@@ -62,6 +62,7 @@
 	"motionPort_help": "Motion-Webcontrol-Port für Snapshots (Standard 7999)",
 	"motionResetMs": "Bewegung Auto-Reset (ms)",
 	"motionResetMs_help": "Wie lange der .motion-Datenpunkt nach einem Webhook auf true bleibt (Standard 15000)",
+	"overlay_camera_name": "Kameraname",
 	"overlay_info": "Voreingestellte Textüberlagerungswerte für Kameras aus dem Cameras-Tab — eine Zeile pro Kamera. Zwei Wege, wie diese Tabelle wirkt:\n• Neue Kamera: Ausgefüllte Felder werden zum Startwert, sobald die Overlay-Datenpunkte dieser Kamera zum ersten Mal angelegt werden.\n• Bestehende Kamera: Ausgefüllte Felder werden nur übernommen, wenn du unten auf \"Overlay-Einstellungen jetzt anwenden\" klickst.\n\nLeere Felder bedeuten immer \"unverändert lassen\" — sie überschreiben nie einen bestehenden Wert. Diese Tabelle wirkt nur in eine Richtung: Änderungen, die du später über die overlay.*-Datenpunkte machst, werden hier nie zurückgeschrieben und bei einem Adapter-Neustart auch nicht überschrieben.",
 	"overlay_off": "Aus",
 	"overlay_on": "Ein",

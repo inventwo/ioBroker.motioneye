@@ -62,6 +62,7 @@
 	"motionPort_help": "Porta di controllo web del movimento per istantanee (impostazione predefinita 7999)",
 	"motionResetMs": "Ripristino automatico del movimento (ms)",
 	"motionResetMs_help": "Per quanto tempo lo stato .motion rimane vero dopo un webhook (predefinito 15000)",
+	"overlay_camera_name": "Nome della fotocamera",
 	"overlay_info": "Preimpostare i valori di sovrapposizione del testo per le telecamere dalla scheda Telecamere: una riga per telecamera. Due modi in cui questa tabella ha effetto:\n• Nuova telecamera: i campi compilati diventano il valore iniziale la prima volta che vengono creati i punti dati sovrapposti della telecamera.\n• Fotocamera esistente: i campi compilati vengono applicati solo quando si fa clic su \"Applica impostazioni di sovrapposizione ora\" di seguito.\n\nI campi vuoti significano sempre \"lasciare invariato\": non sovrascrivono mai un valore esistente. Questa tabella è unidirezionale: non rilegge mai le modifiche apportate in seguito tramite i datapoint overlay.*, quindi non annullerà inaspettatamente le modifiche in tempo reale al riavvio dell'adattatore.",
 	"overlay_off": "Spento",
 	"overlay_on": "SU",

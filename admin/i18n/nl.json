@@ -62,6 +62,7 @@
 	"motionPort_help": "Motion webcontrol-poort voor snapshots (standaard 7999)",
 	"motionResetMs": "Automatische reset door beweging (ms)",
 	"motionResetMs_help": "Hoe lang de .motion-status waar blijft na een webhook (standaard 15000)",
+	"overlay_camera_name": "Cameranaam",
 	"overlay_info": "Vooraf ingestelde tekstoverlaywaarden voor camera's op het tabblad Camera's: één rij per camera. Er zijn twee manieren waarop deze tabel van kracht wordt:\n• Nieuwe camera: ingevulde velden worden de initiële waarde de allereerste keer dat de overlaygegevenspunten van de camera worden gemaakt.\n• Bestaande camera: ingevulde velden worden alleen toegepast als u hieronder op 'Overlay-instellingen nu toepassen' klikt.\n\nLege velden betekenen altijd 'ongewijzigd laten'; ze overschrijven nooit een bestaande waarde. Deze tabel is eenrichtingsverkeer: wijzigingen die u later aanbrengt via de overlay.*-datapunten worden nooit teruggelezen, zodat live wijzigingen niet onverwachts worden teruggedraaid als de adapter opnieuw wordt opgestart.",
 	"overlay_off": "Uit",
 	"overlay_on": "Op",
