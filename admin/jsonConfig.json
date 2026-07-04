@@ -183,31 +183,6 @@
 					"lg": 4,
 					"xl": 4
 				},
-				"storagePollEnabled": {
-					"type": "checkbox",
-					"label": "storagePollEnabled",
-					"default": false,
-					"xs": 12,
-					"sm": 6,
-					"md": 4,
-					"lg": 4,
-					"xl": 4,
-					"help": "storagePollEnabled_help"
-				},
-				"storagePollIntervalSec": {
-					"type": "number",
-					"label": "storagePollIntervalSec",
-					"min": 300,
-					"max": 604800,
-					"default": 3600,
-					"disabled": "!data.storagePollEnabled",
-					"xs": 12,
-					"sm": 6,
-					"md": 4,
-					"lg": 4,
-					"xl": 4,
-					"help": "storagePollIntervalSec_help"
-				},
 				"_streamHeader": {
 					"type": "header",
 					"text": "header_stream",
@@ -567,9 +542,35 @@
 					"text": "header_storage",
 					"size": 3
 				},
+				"storagePollEnabled": {
+					"type": "checkbox",
+					"label": "storagePollEnabled",
+					"default": false,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "storagePollEnabled_help"
+				},
+				"storagePollIntervalSec": {
+					"type": "number",
+					"label": "storagePollIntervalSec",
+					"min": 300,
+					"max": 604800,
+					"default": 3600,
+					"disabled": "!data.storagePollEnabled",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "storagePollIntervalSec_help"
+				},
 				"_storageInfo": {
 					"type": "staticText",
 					"text": "storage_info",
+					"newLine": true,
 					"xs": 12,
 					"sm": 12,
 					"md": 12,
@@ -621,11 +622,11 @@
 						},
 						{
 							"type": "checkbox",
-							"attr": "storageAutoRefresh",
-							"title": "camera_storageAutoRefresh",
+							"attr": "storageAutoRefreshExcluded",
+							"title": "camera_storageAutoRefreshExcluded",
 							"width": "30%",
-							"default": true,
-							"tooltip": "camera_storageAutoRefresh_help"
+							"default": false,
+							"tooltip": "camera_storageAutoRefreshExcluded_help"
 						}
 					]
 				}
