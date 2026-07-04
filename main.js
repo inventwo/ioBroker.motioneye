@@ -824,6 +824,10 @@ class Motioneye extends utils.Adapter {
 			return acc;
 		}, /** @type {Record<string, string>} */ ({}));
 
+		// `def` only takes effect the first time this state object is created (e.g. a
+		// brand-new camera) — it seeds the initial value from the Overlay config table
+		// row, if filled in. It has no effect on cameras that already have this state.
+		const overlay = camera.overlayConfig;
 		const states = [
 			{
 				id: 'enabled',
@@ -833,7 +837,7 @@ class Motioneye extends utils.Adapter {
 					role: 'switch',
 					read: true,
 					write: true,
-					def: false,
+					def: overlay.enabled === 'true',
 				},
 			},
 			{
@@ -844,7 +848,7 @@ class Motioneye extends utils.Adapter {
 					role: 'text',
 					read: true,
 					write: true,
-					def: 'camera-name',
+					def: overlay.leftText || 'camera-name',
 					states: textPositionStates,
 				},
 			},
@@ -856,7 +860,7 @@ class Motioneye extends utils.Adapter {
 					role: 'text',
 					read: true,
 					write: true,
-					def: 'timestamp',
+					def: overlay.rightText || 'timestamp',
 					states: textPositionStates,
 				},
 			},
@@ -868,7 +872,7 @@ class Motioneye extends utils.Adapter {
 					role: 'text',
 					read: true,
 					write: true,
-					def: '',
+					def: overlay.customLeftText,
 				},
 			},
 			{
@@ -879,7 +883,7 @@ class Motioneye extends utils.Adapter {
 					role: 'text',
 					read: true,
 					write: true,
-					def: '',
+					def: overlay.customRightText,
 				},
 			},
 			{
@@ -892,7 +896,7 @@ class Motioneye extends utils.Adapter {
 					max: TEXT_SCALE_MAX,
 					read: true,
 					write: true,
-					def: TEXT_SCALE_MIN,
+					def: overlay.textScale || TEXT_SCALE_MIN,
 				},
 			},
 		];
@@ -988,6 +992,44 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
+	 * Re-push the currently known `overlay.*` datapoint values to MotionEye on every
+	 * adapter start (mirrors `mode`) — this keeps MotionEye in sync after e.g. a
+	 * MotionEye restart, and applies the Overlay config table `def` seed for brand-new
+	 * cameras. It never reads the config table directly, so live datapoint changes
+	 * made between adapter restarts are never overwritten by stale config values.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @returns {Promise<Record<string, unknown>>}
+	 */
+	async buildOverlayStartupPatch(camera) {
+		const overlayId = `${camera.channel}.${CAMERA_OVERLAY_CHANNEL}`;
+		const [enabled, leftText, rightText, customLeftText, customRightText, textScale] = await Promise.all(
+			['enabled', 'leftText', 'rightText', 'customLeftText', 'customRightText', 'textScale'].map(id =>
+				this.getStateAsync(`${overlayId}.${id}`),
+			),
+		);
+
+		/** @type {Record<string, unknown>} */
+		const patch = {};
+		Object.assign(patch, buildTextOverlayPatch(enabled?.val).patch);
+		const leftBuilt = buildLeftTextPatch(leftText?.val);
+		if (leftBuilt.patch) {
+			Object.assign(patch, leftBuilt.patch);
+		}
+		const rightBuilt = buildRightTextPatch(rightText?.val);
+		if (rightBuilt.patch) {
+			Object.assign(patch, rightBuilt.patch);
+		}
+		Object.assign(patch, buildCustomLeftTextPatch(customLeftText?.val).patch);
+		Object.assign(patch, buildCustomRightTextPatch(customRightText?.val).patch);
+		const scaleBuilt = buildTextScalePatch(textScale?.val);
+		if (scaleBuilt.patch) {
+			Object.assign(patch, scaleBuilt.patch);
+		}
+		return patch;
+	}
+
+	/**
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
 	 */
 	async applyInitialCameraConfig(camera) {
@@ -1024,6 +1066,8 @@ class Motioneye extends utils.Adapter {
 		} else {
 			Object.assign(patch, storagePatch);
 		}
+
+		Object.assign(patch, await this.buildOverlayStartupPatch(camera));
 
 		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, patch);
 		await this.setStateAsync(`${channelId}.mode`, mode, true);
@@ -1619,6 +1663,8 @@ class Motioneye extends utils.Adapter {
 			await this.handleLoadCameras(obj);
 		} else if (obj.command === 'testConnection') {
 			await this.handleTestConnection(obj);
+		} else if (obj.command === 'applyOverlayNow') {
+			await this.handleApplyOverlayNow(obj);
 		}
 	}
 
@@ -1712,6 +1758,72 @@ class Motioneye extends utils.Adapter {
 			this.log.error(`loadCameras failed: ${error.message}`);
 			this.replyToMessage(obj, { error: error.message });
 		}
+	}
+
+	/**
+	 * Applies the Overlay config table (button "Apply overlay settings now") to the
+	 * matching running cameras. Only non-empty fields are applied — empty fields mean
+	 * "leave unchanged" and are skipped, so this never overwrites a live datapoint with
+	 * a blank value. Uses the current, possibly unsaved, admin form data (`payload.cameras`)
+	 * so the instance does not need to be restarted first.
+	 *
+	 * @param {ioBroker.Message} obj
+	 */
+	async handleApplyOverlayNow(obj) {
+		if (!this.motionEyeApi) {
+			this.replyToMessage(obj, { error: 'Adapter instance is not running' });
+			return;
+		}
+
+		const payload = parseLoadCamerasMessage(obj.message);
+		const rows = Array.isArray(payload.cameras) ? payload.cameras : this.config.cameras || [];
+		const resolvedRows = resolveCameras(rows, this.config.defaultMode || 'off');
+		const runningCameras = [...this.camerasById.values()];
+
+		let appliedCameras = 0;
+		let appliedFields = 0;
+
+		for (const row of resolvedRows) {
+			const camera = runningCameras.find(entry => entry.motionEyeId === row.motionEyeId);
+			if (!camera) {
+				continue;
+			}
+
+			const overlay = row.overlayConfig;
+			/** @type {[('enabled'|'leftText'|'rightText'|'customLeftText'|'customRightText'|'textScale'), unknown][]} */
+			const fields = [
+				[
+					'enabled',
+					overlay.enabled === 'true' || overlay.enabled === 'false' ? overlay.enabled === 'true' : null,
+				],
+				['leftText', overlay.leftText || null],
+				['customLeftText', overlay.customLeftText || null],
+				['rightText', overlay.rightText || null],
+				['customRightText', overlay.customRightText || null],
+				['textScale', overlay.textScale || null],
+			];
+
+			let changedForCamera = false;
+			for (const [param, value] of fields) {
+				if (value === null) {
+					continue;
+				}
+				try {
+					await this.setOverlayParam(camera, param, value);
+					changedForCamera = true;
+					appliedFields += 1;
+				} catch (error) {
+					this.log.error(`applyOverlayNow: set ${param} failed for ${camera.name}: ${error.message}`);
+				}
+			}
+
+			if (changedForCamera) {
+				appliedCameras += 1;
+			}
+		}
+
+		this.log.info(`Applied Overlay config table to ${appliedCameras} camera(s), ${appliedFields} field(s)`);
+		this.replyToMessage(obj, { result: appliedCameras > 0 ? 'applied' : 'none', appliedCameras, appliedFields });
 	}
 
 	/**

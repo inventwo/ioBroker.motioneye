@@ -77,6 +77,15 @@ From adapter **0.7.0** onwards, the camera's text overlay lives under `motioneye
 3. **Custom text:** set `leftText` (or `rightText`) to `custom-text` and fill in `customLeftText` (or `customRightText`) — in either order. MotionEye only stores the custom text while the mode is already `custom-text`, so the adapter always sends both fields together in one request to avoid the text getting silently dropped.
 4. **`textScale`** controls the text size (`1`–`10`, matches the slider in the MotionEye UI).
 
+**Presetting overlay text via the admin config (Overlay tab):**
+
+From the next adapter release onwards, the **Overlay** config tab shows one table row per camera (from the Cameras tab) with the same fields as above, plus a **"Apply overlay settings now"** button. This is a one-way street from config to datapoints — the table is never updated automatically from datapoint changes, so it cannot silently revert something you changed live:
+
+- Leave a field empty (or the select on **"— unchanged —"**) to skip it — it never overwrites an existing value.
+- **Brand-new camera** (added on the Cameras tab, not yet saved/restarted): filled-in fields become the datapoints' initial value the first time they're created — no extra step needed after the first restart.
+- **Camera that already has `overlay.*` datapoints** (the normal case if you're reading this after already using the adapter): filling in the table alone does **nothing** by itself — you must click **"Apply overlay settings now"**. That button applies the table immediately (datapoints + MotionEye), without needing to save the config or restart the instance, and it's safe to use repeatedly, e.g. for setting up several cameras at once.
+- Because the config table never reads datapoint changes back, editing a live datapoint later (e.g. via VIS or a script) is never overwritten by the table on the next adapter restart — the table row only matters again if you click "Apply overlay settings now" yourself.
+
 ---
 
 ### Test connection (admin UI)

@@ -81,6 +81,8 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 
 > When setting `leftText`/`rightText` to `custom-text`, also set `customLeftText`/`customRightText` — otherwise MotionEye shows empty text. See [FAQ](docs/en/faq.md#text-overlay-overlay).
 
+> These datapoints can also be preset per camera on the **Overlay** config tab (handy when configuring many cameras at once). See [Configuration](#configuration) and [FAQ](docs/en/faq.md#text-overlay-overlay).
+
 ### Instance (`motioneye.0._info.*`)
 
 | State | Type | Description |
@@ -135,6 +137,16 @@ Details: [FAQ EN](docs/en/faq.md#motioneye-044-adapter-050) · [FAQ DE](docs/de/
 
 Per camera (Cameras tab): optional **Media folder** name under `/var/lib/motioneye` (e.g. `Bambu` instead of default `Camera8`). Applied on adapter start when config sync is enabled. Does not rename existing folders on disk.
 
+### Overlay tab
+
+A dedicated **Overlay** tab presets the `overlay.*` datapoints (enable, left/right text, custom text, text size) per camera, in a table with one row per camera from the Cameras tab. This is one-way and never reads live datapoint changes back into the table:
+
+- **New camera**: filled-in fields become the initial datapoint value the first time it's created.
+- **Existing camera**: filled-in fields only take effect after clicking **Apply overlay settings now** — no save/restart required.
+- Empty fields always mean "leave unchanged".
+
+See [FAQ](docs/en/faq.md#text-overlay-overlay) for details.
+
 ## Support
 
 If you like our work and would like to support us, we appreciate any donation.
@@ -147,6 +159,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) New **Overlay** config tab: preset `overlay.*` (enabled/leftText/rightText/customLeftText/customRightText/textScale) per camera in a table, with a button to apply the table to already-running cameras immediately; values only ever flow from the config table to the datapoints, never back, so live datapoint changes are never overwritten on a restart
+
 ### 0.7.0 (2026-07-03)
 - (skvarel) Per-camera text overlay under `overlay.*`: read and control overlay on/off, left/right text mode (camera name / timestamp / custom text / disabled), custom text strings, and text size (`overlay.enabled`, `overlay.leftText`, `overlay.rightText`, `overlay.customLeftText`, `overlay.customRightText`, `overlay.textScale`); `leftText`/`rightText` and their custom text are always saved together, in any order
 - (skvarel) Fixed a race condition where setting two `settings.*` datapoints for the same camera at nearly the same time could silently drop one of the changes ("lost update"); config writes per camera are now serialized

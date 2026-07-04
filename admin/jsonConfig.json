@@ -404,6 +404,134 @@
 				}
 			}
 		},
+		"_overlay": {
+			"type": "panel",
+			"label": "tab_overlay",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTksNEg1QTIsMiAwIDAsMCAzLDZWMThBMiwyIDAgMCwwIDUsMjBIMTlBMiwyIDAgMCwwIDIxLDE4VjZBMiwyIDAgMCwwIDE5LDRNMTEsOS41VjEwLjVIOS41VjkuNUM5LjUsOS4yMiA5LjI4LDkgOSw5SDhDNy43Miw5IDcuNSw5LjIyIDcuNSw5LjVWMTQuNUM3LjUsMTQuNzggNy43MiwxNSA4LDE1SDlDOS4yOCwxNSA5LjUsMTQuNzggOS41LDE0LjVWMTMuNUgxMVYxNC41QTEuNSwxLjUgMCAwLDEgOS41LDE2SDhBMS41LDEuNSAwIDAsMSA2LjUsMTQuNVY5LjVBMS41LDEuNSAwIDAsMSA4LDhIOS41QTEuNSwxLjUgMCAwLDEgMTEsOS41TTE3LjUsOS41VjEwLjVIMTZWOS41QzE2LDkuMjIgMTUuNzgsOSAxNS41LDlIMTQuNUMxNC4yMiw5IDE0LDkuMjIgMTQsOS41VjE0LjVDMTQsMTQuNzggMTQuMjIsMTUgMTQuNSwxNUgxNS41QzE1Ljc4LDE1IDE2LDE0Ljc4IDE2LDE0LjVWMTMuNUgxNy41VjE0LjVBMS41LDEuNSAwIDAsMSAxNiwxNkgxNC41QTEuNSwxLjUgMCAwLDEgMTMsMTQuNVY5LjVBMS41LDEuNSAwIDAsMSAxNC41LDhIMTZBMS41LDEuNSAwIDAsMSAxNy41LDkuNVoiLz48L3N2Zz4=",
+			"items": {
+				"_overlayHeader": {
+					"type": "header",
+					"text": "header_overlay",
+					"size": 3
+				},
+				"_overlayInfo": {
+					"type": "staticText",
+					"text": "overlay_info",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginBottom": "10px"
+					}
+				},
+				"_applyOverlayNow": {
+					"type": "sendTo",
+					"label": "apply_overlay_button",
+					"help": "apply_overlay_help",
+					"command": "applyOverlayNow",
+					"variant": "contained",
+					"showProcess": true,
+					"timeout": 60000,
+					"newLine": true,
+					"jsonData": "{\"camerasPayload\":\"${encodeURIComponent(JSON.stringify(data.cameras || []))}\"}",
+					"result": {
+						"applied": "apply_overlay_result_applied",
+						"none": "apply_overlay_result_none"
+					}
+				},
+				"cameras": {
+					"type": "table",
+					"newLine": true,
+					"label": "overlay_table",
+					"noDelete": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"items": [
+						{
+							"type": "text",
+							"attr": "name",
+							"title": "camera_name",
+							"width": "14%",
+							"readOnly": true
+						},
+						{
+							"type": "select",
+							"attr": "overlayEnabled",
+							"title": "camera_overlayEnabled",
+							"width": "10%",
+							"options": [
+								{ "label": "overlay_unchanged", "value": "" },
+								{ "label": "overlay_on", "value": "true" },
+								{ "label": "overlay_off", "value": "false" }
+							],
+							"default": "",
+							"tooltip": "camera_overlayEnabled_help"
+						},
+						{
+							"type": "select",
+							"attr": "leftText",
+							"title": "camera_leftText",
+							"width": "14%",
+							"options": [
+								{ "label": "textpos_unchanged", "value": "" },
+								{ "label": "textpos_camera_name", "value": "camera-name" },
+								{ "label": "textpos_timestamp", "value": "timestamp" },
+								{ "label": "textpos_custom_text", "value": "custom-text" },
+								{ "label": "textpos_disabled", "value": "disabled" }
+							],
+							"default": "",
+							"tooltip": "camera_leftText_help"
+						},
+						{
+							"type": "text",
+							"attr": "customLeftText",
+							"title": "camera_customLeftText",
+							"width": "14%",
+							"placeholder": "camera_customLeftText_placeholder"
+						},
+						{
+							"type": "select",
+							"attr": "rightText",
+							"title": "camera_rightText",
+							"width": "14%",
+							"options": [
+								{ "label": "textpos_unchanged", "value": "" },
+								{ "label": "textpos_camera_name", "value": "camera-name" },
+								{ "label": "textpos_timestamp", "value": "timestamp" },
+								{ "label": "textpos_custom_text", "value": "custom-text" },
+								{ "label": "textpos_disabled", "value": "disabled" }
+							],
+							"default": "",
+							"tooltip": "camera_rightText_help"
+						},
+						{
+							"type": "text",
+							"attr": "customRightText",
+							"title": "camera_customRightText",
+							"width": "14%",
+							"placeholder": "camera_customRightText_placeholder"
+						},
+						{
+							"type": "number",
+							"attr": "textScale",
+							"title": "camera_textScale",
+							"width": "10%",
+							"min": 0,
+							"max": 10,
+							"default": 0,
+							"tooltip": "camera_textScale_help"
+						}
+					]
+				}
+			}
+		},
 		"_logging": {
 			"type": "panel",
 			"label": "tab_logging",

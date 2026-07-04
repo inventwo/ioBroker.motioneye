@@ -77,6 +77,15 @@ Ab Adapter **0.7.0** liegt die Textüberlagerung der Kamera unter `motioneye.<In
 3. **Benutzerdefinierter Text:** Setze `leftText` (bzw. `rightText`) auf `custom-text` und trage den Text in `customLeftText` (bzw. `customRightText`) ein — die Reihenfolge spielt keine Rolle. MotionEye speichert den Benutzertext nur dann dauerhaft, wenn der Modus bereits `custom-text` ist, deshalb sendet der Adapter beide Werte immer gemeinsam in einer Anfrage, damit der Text nicht verloren geht.
 4. **`textScale`** steuert die Textgröße (`1`–`10`, entspricht dem Schieberegler in der MotionEye-Oberfläche).
 
+**Textüberlagerung über die Adapter-Konfiguration voreinstellen (Overlay-Tab):**
+
+Ab der nächsten Adapter-Version zeigt der Konfigurations-Tab **Overlay** eine Zeile pro Kamera (aus dem Cameras-Tab) mit den gleichen Feldern wie oben, plus einem Button **"Overlay-Einstellungen jetzt anwenden"**. Das wirkt nur in eine Richtung — von der Config zu den Datenpunkten — die Tabelle wird nie automatisch aus Datenpunkt-Änderungen aktualisiert und kann dadurch auch nichts, was du live geändert hast, unbemerkt zurücksetzen:
+
+- Lässt du ein Feld leer (bzw. steht das Dropdown auf **"— unverändert —"**), wird es übersprungen — ein bestehender Wert wird nie überschrieben.
+- **Neue Kamera** (im Cameras-Tab angelegt, aber noch nicht gespeichert/neu gestartet): Ausgefüllte Felder werden zum Startwert der Datenpunkte, sobald diese beim nächsten Neustart zum ersten Mal angelegt werden — kein weiterer Schritt nötig.
+- **Kamera, die schon `overlay.*`-Datenpunkte hat** (der Normalfall, wenn du den Adapter schon länger nutzt): Das reine Ausfüllen der Tabelle bewirkt für sich genommen **nichts** — du musst auf **"Overlay-Einstellungen jetzt anwenden"** klicken. Der Button übernimmt die Tabelle sofort (Datenpunkte + MotionEye), ohne dass du speichern oder die Instanz neu starten musst, und lässt sich beliebig oft wiederholen — praktisch, um z. B. mehrere Kameras auf einmal einzurichten.
+- Da die Config-Tabelle Datenpunkt-Änderungen nie zurückliest, wird eine später live geänderte Einstellung (z. B. per VIS oder Skript) beim nächsten Adapter-Neustart nicht durch die Tabelle überschrieben — die Zeile wirkt erst wieder, wenn du selbst auf "Overlay-Einstellungen jetzt anwenden" klickst.
+
 ---
 
 ### Verbindung testen (Admin)
