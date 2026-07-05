@@ -80,6 +80,7 @@
 	"statusPollIntervalSec": "Status poll interval (seconds)",
 	"storagePollEnabled": "Enable storage stats auto-refresh",
 	"storagePollEnabled_help": "Off by default. Listing snapshots/videos requires MotionEye to scan and stat() every stored file, which can be slow for cameras with large media libraries — use each camera's storage.refresh datapoint (or the button below) for an on-demand refresh instead of enabling this for frequent updates.",
+	"storagePollIntervalSec": "Storage stats auto-refresh interval (seconds)",
 	"storagePollIntervalSec_help": "How often to auto-refresh storage stats when enabled above. Cameras with \"Exclude from auto-refresh\" checked in the table below are skipped.",
 	"storage_camera_name": "Camera name",
 	"storage_info": "Cameras are auto-refreshed on the interval configured above by default. Check \"Exclude from auto-refresh\" for individual cameras with large media libraries to skip them — their storage.refresh datapoint (and the button below) still work any time regardless.",

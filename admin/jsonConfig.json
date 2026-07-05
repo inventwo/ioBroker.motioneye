@@ -437,6 +437,11 @@
 					"showProcess": true,
 					"timeout": 60000,
 					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
 					"jsonData": "{\"camerasPayload\":\"${encodeURIComponent(JSON.stringify(data.cameras || []))}\"}",
 					"result": {
 						"applied": "apply_overlay_result_applied",
