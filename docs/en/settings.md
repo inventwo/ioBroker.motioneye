@@ -7,8 +7,7 @@
 | Option | Default | Description |
 |--------|---------|-------------|
 | MotionEye host | *(required)* | IP or hostname of the MotionEye server |
-| Motion HTTP port | `7999` | Motion API for snapshots |
-| MotionEye config API port | `8765` | Mode, webhooks, stream control |
+| MotionEye config API port | `8765` | Mode, webhooks, stream control, snapshots |
 | MotionEye username | `admin` | Web login user |
 | MotionEye password | *(empty)* | Re-enter after adapter update if log shows `unauthorized` |
 | Control MotionEye via config API | `true` | Leave enabled for normal operation |

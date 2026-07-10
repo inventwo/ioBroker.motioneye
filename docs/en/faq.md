@@ -90,7 +90,7 @@ From the next adapter release onwards, the **Overlay** config tab shows one tabl
 
 ### Storage (`storage.*`)
 
-From the next adapter release onwards, `motioneye.<instance>.<camera>.storage.*` reports how many snapshots/video clips are currently stored and how much space they occupy (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh`, and the `refresh` trigger).
+Since adapter **0.9.0**, `motioneye.<instance>.<camera>.storage.*` reports how many snapshots/video clips are currently stored and how much space they occupy (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh`, and the `refresh` trigger).
 
 1. **Why it's not automatic by default:** getting these numbers requires MotionEye to recursively scan the camera's media folder and check every single stored file — for cameras with a large media library (thousands of snapshots/clips) this can take a while and put noticeable load on the MotionEye server. That's why it is **not** part of the regular status poll (`statusPollIntervalSec`).
 2. **Manual refresh (always available):** set `storage.refresh` to `true` on the camera you want to update — the adapter fetches the current numbers and resets `refresh` back to `false` when done. This works regardless of the settings below.

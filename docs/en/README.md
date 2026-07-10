@@ -20,9 +20,7 @@
 #### MotionEye requirements
 
 1. MotionEye with config API on port **8765** (default)
-2. Motion HTTP API on port **7999** for snapshots (default)
-3. In `motion.conf`: `webcontrol_localhost off` if MotionEye and ioBroker run on different hosts
-4. **MotionEye 0.44+:** adapter **0.5.0** or newer (session login) — see [FAQ](faq.md#motioneye-044-adapter-050)
+2. **MotionEye 0.44+:** adapter **0.5.0** or newer (session login) — see [FAQ](faq.md#motioneye-044-adapter-050)
 
 ## Quick start
 

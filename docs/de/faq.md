@@ -90,7 +90,7 @@ Ab der nächsten Adapter-Version zeigt der Konfigurations-Tab **Overlay** eine Z
 
 ### Speicherplatz (`storage.*`)
 
-Ab der nächsten Adapter-Version zeigt `motioneye.<Instanz>.<kamera>.storage.*` an, wie viele Snapshots/Videoclips aktuell gespeichert sind und wie viel Platz sie belegen (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh` sowie der Trigger `refresh`).
+Seit Adapter **0.9.0** zeigt `motioneye.<Instanz>.<kamera>.storage.*` an, wie viele Snapshots/Videoclips aktuell gespeichert sind und wie viel Platz sie belegen (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh` sowie der Trigger `refresh`).
 
 1. **Warum das nicht automatisch läuft:** Um diese Werte zu ermitteln, muss MotionEye den Medienordner der Kamera rekursiv durchsuchen und jede einzelne gespeicherte Datei prüfen — bei Kameras mit großen Medienarchiven (tausende Snapshots/Clips) kann das etwas dauern und den MotionEye-Server merklich belasten. Deshalb ist das **nicht** Teil des normalen Status-Polls (`statusPollIntervalSec`).
 2. **Manuelle Aktualisierung (immer verfügbar):** Setze `storage.refresh` bei der gewünschten Kamera auf `true` — der Adapter holt die aktuellen Werte und setzt `refresh` danach automatisch wieder auf `false`. Das funktioniert unabhängig von den folgenden Einstellungen.
