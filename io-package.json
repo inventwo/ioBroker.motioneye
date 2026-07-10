@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "motioneye",
-    "version": "0.9.0",
+    "version": "0.10.0",
     "news": {
+      "0.10.0": {
+        "en": "Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.",
+        "de": "Das Problem, dass die Aktion `snapshot` bei einigen MotionEye/Motion-Kombinationen mit dem Fehler `404 Not Found` fehlschlug, wurde behoben: Snapshots werden nun über den authentifizierten Endpunkt `/action/{id}/snapshot` von MotionEye (dieselbe Verbindung wie alle anderen Aktionen) ausgelöst, anstatt über einen direkten, nicht authentifizierten Aufruf des WebControl-Ports von Motion. Die Einstellung `motionPort` wird nicht mehr benötigt und wurde entfernt.",
+        "ru": "Исправлена ошибка «404 not found», из-за которой действие `snapshot` завершалось с ошибкой на некоторых комбинациях MotionEye/Motion: теперь снимки запускаются через собственную аутентифицированную конечную точку MotionEye `/action/{id}/snapshot` (то же соединение, что и у всех остальных), а не через прямой, неаутентифицированный вызов к необработанному порту веб-контроля Motion. Параметр `motionPort` больше не нужен и удален.",
+        "pt": "Corrigido o problema em que a ação `snapshot` falhava com o erro `404 não encontrado` em algumas combinações MotionEye/Motion: agora os snapshots são acionados pelo endpoint autenticado `/action/{id}/snapshot` do próprio MotionEye (a mesma conexão usada para tudo), em vez de uma chamada direta e não autenticada para a porta do webcontrol do Motion. A configuração `motionPort` não é mais necessária e foi removida.",
+        "nl": "De fout waarbij de `snapshot`-actie mislukte met een `404 not found`-fout bij sommige MotionEye/Motion-combinaties is verholpen: snapshots worden nu geactiveerd via het eigen geauthenticeerde `/action/{id}/snapshot`-eindpunt van MotionEye (dezelfde verbinding als alle andere) in plaats van een directe, niet-geauthenticeerde aanroep naar de raw webcontrol-poort van Motion. De `motionPort`-instelling is niet langer nodig en is verwijderd.",
+        "fr": "Correction d'un problème d'erreur 404 (non trouvé) lors de l'exécution de l'action `snapshot` sur certaines configurations MotionEye/Motion : les snapshots sont désormais déclenchés via le point de terminaison authentifié `/action/{id}/snapshot` de MotionEye (même connexion que pour le reste des actions), au lieu d'un appel direct non authentifié au port webcontrol de Motion. Le paramètre `motionPort` n'est plus nécessaire et a été supprimé.",
+        "it": "Risolto il problema per cui l'azione `snapshot` falliva con l'errore `404 not found` su alcune combinazioni MotionEye/Motion: gli snapshot vengono ora attivati tramite l'endpoint autenticato `/action/{id}/snapshot` di MotionEye (la stessa connessione utilizzata per tutto il resto) anziché tramite una chiamata diretta e non autenticata alla porta webcontrol di Motion. L'impostazione `motionPort` non è più necessaria ed è stata rimossa.",
+        "es": "Se solucionó un error que provocaba que la acción `snapshot` fallara con el código `404 not found` en algunas combinaciones de MotionEye/Motion: ahora las instantáneas se activan mediante el punto final autenticado `/action/{id}/snapshot` de MotionEye (la misma conexión que las demás) en lugar de una llamada directa y no autenticada al puerto webcontrol sin procesar de Motion. La configuración `motionPort` ya no es necesaria y se ha eliminado.",
+        "pl": "Naprawiono błąd akcji `snapshot` powodujący błąd `404 not found` w niektórych kombinacjach MotionEye/Motion: migawki są teraz uruchamiane za pośrednictwem uwierzytelnionego punktu końcowego `/action/{id}/snapshot` MotionEye (tego samego połączenia, co wszystkie inne) zamiast bezpośredniego, nieuwierzytelnionego wywołania surowego portu webcontrol Motion. Ustawienie `motionPort` nie jest już potrzebne i zostało usunięte.",
+        "uk": "Виправлено помилку дії `snapshot` з кодом `404 not found` на деяких комбінаціях MotionEye/Motion: знімки тепер запускаються через власну автентифіковану кінцеву точку MotionEye `/action/{id}/snapshot` (те саме підключення, що й усе інше), а не через прямий неавтентифікований виклик необробленого порту веб-контролю Motion. Налаштування `motionPort` більше не потрібне та було видалено.",
+        "zh-cn": "修复了在某些 MotionEye/Motion 组合下，`snapshot` 操作因 `404 not found` 错误而失败的问题：现在快照操作通过 MotionEye 自身经过身份验证的 `/action/{id}/snapshot` 端点（与其他所有操作使用同一连接）触发，而不是直接调用 Motion 的原始 Web 控制端口（未经身份验证）。`motionPort` 设置已不再需要，已被移除。"
+      },
       "0.9.0": {
         "en": "Per-camera storage stats under `storage.*`: snapshot count, video count, and occupied space in MB (`storage.snapshotCount`, `storage.videoCount`, `storage.usedSpaceMb`, `storage.lastRefresh`), refreshed on demand via `storage.refresh`\nNew **Storage** config tab: global auto-refresh on/off switch + interval (`storagePollEnabled`, `storagePollIntervalSec`, off by default), a per-camera \"Exclude from auto-refresh\" checkbox to skip unimportant cameras, and a button to refresh all listed cameras immediately",
         "de": "Speicherstatistiken pro Kamera unter `storage.*`: Anzahl der Schnappschüsse, Anzahl der Videos und belegter Speicherplatz in MB (`storage.snapshotCount`, `storage.videoCount`, `storage.usedSpaceMb`, `storage.lastRefresh`), die bei Bedarf über `storage.refresh` aktualisiert werden.\nNeuer **Speicher**-Konfigurationsreiter: Globaler Schalter zum Ein-/Ausschalten der automatischen Aktualisierung + Intervall (`storagePollEnabled`, `storagePollIntervalSec`, standardmäßig deaktiviert), eine Checkbox pro Kamera „Von automatischer Aktualisierung ausschließen“, um unwichtige Kameras zu überspringen, und eine Schaltfläche zum sofortigen Aktualisieren aller aufgelisteten Kameras.",
@@ -80,19 +93,6 @@
         "pl": "Obsługa MotionEye 0.44+: logowanie do sesji przez POST /login (automatyczne przywracanie w przypadku niepowodzenia uwierzytelniania podpisu URL); zachowuje uwierzytelnianie podpisu 0.43.x",
         "uk": "Підтримка MotionEye 0.44+: вхід до сеансу через POST /login (автоматичне повернення до роботи, якщо не вдається автентифікація підпису URL-адреси); зберігається автентифікація підпису 0.43.x",
         "zh-cn": "支持 MotionEye 0.44+：通过 POST /login 进行会话登录（URL 签名认证失败时自动回退）；保留 0.43.x 签名认证。"
-      },
-      "0.4.3": {
-        "en": "Fixed italian translation for `streamReadyTimeoutMs_help` (repository review E5606)",
-        "de": "Fixe italienische Übersetzung für `streamReadyTimeoutMs help` (Repository Review E5606)",
-        "ru": "Исправленный итальянский перевод для \"streamReadyTimeoutMs help\" (репозиторийный обзор E5606)",
-        "pt": "Tradução italiana fixa para `streamReadyTimeoutMs help` (revisão do repositório E5606)",
-        "nl": "Vaste Italiaanse vertaling voor ",
-        "fr": "Traduction italienne fixe pour `streamReadyTimeoutMs help` (avis de dépôt E5606)",
-        "it": "Traduzione italiana fissa per `streamReadyTimeoutMs help` (repository review E5606)",
-        "es": "Traducción electrónica fija para `streamReadyTimeoutMs help` (repositorio E5606)",
-        "pl": "Stałe tłumaczenie włoskie dla \"streamReadyTimeoutMs _ help\" (przegląd repozytorium E5606)",
-        "uk": "Фіксований італійський переклад для `streamReadyTimeoutMs help` (репозиторійний огляд E5606)",
-        "zh-cn": "\" Stream ReadyTimeoutMs help \" (仓库审查E5606)的固定意大利语翻译"
       }
     },
     "titleLang": {

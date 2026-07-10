@@ -182,7 +182,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.0 (2026-07-10)
 - (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.
 
 ### 0.9.0 (2026-07-05)
@@ -198,9 +198,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 0.6.1 (2026-07-03)
 - (skvarel) Fixed privacy mask regions not surviving adapter restarts/updates: mask lines are now persisted to the settings channel's native config instead of only in memory
-
-### 0.6.0 (2026-07-02)
-- (skvarel) Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation, auto brightness and privacy mask (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); resolution is validated against the camera's supported list
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)

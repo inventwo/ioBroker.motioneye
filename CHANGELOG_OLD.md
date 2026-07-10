@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.6.0 (2026-07-02)
+- (skvarel) Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation, auto brightness and privacy mask (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); resolution is validated against the camera's supported list
+
 ## 0.5.0 (2026-07-01)
 - (skvarel) MotionEye 0.44+ support: session login via POST /login (auto-fallback when URL signature auth fails); keeps 0.43.x signature auth
 
