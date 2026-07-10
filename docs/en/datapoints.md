@@ -19,6 +19,53 @@ Channel names are lowercase (e.g. `garten`, `innenhof_ii`).
 | `status` | yes | no | Last sync / error text |
 | `webhookUrl` | yes | no | URL written to MotionEye |
 
+### Per camera device settings (`motioneye.<instance>.<camera>.settings.*`)
+
+| State | Read | Write | Description |
+|-------|------|-------|-------------|
+| `framerate` | yes | yes | Capture framerate in fps |
+| `resolution` | yes | yes | Resolution `WxH` |
+| `availableResolutions` | yes | no | Supported resolutions (comma-separated) |
+| `rotation` | yes | yes | Video rotation `0` / `90` / `180` / `270` |
+| `autoBrightness` | yes | yes | Automatic brightness on/off |
+| `privacyMask` | yes | yes | Privacy mask on/off |
+
+### Per camera text overlay (`motioneye.<instance>.<camera>.overlay.*`)
+
+| State | Read | Write | Description |
+|-------|------|-------|-------------|
+| `enabled` | yes | yes | Text overlay on/off |
+| `leftText` | yes | yes | `camera-name` / `timestamp` / `custom-text` / `disabled` |
+| `rightText` | yes | yes | Same options as `leftText` |
+| `customLeftText` | yes | yes | Used when `leftText = custom-text` |
+| `customRightText` | yes | yes | Used when `rightText = custom-text` |
+| `textScale` | yes | yes | Text size, `1`–`10` |
+
+### Per camera motion detection (`motioneye.<instance>.<camera>.motiondetection.*`)
+
+| State | Read | Write | Description |
+|-------|------|-------|-------------|
+| `frameChangeThreshold` | yes | yes | Frame change threshold in % of image pixels (0–20) |
+| `autoThresholdTuning` | yes | yes | Automatic threshold tuning on/off |
+| `autoNoiseDetect` | yes | yes | Automatic noise detection on/off |
+| `noiseLevel` | yes | yes | Manual noise level 0–255 (when auto noise detection is off) |
+| `eventGap` | yes | yes | Seconds of no motion before an event ends |
+| `minimumMotionFrames` | yes | yes | Minimum consecutive frames with motion before triggering |
+| `lightSwitchDetect` | yes | yes | Light switch detection sensitivity in % (0–100) |
+| `despeckleFilter` | yes | yes | Despeckle filter on/off |
+| `preCapture` | yes | yes | Frames captured before motion is detected |
+| `postCapture` | yes | yes | Frames captured after motion stops |
+
+### Per camera storage (`motioneye.<instance>.<camera>.storage.*`)
+
+| State | Read | Write | Description |
+|-------|------|-------|-------------|
+| `snapshotCount` | yes | no | Number of stored snapshots |
+| `videoCount` | yes | no | Number of stored video clips |
+| `usedSpaceMb` | yes | no | Occupied space in MB |
+| `lastRefresh` | yes | no | Timestamp of the last successful refresh |
+| `refresh` | no | yes | Trigger a refresh now |
+
 ### Instance info (`motioneye.<instance>._info.*`)
 
 | State | Description |

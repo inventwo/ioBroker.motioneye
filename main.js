@@ -43,6 +43,25 @@ const {
 	buildCustomRightTextPatch,
 	buildTextScalePatch,
 } = require('./lib/deviceProfiles');
+const {
+	FRAME_CHANGE_THRESHOLD_MIN,
+	FRAME_CHANGE_THRESHOLD_MAX,
+	NOISE_LEVEL_MIN,
+	NOISE_LEVEL_MAX,
+	EVENT_GAP_MIN,
+	EVENT_GAP_MAX,
+	CAPTURE_FRAMES_MIN,
+	CAPTURE_FRAMES_MAX,
+	MINIMUM_MOTION_FRAMES_MIN,
+	MINIMUM_MOTION_FRAMES_MAX,
+	LIGHT_SWITCH_DETECT_MIN,
+	LIGHT_SWITCH_DETECT_MAX,
+	MOTION_DETECTION_PARAM_IDS,
+	normalizeFrameChangeThreshold,
+	normalizeNoiseLevel,
+	normalizeDespeckleFilter,
+	buildMotionDetectionPatch,
+} = require('./lib/motionDetectionProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
@@ -77,6 +96,11 @@ const DEVICE_PARAMS = ['framerate', 'resolution', 'rotation', 'autoBrightness', 
 const CAMERA_OVERLAY_CHANNEL = 'overlay';
 /** Writable overlay parameters handled via setOverlayParam (state id under `overlay`). */
 const OVERLAY_PARAMS = ['enabled', 'leftText', 'rightText', 'customLeftText', 'customRightText', 'textScale'];
+
+/** Motion detection tuning parameters grouped under the `motiondetection` sub-channel. */
+const CAMERA_MOTION_DETECTION_CHANNEL = 'motiondetection';
+/** Writable motion detection parameters handled via setMotionDetectionParam. */
+const MOTION_DETECTION_PARAMS = MOTION_DETECTION_PARAM_IDS;
 
 /** Snapshot/video count + occupied space grouped under the `storage` sub-channel. */
 const CAMERA_STORAGE_CHANNEL = 'storage';
@@ -663,6 +687,7 @@ class Motioneye extends utils.Adapter {
 
 		await this.ensureCameraSettingsObjects(camera);
 		await this.ensureCameraOverlayObjects(camera);
+		await this.ensureCameraMotionDetectionObjects(camera);
 		await this.ensureCameraStorageObjects(camera);
 
 		await this.extendObjectAsync(`${channelId}.mode`, {
@@ -928,6 +953,162 @@ class Motioneye extends utils.Adapter {
 
 		for (const state of states) {
 			await this.setObjectNotExistsAsync(`${overlayId}.${state.id}`, {
+				type: 'state',
+				common: /** @type {ioBroker.StateCommon} */ (state.common),
+				native: {},
+			});
+		}
+	}
+
+	/**
+	 * Create the `motiondetection` sub-channel and motion detection tuning states.
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 */
+	async ensureCameraMotionDetectionObjects(camera) {
+		const motionDetectionId = `${camera.channel}.${CAMERA_MOTION_DETECTION_CHANNEL}`;
+
+		await this.setObjectNotExistsAsync(motionDetectionId, {
+			type: 'channel',
+			common: { name: `${camera.name} motion detection` },
+			native: {},
+		});
+
+		const states = [
+			{
+				id: 'frameChangeThreshold',
+				common: {
+					name: `${camera.name} frame change threshold`,
+					type: 'number',
+					role: 'level',
+					unit: '%',
+					min: FRAME_CHANGE_THRESHOLD_MIN,
+					max: FRAME_CHANGE_THRESHOLD_MAX,
+					read: true,
+					write: true,
+					def: 1,
+				},
+			},
+			{
+				id: 'autoThresholdTuning',
+				common: {
+					name: `${camera.name} auto threshold tuning`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+			{
+				id: 'autoNoiseDetect',
+				common: {
+					name: `${camera.name} auto noise detection`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: true,
+				},
+			},
+			{
+				id: 'noiseLevel',
+				common: {
+					name: `${camera.name} noise level`,
+					type: 'number',
+					role: 'level',
+					min: NOISE_LEVEL_MIN,
+					max: NOISE_LEVEL_MAX,
+					read: true,
+					write: true,
+					def: 32,
+				},
+			},
+			{
+				id: 'eventGap',
+				common: {
+					name: `${camera.name} motionless gap`,
+					type: 'number',
+					role: 'level',
+					unit: 's',
+					min: EVENT_GAP_MIN,
+					max: EVENT_GAP_MAX,
+					read: true,
+					write: true,
+					def: 30,
+				},
+			},
+			{
+				id: 'minimumMotionFrames',
+				common: {
+					name: `${camera.name} minimum motion frames`,
+					type: 'number',
+					role: 'level',
+					unit: 'frames',
+					min: MINIMUM_MOTION_FRAMES_MIN,
+					max: MINIMUM_MOTION_FRAMES_MAX,
+					read: true,
+					write: true,
+					def: 10,
+				},
+			},
+			{
+				id: 'lightSwitchDetect',
+				common: {
+					name: `${camera.name} light switch detection`,
+					type: 'number',
+					role: 'level',
+					unit: '%',
+					min: LIGHT_SWITCH_DETECT_MIN,
+					max: LIGHT_SWITCH_DETECT_MAX,
+					read: true,
+					write: true,
+					def: 0,
+				},
+			},
+			{
+				id: 'despeckleFilter',
+				common: {
+					name: `${camera.name} despeckle filter`,
+					type: 'boolean',
+					role: 'switch',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+			{
+				id: 'preCapture',
+				common: {
+					name: `${camera.name} pre-capture frames`,
+					type: 'number',
+					role: 'level',
+					unit: 'frames',
+					min: CAPTURE_FRAMES_MIN,
+					max: CAPTURE_FRAMES_MAX,
+					read: true,
+					write: true,
+					def: 5,
+				},
+			},
+			{
+				id: 'postCapture',
+				common: {
+					name: `${camera.name} post-capture frames`,
+					type: 'number',
+					role: 'level',
+					unit: 'frames',
+					min: CAPTURE_FRAMES_MIN,
+					max: CAPTURE_FRAMES_MAX,
+					read: true,
+					write: true,
+					def: 10,
+				},
+			},
+		];
+
+		for (const state of states) {
+			await this.setObjectNotExistsAsync(`${motionDetectionId}.${state.id}`, {
 				type: 'state',
 				common: /** @type {ioBroker.StateCommon} */ (state.common),
 				native: {},
@@ -1360,6 +1541,93 @@ class Motioneye extends utils.Adapter {
 	}
 
 	/**
+	 * Update motion detection tuning states from a MotionEye UI config (read path).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {Record<string, unknown>} uiConfig
+	 */
+	async syncMotionDetectionParams(camera, uiConfig) {
+		const motionDetectionId = `${camera.channel}.${CAMERA_MOTION_DETECTION_CHANNEL}`;
+
+		if (uiConfig.frame_change_threshold != null) {
+			const frameChangeThreshold = normalizeFrameChangeThreshold(uiConfig.frame_change_threshold);
+			if (frameChangeThreshold != null) {
+				await this.setStateAsync(`${motionDetectionId}.frameChangeThreshold`, frameChangeThreshold, true);
+			}
+		}
+
+		if (uiConfig.auto_threshold_tuning != null) {
+			await this.setStateAsync(
+				`${motionDetectionId}.autoThresholdTuning`,
+				normalizeBoolean(uiConfig.auto_threshold_tuning),
+				true,
+			);
+		}
+
+		if (uiConfig.auto_noise_detect != null) {
+			await this.setStateAsync(
+				`${motionDetectionId}.autoNoiseDetect`,
+				normalizeBoolean(uiConfig.auto_noise_detect),
+				true,
+			);
+		}
+
+		if (uiConfig.noise_level != null) {
+			const noiseLevel = normalizeNoiseLevel(uiConfig.noise_level);
+			if (noiseLevel != null) {
+				await this.setStateAsync(`${motionDetectionId}.noiseLevel`, noiseLevel, true);
+			}
+		}
+
+		if (uiConfig.event_gap != null) {
+			const eventGap = Number(uiConfig.event_gap);
+			if (Number.isFinite(eventGap)) {
+				await this.setStateAsync(`${motionDetectionId}.eventGap`, Math.round(eventGap), true);
+			}
+		}
+
+		if (uiConfig.minimum_motion_frames != null) {
+			const minimumMotionFrames = Number(uiConfig.minimum_motion_frames);
+			if (Number.isFinite(minimumMotionFrames)) {
+				await this.setStateAsync(
+					`${motionDetectionId}.minimumMotionFrames`,
+					Math.round(minimumMotionFrames),
+					true,
+				);
+			}
+		}
+
+		if (uiConfig.light_switch_detect != null) {
+			const lightSwitchDetect = Number(uiConfig.light_switch_detect);
+			if (Number.isFinite(lightSwitchDetect)) {
+				await this.setStateAsync(`${motionDetectionId}.lightSwitchDetect`, Math.round(lightSwitchDetect), true);
+			}
+		}
+
+		if (uiConfig.despeckle_filter != null) {
+			await this.setStateAsync(
+				`${motionDetectionId}.despeckleFilter`,
+				normalizeDespeckleFilter(uiConfig.despeckle_filter),
+				true,
+			);
+		}
+
+		if (uiConfig.pre_capture != null) {
+			const preCapture = Number(uiConfig.pre_capture);
+			if (Number.isFinite(preCapture)) {
+				await this.setStateAsync(`${motionDetectionId}.preCapture`, Math.round(preCapture), true);
+			}
+		}
+
+		if (uiConfig.post_capture != null) {
+			const postCapture = Number(uiConfig.post_capture);
+			if (Number.isFinite(postCapture)) {
+				await this.setStateAsync(`${motionDetectionId}.postCapture`, Math.round(postCapture), true);
+			}
+		}
+	}
+
+	/**
 	 * Write a camera device parameter to MotionEye (control path).
 	 *
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
@@ -1576,6 +1844,40 @@ class Motioneye extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * Write a motion detection tuning parameter to MotionEye (control path).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {(typeof MOTION_DETECTION_PARAMS)[number]} param
+	 * @param {unknown} value
+	 */
+	async setMotionDetectionParam(camera, param, value) {
+		const channelId = camera.channel;
+		const motionDetectionId = `${channelId}.${CAMERA_MOTION_DETECTION_CHANNEL}`;
+
+		if (!this.config.useMotionEyeConfig) {
+			await this.setStateAsync(`${channelId}.status`, 'useMotionEyeConfig is disabled', true);
+			return;
+		}
+
+		const built = buildMotionDetectionPatch(param, value);
+		if (!built.patch) {
+			this.log.warn(`${param} rejected for ${camera.name}: ${built.error}`);
+			await this.setStateAsync(`${channelId}.status`, `error: ${built.error}`, true);
+			return;
+		}
+
+		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, built.patch);
+
+		await this.setStateAsync(`${motionDetectionId}.${param}`, built.value, true);
+		await this.setStateAsync(`${channelId}.status`, `${param}=${built.value}`, true);
+
+		if (result.changed) {
+			await this.setStateAsync(`${channelId}.lastAction`, `config/set ${param}=${built.value}`, true);
+			this.log.info(`${param} for ${camera.name}: ${built.value}`);
+		}
+	}
+
 	async pollMotionEye() {
 		if (!this.motionEyeApi) {
 			return;
@@ -1614,6 +1916,7 @@ class Motioneye extends utils.Adapter {
 			await this.setStateAsync(`${camera.channel}.motionEyeName`, motionEyeName, true);
 			await this.syncDeviceParams(camera, uiConfig);
 			await this.syncOverlayParams(camera, uiConfig);
+			await this.syncMotionDetectionParams(camera, uiConfig);
 
 			const currentMode = await this.getStateAsync(`${camera.channel}.mode`);
 			const localMode = normalizeMode(currentMode && currentMode.val);
@@ -1802,6 +2105,25 @@ class Motioneye extends utils.Adapter {
 					/** @type {'enabled'|'leftText'|'rightText'|'customLeftText'|'customRightText'|'textScale'} */ (
 						param
 					),
+					state.val,
+				);
+			} catch (error) {
+				this.log.error(`set ${param} failed for ${camera.name}: ${error.message}`);
+				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
+			}
+			return;
+		}
+
+		const motionDetectionPrefix = `${CAMERA_MOTION_DETECTION_CHANNEL}.`;
+		if (stateName.startsWith(motionDetectionPrefix)) {
+			const param = stateName.slice(motionDetectionPrefix.length);
+			if (!MOTION_DETECTION_PARAMS.includes(param)) {
+				return;
+			}
+			try {
+				await this.setMotionDetectionParam(
+					camera,
+					/** @type {(typeof MOTION_DETECTION_PARAMS)[number]} */ (param),
 					state.val,
 				);
 			} catch (error) {

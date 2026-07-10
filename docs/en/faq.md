@@ -64,7 +64,19 @@ From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instanc
 3. If you turn the mask **off directly in MotionEye**, MotionEye discards the regions immediately. Then you must redraw the mask in MotionEye, wait for a poll (or restart the instance) so the adapter picks up the lines again.
 4. **Brightness/contrast/saturation/hue** are only available in MotionEye for local USB/v4l2 cameras, not for network (RTSP) cameras — therefore no datapoints in the adapter.
 
-**Changing several settings at once:** From adapter **0.7.0**, config writes are queued per camera, so setting multiple `settings.*`/`overlay.*` datapoints for the same camera at nearly the same time (e.g. via a script or batch edit) no longer risks one change silently overwriting another. On older versions, change one datapoint at a time and wait for `lastAction` to update before changing the next.
+**Changing several settings at once:** From adapter **0.7.0**, config writes are queued per camera, so setting multiple `settings.*`/`overlay.*`/`motiondetection.*` datapoints for the same camera at nearly the same time (e.g. via a script or batch edit) no longer risks one change silently overwriting another. On older versions, change one datapoint at a time and wait for `lastAction` to update before changing the next.
+
+---
+
+### Motion detection tuning (`motiondetection.*`)
+
+From the next adapter release onwards, motion detection tuning parameters live under `motioneye.<instance>.<camera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
+
+1. **Detection on/off** is still controlled via root `mode` (`off` / `still` / `sharp`) — the `motiondetection.*` datapoints only tune sensitivity and timing while detection is enabled.
+2. **`frameChangeThreshold`** is the percentage of image pixels that must change to trigger motion (0–20 %, matching the MotionEye slider). Setting it to `0` effectively disables detection.
+3. **`autoThresholdTuning`** and **`autoNoiseDetect`** let MotionEye adjust threshold/noise automatically. When auto noise detection is on, `noiseLevel` is still readable but has little practical effect until you turn auto off.
+4. **Timing:** `eventGap` is how long motion must be absent before an event ends (seconds). `minimumMotionFrames` filters brief false triggers. `preCapture`/`postCapture` are frame buffers before/after motion (frame count depends on camera framerate).
+5. **Sync delay:** values changed in the MotionEye web UI appear in ioBroker after the next status poll (`statusPollIntervalSec`, default 300 s). Writes from ioBroker are applied immediately.
 
 ---
 

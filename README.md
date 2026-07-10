@@ -95,6 +95,23 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 
 > Refreshing requires MotionEye to recursively scan and check every stored file, which can be slow for cameras with large media libraries. Not part of the regular status poll — refresh manually via `refresh`, or enable a slow auto-refresh on the **Storage** config tab (`storagePollEnabled` + `storagePollIntervalSec`, default: disabled), where you can also exclude individual cameras from that auto-refresh while keeping the manual `refresh` datapoint available. See [FAQ](docs/en/faq.md#storage-storage).
 
+### Per camera motion detection (`motioneye.0.<name>.motiondetection.*`)
+
+| State | Type | Read | Write | Description |
+|-------|------|------|-------|-------------|
+| `frameChangeThreshold` | level | yes | yes | Frame change threshold in % of image pixels (0–20) |
+| `autoThresholdTuning` | switch | yes | yes | Automatic threshold tuning on/off |
+| `autoNoiseDetect` | switch | yes | yes | Automatic noise detection on/off |
+| `noiseLevel` | level | yes | yes | Manual noise level 0–255 (used when auto noise detection is off) |
+| `eventGap` | level | yes | yes | Seconds of no motion before an event ends |
+| `minimumMotionFrames` | level | yes | yes | Minimum consecutive frames with motion before triggering |
+| `lightSwitchDetect` | level | yes | yes | Light switch detection sensitivity in % (0–100) |
+| `despeckleFilter` | switch | yes | yes | Despeckle filter on/off |
+| `preCapture` | level | yes | yes | Frames captured before motion is detected |
+| `postCapture` | level | yes | yes | Frames captured after motion stops |
+
+> Motion detection itself is controlled via root `mode` (`off` / `still` / `sharp`). Setting `frameChangeThreshold` to `0` effectively disables motion detection. Changes made in the MotionEye web UI appear in ioBroker after the next status poll.
+
 ### Instance (`motioneye.0._info.*`)
 
 | State | Type | Description |
@@ -182,6 +199,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
+
 ### 0.10.0 (2026-07-10)
 - (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.
 
