@@ -17,7 +17,57 @@ Kanalnamen in Kleinbuchstaben (z. B. `garten`, `innenhof_ii`).
 | `streamPulse` | nein | ja | Kurzer Stream-Impuls (Button) |
 | `streamUrl` | ja | nein | Fertiges HTML für HTML-Widgets |
 | `status` | ja | nein | Letzte Sync-Meldung / Fehler |
+| `lastAction` | ja | nein | Letzte API-Aktion |
 | `webhookUrl` | ja | nein | In MotionEye geschriebene URL |
+| `motionEyeId` | ja | nein | MotionEye-Kamera-ID |
+| `motionEyeName` | ja | nein | Originalname in MotionEye |
+
+### Geräteeinstellungen (`motioneye.<Instanz>.<kamera>.settings.*`)
+
+| Datenpunkt | Lesen | Schreiben | Beschreibung |
+|------------|-------|-----------|--------------|
+| `framerate` | ja | ja | Aufnahme-Framerate in fps |
+| `resolution` | ja | ja | Auflösung `BxH` |
+| `availableResolutions` | ja | nein | Unterstützte Auflösungen (kommagetrennt) |
+| `rotation` | ja | ja | Video-Rotation `0` / `90` / `180` / `270` |
+| `autoBrightness` | ja | ja | Automatische Helligkeit ein/aus |
+| `privacyMask` | ja | ja | Datenschutzmaske ein/aus |
+
+### Textüberlagerung (`motioneye.<Instanz>.<kamera>.overlay.*`)
+
+| Datenpunkt | Lesen | Schreiben | Beschreibung |
+|------------|-------|-----------|--------------|
+| `enabled` | ja | ja | Textüberlagerung ein/aus |
+| `leftText` | ja | ja | `camera-name` / `timestamp` / `custom-text` / `disabled` |
+| `rightText` | ja | ja | Wie `leftText` |
+| `customLeftText` | ja | ja | Bei `leftText = custom-text` |
+| `customRightText` | ja | ja | Bei `rightText = custom-text` |
+| `textScale` | ja | ja | Textgröße, `1`–`10` |
+
+### Bewegungserkennung (`motioneye.<Instanz>.<kamera>.motiondetection.*`)
+
+| Datenpunkt | Lesen | Schreiben | Beschreibung |
+|------------|-------|-----------|--------------|
+| `frameChangeThreshold` | ja | ja | Schwellwert für Frameveränderung in % der Bildpixel (0–20) |
+| `autoThresholdTuning` | ja | ja | Automatische Schwellenwerteinstellung ein/aus |
+| `autoNoiseDetect` | ja | ja | Automatische Bildrauscherkennung ein/aus |
+| `noiseLevel` | ja | ja | Manueller Rauschpegel 0–255 (wenn Auto-Rauschen aus) |
+| `eventGap` | ja | ja | Sekunden ohne Bewegung, bis ein Ereignis endet |
+| `minimumMotionFrames` | ja | ja | Mindestanzahl aufeinanderfolgender Frames mit Bewegung |
+| `lightSwitchDetect` | ja | ja | Erkennung von Lichtveränderungen in % (0–100) |
+| `despeckleFilter` | ja | ja | Fleckenfilter ein/aus |
+| `preCapture` | ja | ja | Frames vor erkannter Bewegung (Vorschau) |
+| `postCapture` | ja | ja | Frames nach Ende der Bewegung |
+
+### Speicherplatz (`motioneye.<Instanz>.<kamera>.storage.*`)
+
+| Datenpunkt | Lesen | Schreiben | Beschreibung |
+|------------|-------|-----------|--------------|
+| `snapshotCount` | ja | nein | Anzahl gespeicherter Snapshots |
+| `videoCount` | ja | nein | Anzahl gespeicherter Videoclips |
+| `usedSpaceMb` | ja | nein | Belegter Speicherplatz in MB |
+| `lastRefresh` | ja | nein | Zeitstempel der letzten erfolgreichen Aktualisierung |
+| `refresh` | nein | ja | Aktualisierung jetzt auslösen |
 
 ### Instanz-Info (`motioneye.<Instanz>._info.*`)
 

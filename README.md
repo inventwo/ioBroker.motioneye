@@ -31,7 +31,8 @@ FAQ and troubleshooting (Docker/Unraid, `unauthorized`, VIS stream): [EN](docs/e
 - User-defined camera names in ioBroker (independent of MotionEye labels)
 - Dynamic channels under `motioneye.0.<name>.*` (lowercase folder names)
 - Built-in webhook server — no simple-api dependency
-- MotionEye Config API sync for modes and webhook URLs
+- MotionEye Config API sync for modes, webhook URLs, and motion detection tuning (`motiondetection.*`)
+- Per-camera sub-channels: `settings.*`, `overlay.*`, `motiondetection.*`, `storage.*`
 - `_info.connection` — instance shows when MotionEye is unreachable
 - Stream sibling relink after VIS re-render (multi-camera dashboards)
 
@@ -110,7 +111,9 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `preCapture` | level | yes | yes | Frames captured before motion is detected |
 | `postCapture` | level | yes | yes | Frames captured after motion stops |
 
-> Motion detection itself is controlled via root `mode` (`off` / `still` / `sharp`). Setting `frameChangeThreshold` to `0` effectively disables motion detection. Changes made in the MotionEye web UI appear in ioBroker after the next status poll.
+<!-- RELEASE: "After updating from GitHub" → "After updating the adapter" before npm stable release -->
+
+> Motion detection itself is controlled via root `mode` (`off` / `still` / `sharp`). Setting `frameChangeThreshold` to `0` effectively disables motion detection. Changes made in the MotionEye web UI appear in ioBroker after the next status poll. After updating from GitHub, restart the instance so `motiondetection.*` objects are created. See [FAQ](docs/en/faq.md#motion-detection-tuning-motiondetection).
 
 ### Instance (`motioneye.0._info.*`)
 

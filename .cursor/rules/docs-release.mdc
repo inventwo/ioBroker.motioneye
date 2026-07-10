@@ -37,6 +37,18 @@ Required sections: Installation, Configuration, Usage, Changelog, License, Suppo
 - **Never** edit `CHANGELOG_OLD.md` manually
 - **Never** use bold type tags in changelog lines (breaks io-package news translation)
 
+## Pre-release checklist (motiondetection)
+
+Before tagging a stable npm release, replace temporary **GitHub alpha** wording with the released version (search repo for `RELEASE:`):
+
+| File | Replace |
+|------|---------|
+| `docs/en/faq.md` | `Available in the current **GitHub alpha** (not yet on npm stable):` → `From adapter **X.Y.Z** onwards,` |
+| `docs/de/faq.md` | `In der aktuellen **GitHub-Alpha** (noch nicht im npm-Stable)` → `Ab Adapter **X.Y.Z**` |
+| `README.md` | `After updating from GitHub, restart the instance` → `After updating the adapter, restart the instance` (or drop if redundant) |
+
+Use the same version style as other FAQ sections (e.g. overlay **0.7.0**, storage **0.9.0**). Remove any `<!-- RELEASE: ... -->` HTML comments once done.
+
 ## io-package.json
 
 - Keep `common.version` in sync with `package.json`

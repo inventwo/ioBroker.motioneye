@@ -64,7 +64,23 @@ Ab Adapter **0.6.0** liegen Kamera-Parameter unter `motioneye.<Instanz>.<kamera>
 3. Schaltest du die Maske **direkt in MotionEye** aus, verwirft MotionEye die Bereiche sofort. Danach hilft nur: Maske in MotionEye neu zeichnen, kurz warten (Poll) oder Instanz neu starten, damit der Adapter die Linien wieder übernimmt.
 4. **Helligkeit/Kontrast/Sättigung/Farbton** gibt es in MotionEye nur für lokale USB-/v4l2-Kameras, nicht für Netzwerk-Kameras (RTSP) — deshalb keine Datenpunkte im Adapter.
 
-**Mehrere Einstellungen gleichzeitig ändern:** Ab Adapter **0.7.0** werden Config-Schreibvorgänge pro Kamera in eine Warteschlange gestellt. Wenn du mehrere `settings.*`/`overlay.*`-Datenpunkte derselben Kamera fast gleichzeitig setzt (z. B. per Skript oder Mehrfachauswahl), geht dadurch keine der Änderungen mehr verloren. In älteren Versionen: Datenpunkte einzeln nacheinander setzen und `lastAction` abwarten, bevor der nächste geändert wird.
+**Mehrere Einstellungen gleichzeitig ändern:** Ab Adapter **0.7.0** werden Config-Schreibvorgänge pro Kamera in eine Warteschlange gestellt. Wenn du mehrere `settings.*`/`overlay.*`/`motiondetection.*`-Datenpunkte derselben Kamera fast gleichzeitig setzt (z. B. per Skript oder Mehrfachauswahl), geht dadurch keine der Änderungen mehr verloren. In älteren Versionen: Datenpunkte einzeln nacheinander setzen und `lastAction` abwarten, bevor der nächste geändert wird.
+
+---
+
+### Bewegungserkennung (`motiondetection.*`)
+
+<!-- RELEASE: "GitHub-Alpha"-Einleitung vor npm-Stable-Release durch "Ab Adapter X.Y.Z" ersetzen -->
+
+In der aktuellen **GitHub-Alpha** (noch nicht im npm-Stable) liegen die Parameter zur Feineinstellung der Bewegungserkennung unter `motioneye.<Instanz>.<kamera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
+
+1. **Erkennung ein/aus** steuerst du weiterhin über den Root-Datenpunkt `mode` (`off` / `still` / `sharp`) — `motiondetection.*` regelt nur Empfindlichkeit und Timing, solange die Erkennung aktiv ist.
+2. **`frameChangeThreshold`** ist der Anteil der Bildpixel in Prozent, der sich ändern muss, um Bewegung auszulösen (0–20 %, wie der Schieberegler in MotionEye). Bei `0` ist die Erkennung praktisch ausgeschaltet.
+3. **`autoThresholdTuning`** und **`autoNoiseDetect`** lassen MotionEye Schwellwert und Rauschen automatisch anpassen. Ist die automatische Rauscherkennung an, ist `noiseLevel` weiter lesbar, wirkt aber erst wieder, wenn du Auto ausschaltest.
+4. **Timing:** `eventGap` ist die Dauer ohne Bewegung, bis ein Ereignis endet (Sekunden). `minimumMotionFrames` filtert kurze Fehlalarme. `preCapture`/`postCapture` sind Frame-Puffer vor/nach der Bewegung (die Frame-Anzahl hängt von der Kamera-Framerate ab).
+5. **Sync-Verzögerung:** Änderungen in der MotionEye-Weboberfläche erscheinen in ioBroker erst beim nächsten Status-Poll (`statusPollIntervalSec`, Standard 300 s). Schreiben aus ioBroker wirkt sofort.
+
+Nach dem Adapter-Update: Instanz **neu starten**, damit die neuen Objekte unter `motiondetection.*` angelegt werden.
 
 ---
 

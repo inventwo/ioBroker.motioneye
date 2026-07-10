@@ -70,13 +70,17 @@ From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instanc
 
 ### Motion detection tuning (`motiondetection.*`)
 
-From the next adapter release onwards, motion detection tuning parameters live under `motioneye.<instance>.<camera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
+<!-- RELEASE: replace "GitHub alpha" intro with "From adapter X.Y.Z onwards," before npm stable release -->
+
+Available in the current **GitHub alpha** (not yet on npm stable): motion detection tuning parameters live under `motioneye.<instance>.<camera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
 
 1. **Detection on/off** is still controlled via root `mode` (`off` / `still` / `sharp`) — the `motiondetection.*` datapoints only tune sensitivity and timing while detection is enabled.
 2. **`frameChangeThreshold`** is the percentage of image pixels that must change to trigger motion (0–20 %, matching the MotionEye slider). Setting it to `0` effectively disables detection.
 3. **`autoThresholdTuning`** and **`autoNoiseDetect`** let MotionEye adjust threshold/noise automatically. When auto noise detection is on, `noiseLevel` is still readable but has little practical effect until you turn auto off.
 4. **Timing:** `eventGap` is how long motion must be absent before an event ends (seconds). `minimumMotionFrames` filters brief false triggers. `preCapture`/`postCapture` are frame buffers before/after motion (frame count depends on camera framerate).
 5. **Sync delay:** values changed in the MotionEye web UI appear in ioBroker after the next status poll (`statusPollIntervalSec`, default 300 s). Writes from ioBroker are applied immediately.
+
+After updating the adapter: **restart the instance** so the new objects under `motiondetection.*` are created.
 
 ---
 
