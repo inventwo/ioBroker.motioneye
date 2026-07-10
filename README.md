@@ -137,8 +137,7 @@ Details: [FAQ EN](docs/en/faq.md#motioneye-044-adapter-050) · [FAQ DE](docs/de/
 | Option | Default | Description |
 |--------|---------|-------------|
 | `motionHost` | *(empty)* | MotionEye server hostname or IP (required) |
-| `motionPort` | `7999` | Motion HTTP API (snapshots) |
-| `motionEyePort` | `8765` | MotionEye config API |
+| `motionEyePort` | `8765` | MotionEye config API (also used for snapshot actions) |
 | `motionEyeUser` | `admin` | MotionEye login user |
 | `motionEyePassword` | *(empty)* | MotionEye password (plain text, stored encrypted) |
 | `webhookHost` | *(required)* | ioBroker host IP or hostname reachable from MotionEye (used in webhook URLs) |
@@ -183,6 +182,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.
+
 ### 0.9.0 (2026-07-05)
 - (skvarel) Per-camera storage stats under `storage.*`: snapshot count, video count, and occupied space in MB (`storage.snapshotCount`, `storage.videoCount`, `storage.usedSpaceMb`, `storage.lastRefresh`), refreshed on demand via `storage.refresh`
 - (skvarel) New **Storage** config tab: global auto-refresh on/off switch + interval (`storagePollEnabled`, `storagePollIntervalSec`, off by default), a per-camera "Exclude from auto-refresh" checkbox to skip unimportant cameras, and a button to refresh all listed cameras immediately

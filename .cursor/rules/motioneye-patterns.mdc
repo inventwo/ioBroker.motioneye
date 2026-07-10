@@ -11,8 +11,10 @@ alwaysApply: false
 | API | Port | Purpose |
 |-----|------|---------|
 | MotionEye Config | 8765 | `GET /config/list`, `POST /config/{id}/set/` with signature auth |
-| Motion HTTP | 7999 | `/{id}/action/snapshot`, optional `detection/status` |
+| MotionEye Action | 8765 | `POST /action/{id}/snapshot` — same authenticated channel, no separate Motion port needed |
 | MJPEG Stream | 9080+id | Live image (no login when auth disabled) |
+
+Snapshots go through MotionEye's own `/action/{id}/snapshot` endpoint (`motionEyeApi.js#takeSnapshot`), not the raw Motion daemon webcontrol port. The old direct-to-Motion approach (`motionPort`, default 7999) was removed because it requires an extra exposed port and its camera-id-to-thread-number mapping isn't guaranteed to match MotionEye's camera ids.
 
 ## Signature auth (MotionEye 0.43.x)
 

@@ -61,8 +61,6 @@
 	"motionEyeUser": "Nom d'utilisateur MotionEye",
 	"motionHost": "Hôte MotionEye",
 	"motionHost_help": "Adresse IP ou nom d'hôte de votre serveur MotionEye",
-	"motionPort": "Port HTTP de mouvement",
-	"motionPort_help": "Port Motion WebControl pour les instantanés (7999 par défaut)",
 	"motionResetMs": "Réinitialisation automatique du mouvement (ms)",
 	"motionResetMs_help": "Combien de temps l'état .motion reste vrai après un webhook (par défaut 15 000)",
 	"overlay_camera_name": "Nom de la caméra",

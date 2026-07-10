@@ -61,8 +61,6 @@
 	"motionEyeUser": "动眼用户名",
 	"motionHost": "MotionEye主机",
 	"motionHost_help": "MotionEye 服务器的 IP 地址或主机名",
-	"motionPort": "运动 HTTP 端口",
-	"motionPort_help": "用于快照的运动 Web 控制端口（默认 7999）",
 	"motionResetMs": "运动自动复位（毫秒）",
 	"motionResetMs_help": "webhook 后 .motion 状态保持 true 的时间（默认 15000）",
 	"overlay_camera_name": "相机名称",

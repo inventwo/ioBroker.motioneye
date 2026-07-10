@@ -20,7 +20,7 @@ MotionEye ist erreichbar, aber Login oder API-Signatur schlägt fehl.
 2. Seit Adapter-Update 0.2.1 wird das Passwort verschlüsselt gespeichert — ein alter Klartext-Wert funktioniert ggf. erst nach erneutem Speichern wieder.
 3. Hat MotionEye **kein Passwort**, Feld leer lassen (keine Leerzeichen).
 4. Benutzername exakt wie in MotionEye (oft `admin`).
-5. **MotionEye Config-API-Port** ist **8765** — nicht 7999 (Motion-HTTP) und nicht der Port der Weboberfläche hinter einem Reverse-Proxy ohne Weiterleitung der API.
+5. **MotionEye Config-API-Port** ist **8765** — nicht der Port der Weboberfläche hinter einem Reverse-Proxy ohne Weiterleitung der API.
 
 **Erfolg:** `_info.connection` = `true`, keine `unauthorized`-Warnungen im Log.
 
@@ -28,7 +28,7 @@ MotionEye ist erreichbar, aber Login oder API-Signatur schlägt fehl.
 
 Wenn du dich im Browser anmelden kannst, der Adapter aber `GET /config/list → HTTP 403: unauthorized` meldet, liegt es fast nie an „falschem Host“, sondern an **unterschiedlichen Zugangsdaten** oder **falscher API-Adresse**:
 
-1. **Gleicher Port wie der Adapter:** Web-Login muss unter `http://<motionHost>:8765/` funktionieren — nicht nur unter `:7999`, `:80`, `:443` oder einer anderen URL.
+1. **Gleicher Port wie der Adapter:** Web-Login muss unter `http://<motionHost>:8765/` funktionieren — nicht nur unter `:80`, `:443` oder einer anderen URL.
 2. **Gleicher Benutzer:** Der Wert unter **MotionEye-Benutzer** muss exakt dem Admin-User in MotionEye entsprechen (Groß/Klein, oft `admin`).
 3. **Passwort in ioBroker:** Feld komplett leeren → **Speichern** → Instanz neu starten → Passwort **von Hand** tippen (nicht kopieren) → **Speichern** → neu starten. Hilft bei kaputter Verschlüsselung oder unsichtbaren Leerzeichen.
 4. **Zwei verschiedene Server:** ioBroker und MotionEye auf getrennten VMs/LXCs (z. B. Proxmox) ist normal — SSH-Tests und `node` gehören auf den **ioBroker-Host**, nicht auf den MotionEye-Container.
@@ -187,7 +187,7 @@ Der ioBroker-Container erreicht `motionHost:8765` auf Netzwerkebene nicht — **
 
 ### `_info.connection` bleibt `false`
 
-- Falscher **motionHost** oder **motionEyePort** (8765, nicht 7999)
+- Falscher **motionHost** oder **motionEyePort** (Standard 8765)
 - Firewall zwischen ioBroker und MotionEye
 - MotionEye läuft nicht
 - Docker/Netzwerk-Problem (siehe oben)

@@ -61,8 +61,6 @@
 	"motionEyeUser": "MotionEye-gebruikersnaam",
 	"motionHost": "MotionEye-host",
 	"motionHost_help": "IP-adres of hostnaam van uw MotionEye-server",
-	"motionPort": "Motion HTTP-poort",
-	"motionPort_help": "Motion webcontrol-poort voor snapshots (standaard 7999)",
 	"motionResetMs": "Automatische reset door beweging (ms)",
 	"motionResetMs_help": "Hoe lang de .motion-status waar blijft na een webhook (standaard 15000)",
 	"overlay_camera_name": "Cameranaam",

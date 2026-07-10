@@ -6,7 +6,6 @@
 
 const utils = require('@iobroker/adapter-core');
 const { createMotionEyeApi } = require('./lib/motionEyeApi');
-const { createMotionApi } = require('./lib/motionApi');
 const { buildStoragePatch } = require('./lib/mediaStorage');
 const { summarizeMediaList, bytesToMb } = require('./lib/mediaUsage');
 const { INFO_STATE_LABELS } = require('./lib/infoLabels');
@@ -111,7 +110,6 @@ class Motioneye extends utils.Adapter {
 		this.on('unload', this.onUnload.bind(this));
 
 		this.motionEyeApi = undefined;
-		this.motionApi = undefined;
 		this.streamManager = undefined;
 		this.webhookServer = undefined;
 		this.pollInterval = undefined;
@@ -152,7 +150,6 @@ class Motioneye extends utils.Adapter {
 		this.verboseLog(
 			`MotionEye API: ${host}:${Number(this.config.motionEyePort) || 8765}, user=${user}, password ${describePassword(this.config.motionEyePassword)}`,
 		);
-		this.verboseLog(`Motion HTTP port: ${Number(this.config.motionPort) || 7999}`);
 		this.verboseLog(
 			`Webhook listener: ${this.config.webhookBind || '0.0.0.0'}:${Number(this.config.webhookPort) || 8090}, webhook host for MotionEye: ${this.webhookHost || '(not set)'}`,
 		);
@@ -190,12 +187,6 @@ class Motioneye extends utils.Adapter {
 			password: this.config.motionEyePassword,
 			requestTimeoutMs: this.config.requestTimeoutMs,
 			verboseLog: message => this.verboseLog(message),
-		});
-
-		this.motionApi = createMotionApi({
-			host: this.config.motionHost,
-			motionPort: this.config.motionPort,
-			requestTimeoutMs: this.config.requestTimeoutMs,
 		});
 
 		this.streamManager = createStreamManager({
@@ -1740,10 +1731,15 @@ class Motioneye extends utils.Adapter {
 
 		if (stateName === 'snapshot' && state.val === true) {
 			try {
-				const result = await this.motionApi.takeSnapshot(camera.motionEyeId);
-				await this.setStateAsync(`${camera.channel}.lastAction`, `action/snapshot: ${result.body}`, true);
+				await this.motionEyeApi.takeSnapshot(camera.motionEyeId);
+				await this.setStateAsync(`${camera.channel}.lastAction`, 'action/snapshot: OK', true);
 			} catch (error) {
 				this.log.error(`Snapshot failed for ${camera.name}: ${error.message}`);
+				await this.setStateAsync(
+					`${camera.channel}.lastAction`,
+					`action/snapshot: error: ${error.message}`,
+					true,
+				);
 			}
 			await this.setStateAsync(`${camera.channel}.snapshot`, false, true);
 			return;
@@ -2072,7 +2068,6 @@ class Motioneye extends utils.Adapter {
 				.finally(() => {
 					this.webhookServer = undefined;
 					this.motionEyeApi = undefined;
-					this.motionApi = undefined;
 					callback();
 				});
 		} catch (error) {

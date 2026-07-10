@@ -163,7 +163,6 @@
   },
   "native": {
     "motionHost": "",
-    "motionPort": 7999,
     "motionEyePort": 8765,
     "motionEyeUser": "admin",
     "motionEyePassword": "",

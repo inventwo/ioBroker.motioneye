@@ -20,7 +20,7 @@ MotionEye is reachable, but login or API signature failed.
 2. After adapter updates since 0.2.1 the password is stored encrypted — an old plain-text value may no longer work until you save it again.
 3. If MotionEye has **no password**, leave the field empty (no spaces).
 4. Username must match MotionEye exactly (often `admin`).
-5. **MotionEye config API port** is **8765** — not 7999 (Motion HTTP) and not a reverse-proxy web port unless the API is forwarded there too.
+5. **MotionEye config API port** is **8765** — not a reverse-proxy web port unless the API is forwarded there too.
 
 **Success:** `_info.connection` = `true`, no `unauthorized` warnings in the log.
 
@@ -28,7 +28,7 @@ MotionEye is reachable, but login or API signature failed.
 
 If the browser login succeeds but the adapter logs `GET /config/list → HTTP 403: unauthorized`, it is usually **not** a wrong host but **different credentials** or the **wrong API URL**:
 
-1. **Same port as the adapter:** Web login must work at `http://<motionHost>:8765/` — not only at `:7999`, `:80`, `:443`, or another URL.
+1. **Same port as the adapter:** Web login must work at `http://<motionHost>:8765/` — not only at `:80`, `:443`, or another URL.
 2. **Same user:** **MotionEye username** must match the MotionEye admin user exactly (case-sensitive, often `admin`).
 3. **Password in ioBroker:** Clear the field completely → **Save** → restart instance → type the password **manually** (do not paste) → **Save** → restart. Fixes broken encryption or invisible whitespace.
 4. **Two separate servers:** ioBroker and MotionEye on different VMs/LXCs (e.g. Proxmox) is fine — SSH tests and `node` must run on the **ioBroker host**, not on the MotionEye container.
@@ -187,7 +187,7 @@ The ioBroker container cannot reach `motionHost:8765` at the network level — t
 
 ### `_info.connection` stays `false`
 
-- Wrong **motionHost** or **motionEyePort** (8765, not 7999)
+- Wrong **motionHost** or **motionEyePort** (default 8765)
 - Firewall between ioBroker and MotionEye
 - MotionEye not running
 - Docker/network issue (see above)

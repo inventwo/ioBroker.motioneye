@@ -61,8 +61,6 @@
 	"motionEyeUser": "Nazwa użytkownika MotionEye",
 	"motionHost": "Gospodarz MotionEye",
 	"motionHost_help": "Adres IP lub nazwa hosta serwera MotionEye",
-	"motionPort": "Ruchowy port HTTP",
-	"motionPort_help": "Port kontroli ruchu internetowego dla migawek (domyślnie 7999)",
 	"motionResetMs": "Automatyczne resetowanie ruchu (ms)",
 	"motionResetMs_help": "Jak długo stan .motion pozostaje prawdziwy po webhooku (domyślnie 15000)",
 	"overlay_camera_name": "Nazwa aparatu",

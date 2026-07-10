@@ -61,8 +61,6 @@
 	"motionEyeUser": "Имя пользователя MotionEye",
 	"motionHost": "Хост MotionEye",
 	"motionHost_help": "IP-адрес или имя хоста вашего сервера MotionEye",
-	"motionPort": "HTTP-порт движения",
-	"motionPort_help": "Порт веб-управления движением для снимков (по умолчанию 7999)",
 	"motionResetMs": "Автоматический сброс движения (мс)",
 	"motionResetMs_help": "Как долго состояние .motion остается истинным после веб-перехватчика (по умолчанию 15000)",
 	"overlay_camera_name": "Имя камеры",
