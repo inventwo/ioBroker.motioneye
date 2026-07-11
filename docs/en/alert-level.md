@@ -33,3 +33,7 @@ Writing **`alertLevel`** takes priority for Telegram-on-motion until **`mode`** 
 The selected level is stored in the **`alertLevel`** state and reapplied on adapter restart.
 
 Manual **`snapshot`** and per-camera **On snapshot** Telegram settings are independent.
+
+### Telegram image on motion (`notify` / `full`)
+
+When **Send image** is enabled in the Notifications tab, the adapter **triggers a MotionEye snapshot** on the motion webhook (same as the manual **`snapshot`** button), waits **`snapshotCacheDelayMs`** (Settings → Snapshots tab, default 800 ms), then downloads the JPEG for Telegram. In **`still`** mode MotionEye does not always have a ready `lastsnap.jpg` without this step.

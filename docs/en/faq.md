@@ -155,6 +155,8 @@ On **motion webhook** or after a **snapshot update**, the adapter can send Teleg
 
 The adapter sends **up to three separate Telegram messages** (like your Blockly example): pre text → image (`snapshots.filePath`) → post text. Placeholders in texts: `{camera}`, `{channel}`, `{timestamp}`.
 
+On **motion webhook** with **Send image** enabled, the adapter triggers a MotionEye snapshot first, then downloads the JPEG (see [Alert level](alert-level.md#telegram-image-on-motion-notify--full)). The **On snapshot** column only applies to manual `snapshot` / `snapshots.refresh`.
+
 **Test:** **Send test message** button. **Minimum interval per camera** limits flooding during continuous motion.
 
 For custom logic, Blockly/scripts with `snapshots.filePath` still work.

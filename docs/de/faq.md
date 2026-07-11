@@ -155,6 +155,8 @@ Bei **Bewegungs-Webhook** oder nach **Snapshot-Aktualisierung** kann der Adapter
 
 Der Adapter sendet **bis zu drei separate Telegram-Nachrichten** (wie dein Blockly-Beispiel): Vor-Text → Bild (`snapshots.filePath`) → Nach-Text. Platzhalter in Texten: `{camera}`, `{channel}`, `{timestamp}`.
 
+Bei **Bewegungs-Webhook** mit **Bild senden = Ja** löst der Adapter zuerst einen MotionEye-Snapshot aus und lädt danach das JPEG (siehe [Schutzstufe](alert-level.md#telegram-bild-bei-bewegung-notify--full)). Die Spalte **Bei Snapshot** gilt nur für manuellen `snapshot` / `snapshots.refresh`.
+
 **Test:** Button **Testnachricht senden**. **Mindestabstand pro Kamera** verhindert Flut bei Dauerbewegung.
 
 Für eigene Logik weiterhin Blockly/Skripte mit `snapshots.filePath` möglich.

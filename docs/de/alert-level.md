@@ -33,3 +33,7 @@ Schreiben auf **`alertLevel`** hat Vorrang für Telegram-bei-Bewegung, bis wiede
 Die gewählte Stufe liegt im **`alertLevel`**-State und wird nach Adapter-Neustart erneut angewendet.
 
 Manueller **`snapshot`** und **Bei Snapshot** in der Config bleiben unabhängig.
+
+### Telegram-Bild bei Bewegung (`notify` / `full`)
+
+Ist **Bild senden** im Tab Benachrichtigungen aktiv, löst der Adapter beim Bewegungs-Webhook **zuerst einen MotionEye-Snapshot** aus (wie der manuelle **`snapshot`**-Button), wartet **`snapshotCacheDelayMs`** (Tab Snapshots, Standard 800 ms) und lädt dann das JPEG für Telegram. Im Modus **`still`** liegt oft noch kein fertiges `lastsnap.jpg` ohne diesen Schritt vor.
