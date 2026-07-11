@@ -75,6 +75,7 @@ Kanalnamen in Kleinbuchstaben (z. B. `garten`, `innenhof_ii`).
 |------------|-------|-----------|--------------|
 | `url` | ja | nein | Web-Pfad im ioBroker-Dateispeicher |
 | `urlLocal` | ja | nein | Vollständige LAN-URL (Web-Adapter) |
+| `filePath` | ja | nein | Absoluter Dateipfad (Telegram, Skripte) |
 | `html` | ja | nein | HTML-Snippet für VIS-HTML-Widget |
 | `lastUpdate` | ja | nein | ISO-Zeitstempel der letzten Cache-Aktualisierung |
 | `sizeKb` | ja | nein | Größe des gecachten JPEG in KB |

@@ -66,12 +66,13 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 |-------|------|------|-------|-------------|
 | `url` | text | yes | no | Web path, e.g. `/motioneye.0/snapshots/garten/lastsnap.jpg` |
 | `urlLocal` | url | yes | no | Full LAN URL via ioBroker web adapter |
+| `filePath` | text | yes | no | Absolute path on disk (Telegram, scripts) |
 | `html` | text | yes | no | Ready-to-use HTML for html widget (like `streamUrl`) |
 | `lastUpdate` | text | yes | no | ISO timestamp of the last cache update |
 | `sizeKb` | value | yes | no | Cached JPEG size in KB |
 | `refresh` | button | no | yes | Re-download from MotionEye without new snapshot |
 
-> Enabled on the **Snapshots** config tab (`snapshotCacheEnabled`, default on). After `snapshot` or optionally on motion webhook. See [FAQ](docs/en/faq.md#snapshot-cache-snapshots).
+> Enabled on the **Snapshots** config tab (`snapshotCacheEnabled`, default on). After `snapshot` or optionally on motion webhook. Use `snapshots.filePath` for Telegram (not the Admin download URL). See [FAQ](docs/en/faq.md#snapshot-cache-snapshots).
 
 ### Per camera device settings (`motioneye.0.<name>.settings.*`)
 
@@ -220,7 +221,7 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) Snapshot cache in ioBroker file storage under `snapshots/<channel>/lastsnap.jpg` — copies MotionEye's latest saved snapshot after `snapshot` trigger (optional on motion webhook); datapoints `snapshots.urlLocal`, `snapshots.html`, `snapshots.refresh`; new **Snapshots** config tab
+- (skvarel) Snapshot cache in ioBroker file storage under `snapshots/<channel>/lastsnap.jpg` — copies MotionEye's latest saved snapshot after `snapshot` trigger (optional on motion webhook); datapoints `snapshots.urlLocal`, `snapshots.filePath`, `snapshots.html`, `snapshots.refresh`; new **Snapshots** config tab
 - (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
 - (skvarel) FAQ: clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)
 

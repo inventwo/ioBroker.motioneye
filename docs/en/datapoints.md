@@ -72,6 +72,7 @@ Channel names are lowercase (e.g. `garten`, `innenhof_ii`).
 |-------|------|-------|-------------|
 | `url` | yes | no | Web path under ioBroker file storage |
 | `urlLocal` | yes | no | Full LAN URL (web adapter) |
+| `filePath` | yes | no | Absolute filesystem path (Telegram, scripts) |
 | `html` | yes | no | HTML snippet for VIS html widget |
 | `lastUpdate` | yes | no | ISO timestamp of last cache update |
 | `sizeKb` | yes | no | Cached JPEG size in KB |

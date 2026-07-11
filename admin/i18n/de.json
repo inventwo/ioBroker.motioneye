@@ -87,7 +87,7 @@
 	"snapshotCacheOnMotion": "Cache bei Bewegungs-Webhook aktualisieren",
 	"snapshotCacheOnMotion_help": "Cached Snapshot auch bei eingehendem Bewegungs-Webhook aktualisieren (begrenzt durch Mindestabstand unten). Standard aus — Bewegung kann sehr häufig auslösen.",
 	"snapshots_camera_name": "Kameraname",
-	"snapshots_info": "Der Snapshot-Cache kopiert den zuletzt gespeicherten Snapshot von MotionEye (lastsnap.jpg) in den ioBroker-Dateispeicher — ein Ordner pro Kamera. Nutze snapshots.urlLocal oder snapshots.html in VIS/Telegram, ohne dich bei MotionEye anzumelden.\n\nNach einem Snapshot-Trigger wartet der Adapter kurz (siehe Verzögerung oben), bevor er herunterlädt. Mit snapshots.refresh kannst du neu laden, ohne einen weiteren Snapshot auszulösen.",
+	"snapshots_info": "Der Snapshot-Cache kopiert den zuletzt gespeicherten Snapshot von MotionEye (lastsnap.jpg) in den ioBroker-Dateispeicher — ein Ordner pro Kamera. Nutze snapshots.urlLocal oder snapshots.html in VIS/Telegram, ohne dich bei MotionEye anzumelden.\n\nFür Telegram und Skripte: snapshots.filePath (absoluter Dateipfad) — nicht die Download-URL aus Admin → Dateien. Nach einem Snapshot-Trigger wartet der Adapter kurz (siehe Verzögerung oben), bevor er herunterlädt. Mit snapshots.refresh kannst du neu laden, ohne einen weiteren Snapshot auszulösen.",
 	"snapshots_table": "Snapshots",
 	"statusPollIntervalSec": "Status-Abfrageintervall (Sekunden)",
 	"storagePollEnabled": "Speicherplatz-Statistik Auto-Aktualisierung aktivieren",

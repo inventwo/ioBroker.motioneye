@@ -134,11 +134,14 @@ Wenn **Letzten Snapshot in ioBroker cachen** aktiv ist (`snapshotCacheEnabled`, 
 
 **Datenpunkte für Automatisierung / VIS:**
 
-- `snapshots.urlLocal` — vollständige URL, z. B. `http://192.168.1.10:8082/motioneye.0/snapshots/garten/lastsnap.jpg`
+- `snapshots.urlLocal` — URL für VIS/HTML-Widget im LAN, z. B. `http://192.168.1.10:8082/motioneye.0/snapshots/garten/lastsnap.jpg`
+- `snapshots.filePath` — absoluter Dateipfad für Telegram und Skripte, z. B. `/opt/iobroker/iobroker-data/files/motioneye.0/snapshots/garten/lastsnap.jpg` (wird automatisch für deinen Host ermittelt)
 - `snapshots.html` — HTML-Widget-Binding (wie bei `streamUrl`)
 - `snapshots.lastUpdate` — Zeitpunkt der letzten Cache-Aktualisierung
 
-Voraussetzung: **Web-Adapter** (`admin` / Port 8082), damit das JPEG per HTTP ausgeliefert wird. Für die LAN-URL wird **ioBroker-Host für Webhooks** (`webhookHost`) verwendet, wenn gesetzt.
+**Telegram:** `snapshots.filePath` als `text` in `sendTo('telegram.0', 'send', { text: filePath, caption: '…' })` verwenden. **Nicht** die Download-URL aus Admin → Dateien (`:8081/files/...`) — die liefert HTML, kein JPEG.
+
+Voraussetzung: **Web-Adapter** (`admin` / Port 8082), damit das JPEG per HTTP für `urlLocal` ausgeliefert wird. Für die LAN-URL wird **ioBroker-Host für Webhooks** (`webhookHost`) verwendet, wenn gesetzt.
 
 Pro Kamera abwählen: Tab **Snapshots** → **Vom Snapshot-Cache ausschließen**.
 

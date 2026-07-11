@@ -271,6 +271,7 @@ class Motioneye extends utils.Adapter {
 				return host || '127.0.0.1';
 			},
 			resolveWebAdapter: () => this.resolveWebAdapter(),
+			getDataDir: () => utils.getAbsoluteDefaultDataDir(),
 			verboseLog: message => this.verboseLog(message),
 			log: (level, message) => this.log[level](message),
 			delayFn: ms => this.delay(ms),
@@ -1280,6 +1281,17 @@ class Motioneye extends utils.Adapter {
 					name: `${camera.name} snapshot URL (LAN)`,
 					type: 'string',
 					role: 'url',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
+				id: 'filePath',
+				common: {
+					name: `${camera.name} snapshot file path`,
+					type: 'string',
+					role: 'text',
 					read: true,
 					write: false,
 					def: '',
