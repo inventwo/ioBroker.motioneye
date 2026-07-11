@@ -153,7 +153,7 @@ On **motion webhook** or after a **snapshot update**, the adapter can send Teleg
 2. **Notifications** tab → **Enable Telegram notifications**.
 3. Choose triggers: **Notify on motion** and/or **Notify on snapshot** (`snapshot` datapoint, `snapshots.refresh`).
 4. Add **recipients** (instance usually `0`, Chat ID from the Telegram adapter). Uncheck **Active** to temporarily disable someone.
-5. Per camera: **Text before image**, **Send image** / **Timestamp** / **Notifications** (Yes/No dropdown, default Yes), optional **Recipients** (empty = all active; otherwise name or chat ID).
+5. Per camera: **Text before image**, **Send image** / **Timestamp**, **On motion** / **On snapshot** (Yes/No dropdown, default Yes), optional **Recipients** (empty = all active; otherwise name or chat ID).
 
 The adapter sends **up to three separate Telegram messages** (like your Blockly example): pre text → image (`snapshots.filePath`) → post text. Placeholders in texts: `{camera}`, `{channel}`, `{timestamp}`.
 

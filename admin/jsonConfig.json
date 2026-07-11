@@ -972,15 +972,27 @@
 						},
 						{
 							"type": "select",
-							"attr": "notificationEnabled",
-							"title": "camera_notificationEnabled",
-							"width": "10%",
+							"attr": "notificationOnMotion",
+							"title": "camera_notificationOnMotion",
+							"width": "9%",
 							"default": "",
 							"options": [
 								{ "label": "notification_option_yes", "value": "" },
 								{ "label": "notification_option_no", "value": "false" }
 							],
-							"tooltip": "camera_notificationEnabled_help"
+							"tooltip": "camera_notificationOnMotion_help"
+						},
+						{
+							"type": "select",
+							"attr": "notificationOnSnapshot",
+							"title": "camera_notificationOnSnapshot",
+							"width": "9%",
+							"default": "",
+							"options": [
+								{ "label": "notification_option_yes", "value": "" },
+								{ "label": "notification_option_no", "value": "false" }
+							],
+							"tooltip": "camera_notificationOnSnapshot_help"
 						}
 					]
 				}
