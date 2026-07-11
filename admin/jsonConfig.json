@@ -763,30 +763,6 @@
 					"lg": 12,
 					"xl": 12
 				},
-				"telegramNotificationOnMotion": {
-					"type": "checkbox",
-					"label": "telegramNotificationOnMotion",
-					"default": true,
-					"disabled": "!data.telegramNotificationsEnabled",
-					"xs": 12,
-					"sm": 6,
-					"md": 4,
-					"lg": 4,
-					"xl": 4,
-					"help": "telegramNotificationOnMotion_help"
-				},
-				"telegramNotificationOnSnapshot": {
-					"type": "checkbox",
-					"label": "telegramNotificationOnSnapshot",
-					"default": false,
-					"disabled": "!data.telegramNotificationsEnabled",
-					"xs": 12,
-					"sm": 6,
-					"md": 4,
-					"lg": 4,
-					"xl": 4,
-					"help": "telegramNotificationOnSnapshot_help"
-				},
 				"telegramNotificationMinIntervalSec": {
 					"type": "number",
 					"label": "telegramNotificationMinIntervalSec",

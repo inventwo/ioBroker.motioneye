@@ -222,8 +222,7 @@ Datapoints: `snapshots.urlLocal`, `snapshots.filePath`, `snapshots.html`, `snaps
 
 The **Notifications** tab sends Telegram messages via the ioBroker Telegram adapter (optional):
 
-- **Enable Telegram notifications** + triggers: **on motion** and/or **on snapshot**
-- **Recipients** table: instance, Chat ID, display name, **Active** checkbox
+- **Enable Telegram notifications** + **Recipients** table (instance, Chat ID, display name, **Active** checkbox)
 - Per camera: pre/post text, **Send image** / **Timestamp**, **On motion** / **On snapshot** (Yes/No dropdowns), **Recipients** filter (empty = all active; name or chat ID)
 
 See [FAQ](docs/en/faq.md#telegram-notifications-notifications-tab).
@@ -241,7 +240,7 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) Per-camera Telegram triggers: separate **On motion** / **On snapshot** Yes/No dropdowns (e.g. snapshot-only notifications without motion alerts)
+- (skvarel) Per-camera Telegram triggers: separate **On motion** / **On snapshot** Yes/No dropdowns in the table (no global motion/snapshot checkboxes)
 
 ### 1.0.0 (2026-07-11)
 - (skvarel) Notifications tab: built-in Telegram on motion and/or snapshot — recipients with Active toggle, per-camera message template (Yes/No dropdowns), per-camera recipient filter, test message

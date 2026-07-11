@@ -2227,10 +2227,10 @@ class Motioneye extends utils.Adapter {
 				await this.setStateAsync(`${camera.channel}.lastAction`, 'action/snapshot: OK', true);
 				if (this.snapshotCache) {
 					const cacheEnabled = this.snapshotCache.isEnabledForCamera(camera);
-					const notifySnapshot = this.config.telegramNotificationOnSnapshot === true;
-					if (cacheEnabled || notifySnapshot) {
+					const needsTelegramSnapshot = this.telegramNotifications?.needsSnapshotRefresh(camera) ?? false;
+					if (cacheEnabled || needsTelegramSnapshot) {
 						void this.snapshotCache.scheduleAfterSnapshot(camera, {
-							force: notifySnapshot && !cacheEnabled,
+							force: needsTelegramSnapshot && !cacheEnabled,
 						});
 					}
 				}
@@ -2275,10 +2275,10 @@ class Motioneye extends utils.Adapter {
 		if (stateName === `${CAMERA_SNAPSHOTS_CHANNEL}.refresh` && state.val === true) {
 			if (this.snapshotCache) {
 				const cacheEnabled = this.snapshotCache.isEnabledForCamera(camera);
-				const notifySnapshot = this.config.telegramNotificationOnSnapshot === true;
-				if (cacheEnabled || notifySnapshot) {
+				const needsTelegramSnapshot = this.telegramNotifications?.needsSnapshotRefresh(camera) ?? false;
+				if (cacheEnabled || needsTelegramSnapshot) {
 					await this.snapshotCache.refreshManual(camera, {
-						force: notifySnapshot && !cacheEnabled,
+						force: needsTelegramSnapshot && !cacheEnabled,
 					});
 				}
 			}

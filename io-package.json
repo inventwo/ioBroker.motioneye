@@ -184,8 +184,6 @@
     "snapshotCacheDelayMs": 800,
     "snapshotCacheMotionMinIntervalSec": 30,
     "telegramNotificationsEnabled": false,
-    "telegramNotificationOnMotion": true,
-    "telegramNotificationOnSnapshot": false,
     "telegramNotificationMinIntervalSec": 30,
     "telegramRecipients": [],
     "disableStreamOnStart": true,
