@@ -758,10 +758,34 @@
 					"label": "telegramNotificationsEnabled",
 					"default": false,
 					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12
+				},
+				"telegramNotificationOnMotion": {
+					"type": "checkbox",
+					"label": "telegramNotificationOnMotion",
+					"default": true,
+					"disabled": "!data.telegramNotificationsEnabled",
+					"xs": 12,
 					"sm": 6,
 					"md": 4,
 					"lg": 4,
-					"xl": 4
+					"xl": 4,
+					"help": "telegramNotificationOnMotion_help"
+				},
+				"telegramNotificationOnSnapshot": {
+					"type": "checkbox",
+					"label": "telegramNotificationOnSnapshot",
+					"default": false,
+					"disabled": "!data.telegramNotificationsEnabled",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "telegramNotificationOnSnapshot_help"
 				},
 				"telegramNotificationMinIntervalSec": {
 					"type": "number",
@@ -813,19 +837,27 @@
 							"type": "number",
 							"default": 0,
 							"placeholder": "0",
-							"width": "12%"
+							"width": "10%"
 						},
 						{
 							"title": "telegramRecipient_chatId",
 							"attr": "chatId",
 							"type": "text",
-							"width": "35%"
+							"width": "28%"
 						},
 						{
 							"title": "telegramRecipient_name",
 							"attr": "name",
 							"type": "text",
-							"width": "53%"
+							"width": "32%"
+						},
+						{
+							"title": "telegramRecipient_enabled",
+							"attr": "enabled",
+							"type": "checkbox",
+							"default": true,
+							"width": "12%",
+							"tooltip": "telegramRecipient_enabled_help"
 						}
 					]
 				},
@@ -889,44 +921,52 @@
 							"type": "text",
 							"attr": "name",
 							"title": "notifications_camera_name",
-							"width": "14%",
+							"width": "12%",
 							"readOnly": true
 						},
 						{
 							"type": "text",
 							"attr": "notificationPreText",
 							"title": "camera_notificationPreText",
-							"width": "22%",
+							"width": "16%",
 							"tooltip": "camera_notificationPreText_help"
 						},
 						{
 							"type": "checkbox",
-							"attr": "notificationSendImage",
-							"title": "camera_notificationSendImage",
-							"width": "10%",
-							"default": true,
-							"tooltip": "camera_notificationSendImage_help"
+							"attr": "notificationImageExcluded",
+							"title": "camera_notificationImageExcluded",
+							"width": "8%",
+							"default": false,
+							"tooltip": "camera_notificationImageExcluded_help"
 						},
 						{
 							"type": "text",
 							"attr": "notificationPostText",
 							"title": "camera_notificationPostText",
-							"width": "22%",
+							"width": "16%",
 							"tooltip": "camera_notificationPostText_help"
 						},
 						{
 							"type": "checkbox",
-							"attr": "notificationIncludeTimestamp",
-							"title": "camera_notificationIncludeTimestamp",
-							"width": "12%",
-							"default": true,
-							"tooltip": "camera_notificationIncludeTimestamp_help"
+							"attr": "notificationTimestampExcluded",
+							"title": "camera_notificationTimestampExcluded",
+							"width": "10%",
+							"default": false,
+							"tooltip": "camera_notificationTimestampExcluded_help"
+						},
+						{
+							"type": "text",
+							"attr": "notificationRecipients",
+							"title": "camera_notificationRecipients",
+							"width": "18%",
+							"placeholder": "camera_notificationRecipients_placeholder",
+							"tooltip": "camera_notificationRecipients_help"
 						},
 						{
 							"type": "checkbox",
 							"attr": "notificationExcluded",
 							"title": "camera_notificationExcluded",
-							"width": "12%",
+							"width": "10%",
 							"default": false,
 							"tooltip": "camera_notificationExcluded_help"
 						}

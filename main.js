@@ -278,6 +278,9 @@ class Motioneye extends utils.Adapter {
 			log: (level, message) => this.log[level](message),
 			delayFn: ms => this.delay(ms),
 			isUnloading: () => this._unloading,
+			onSnapshotCached: (camera, meta) => {
+				void this.telegramNotifications?.onSnapshotCached(camera, meta);
+			},
 		});
 		await this.snapshotCache.init();
 
@@ -2222,8 +2225,14 @@ class Motioneye extends utils.Adapter {
 			try {
 				await this.motionEyeApi.takeSnapshot(camera.motionEyeId);
 				await this.setStateAsync(`${camera.channel}.lastAction`, 'action/snapshot: OK', true);
-				if (this.snapshotCache?.isEnabledForCamera(camera)) {
-					void this.snapshotCache.scheduleAfterSnapshot(camera);
+				if (this.snapshotCache) {
+					const cacheEnabled = this.snapshotCache.isEnabledForCamera(camera);
+					const notifySnapshot = this.config.telegramNotificationOnSnapshot === true;
+					if (cacheEnabled || notifySnapshot) {
+						void this.snapshotCache.scheduleAfterSnapshot(camera, {
+							force: notifySnapshot && !cacheEnabled,
+						});
+					}
 				}
 			} catch (error) {
 				this.log.error(`Snapshot failed for ${camera.name}: ${error.message}`);
@@ -2265,7 +2274,13 @@ class Motioneye extends utils.Adapter {
 
 		if (stateName === `${CAMERA_SNAPSHOTS_CHANNEL}.refresh` && state.val === true) {
 			if (this.snapshotCache) {
-				await this.snapshotCache.refreshManual(camera);
+				const cacheEnabled = this.snapshotCache.isEnabledForCamera(camera);
+				const notifySnapshot = this.config.telegramNotificationOnSnapshot === true;
+				if (cacheEnabled || notifySnapshot) {
+					await this.snapshotCache.refreshManual(camera, {
+						force: notifySnapshot && !cacheEnabled,
+					});
+				}
 			}
 			await this.setStateAsync(`${camera.channel}.${CAMERA_SNAPSHOTS_CHANNEL}.refresh`, false, true);
 			return;

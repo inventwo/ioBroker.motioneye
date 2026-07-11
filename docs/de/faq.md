@@ -149,12 +149,13 @@ Pro Kamera abwählen: Tab **Snapshots** → **Vom Snapshot-Cache ausschließen**
 
 ### Telegram-Benachrichtigungen (Tab **Benachrichtigungen**)
 
-Bei **Bewegungs-Webhook** kann der Adapter automatisch Telegram-Nachrichten senden — ohne Blockly/Skript.
+Bei **Bewegungs-Webhook** oder nach **Snapshot-Aktualisierung** kann der Adapter automatisch Telegram-Nachrichten senden — ohne Blockly/Skript.
 
 1. **Telegram-Adapter** installieren und Benutzer authentifizieren.
 2. Tab **Benachrichtigungen** → **Telegram-Benachrichtigungen aktivieren**.
-3. **Empfänger** eintragen (Instanz meist `0`, Chat-ID aus dem Telegram-Adapter).
-4. Pro Kamera **Text vor dem Bild**, **Bild senden**, **Text nach dem Bild**, optional **Zeitstempel anhängen**.
+3. Auslöser wählen: **Bei Bewegung benachrichtigen** und/oder **Bei Snapshot benachrichtigen** (Datenpunkt `snapshot`, `snapshots.refresh`).
+4. **Empfänger** eintragen (Instanz meist `0`, Chat-ID aus dem Telegram-Adapter). Spalte **Aktiv** deaktivieren, um jemanden vorübergehend auszublenden.
+5. Pro Kamera **Text vor dem Bild**, optional **Kein Bild senden**, **Text nach dem Bild**, optional **Zeitstempel weglassen**, optional **Empfänger** (leer = alle aktiven; sonst Namen/Chat-IDs, kommagetrennt).
 
 Der Adapter sendet **bis zu drei separate Telegram-Nachrichten** (wie dein Blockly-Beispiel): Vor-Text → Bild (`snapshots.filePath`) → Nach-Text. Platzhalter in Texten: `{camera}`, `{channel}`, `{timestamp}`.
 

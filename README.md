@@ -222,10 +222,10 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) **Notifications** config tab: Telegram messages on motion webhook — global enable, recipient table (instance/Chat-ID), per-camera pre text / send image / post text / timestamp; test message button; sends three separate Telegram posts like manual Blockly (pre, image, post)
+- (skvarel) **Notifications** config tab: Telegram messages on motion webhook and/or snapshot update — global enable, trigger checkboxes (motion / snapshot), recipient table, per-camera pre text / send image / post text / timestamp; test message button
 - (skvarel) Snapshot cache in ioBroker file storage under `snapshots/<channel>/lastsnap.jpg` — copies MotionEye's latest saved snapshot after `snapshot` trigger (optional on motion webhook); datapoints `snapshots.urlLocal`, `snapshots.filePath`, `snapshots.html`, `snapshots.refresh`; new **Snapshots** config tab
 - (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
-- (skvarel) FAQ: clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)
+- (skvarel) **FAQ:** clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)
 
 ### 0.10.0 (2026-07-10)
 - (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.
