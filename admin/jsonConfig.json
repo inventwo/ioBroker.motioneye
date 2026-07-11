@@ -932,43 +932,55 @@
 							"tooltip": "camera_notificationPreText_help"
 						},
 						{
-							"type": "checkbox",
-							"attr": "notificationImageExcluded",
-							"title": "camera_notificationImageExcluded",
-							"width": "8%",
-							"default": false,
-							"tooltip": "camera_notificationImageExcluded_help"
+							"type": "select",
+							"attr": "notificationSendImage",
+							"title": "camera_notificationSendImage",
+							"width": "9%",
+							"default": "",
+							"options": [
+								{ "label": "notification_option_yes", "value": "" },
+								{ "label": "notification_option_no", "value": "false" }
+							],
+							"tooltip": "camera_notificationSendImage_help"
 						},
 						{
 							"type": "text",
 							"attr": "notificationPostText",
 							"title": "camera_notificationPostText",
-							"width": "16%",
+							"width": "15%",
 							"tooltip": "camera_notificationPostText_help"
 						},
 						{
-							"type": "checkbox",
-							"attr": "notificationTimestampExcluded",
-							"title": "camera_notificationTimestampExcluded",
+							"type": "select",
+							"attr": "notificationIncludeTimestamp",
+							"title": "camera_notificationIncludeTimestamp",
 							"width": "10%",
-							"default": false,
-							"tooltip": "camera_notificationTimestampExcluded_help"
+							"default": "",
+							"options": [
+								{ "label": "notification_option_yes", "value": "" },
+								{ "label": "notification_option_no", "value": "false" }
+							],
+							"tooltip": "camera_notificationIncludeTimestamp_help"
 						},
 						{
 							"type": "text",
 							"attr": "notificationRecipients",
 							"title": "camera_notificationRecipients",
-							"width": "18%",
+							"width": "16%",
 							"placeholder": "camera_notificationRecipients_placeholder",
 							"tooltip": "camera_notificationRecipients_help"
 						},
 						{
-							"type": "checkbox",
-							"attr": "notificationExcluded",
-							"title": "camera_notificationExcluded",
+							"type": "select",
+							"attr": "notificationEnabled",
+							"title": "camera_notificationEnabled",
 							"width": "10%",
-							"default": false,
-							"tooltip": "camera_notificationExcluded_help"
+							"default": "",
+							"options": [
+								{ "label": "notification_option_yes", "value": "" },
+								{ "label": "notification_option_no", "value": "false" }
+							],
+							"tooltip": "camera_notificationEnabled_help"
 						}
 					]
 				}
