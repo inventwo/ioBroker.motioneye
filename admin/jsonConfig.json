@@ -627,7 +627,7 @@
 		"_snapshots": {
 			"type": "panel",
 			"label": "tab_snapshots",
-			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNNCw0SDdWMTlINHYtM3ptMTAsMTRWMTJoM3Y2SDE0di0zem0tNi0xMEg5VjhoM3Y2aDMiLz48L3N2Zz4=",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNOC41IDEzLjVsMi41IDMuMDFMMTQuNSAxMmw0LjUgNkg1bTE2LThWN2EyIDIgMCAwIDAtMi0ySDVhMiAyIDAgMCAwLTIgMnYxMGEyIDIgMCAwIDAgMiAyaDE0YTIgMiAwIDAgMCAyLTJ2LTMuNWwtMy0zLjV6Ii8+PC9zdmc+",
 			"items": {
 				"_snapshotsHeader": {
 					"type": "header",
