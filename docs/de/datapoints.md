@@ -91,3 +91,6 @@ Kanalnamen in Kleinbuchstaben (z. B. `garten`, `innenhof_ii`).
 | `_info.lastSync` | Zeitstempel letzter Poll |
 | `_info.motionEyeVersion` | MotionEye-Version |
 | `_info.motionVersion` | Motion-Daemon-Version |
+| `_info.diskUsedGb` | Festplatte belegt (GB) — linke Zahl in MotionEye „Festplattennutzung“ |
+| `_info.diskTotalGb` | Festplatte gesamt (GB) — rechte Zahl (Gesamtkapazität der Partition, nicht freier Platz) |
+| `_info.diskUsedPercent` | Belegung in Prozent (z. B. 3) |

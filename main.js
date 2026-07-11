@@ -72,13 +72,24 @@ const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { createSnapshotCacheManager } = require('./lib/snapshotCacheManager');
 const { createTelegramNotificationManager } = require('./lib/telegramNotifications');
+const { parseCameraDiskUsage } = require('./lib/diskUsage');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
 const { createVerboseLogger, describePassword, getUnauthorizedVerboseHints } = require('./lib/diagLog');
 
 /** Info states under `_info` (lowercase, like other adapters). */
 const INFO_PREFIX = '_info';
 const LEGACY_INFO_PREFIXES = ['info', '0_info'];
-const LEGACY_INFO_STATES = ['connection', 'camerasOnline', 'lastSync', 'motionEyeVersion', 'motionVersion'];
+const LEGACY_INFO_STATES = [
+	'connection',
+	'camerasOnline',
+	'lastSync',
+	'motionEyeVersion',
+	'motionVersion',
+	'diskUsedGb',
+	'diskTotalGb',
+	'diskUsedPercent',
+];
+const INFO_NUMBER_STATES = new Set(['camerasOnline', 'diskUsedGb', 'diskTotalGb', 'diskUsedPercent']);
 /** Writable string enum — valid ioBroker role for off/still/sharp (repochecker). */
 const CAMERA_MODE_ROLE = 'level.effect';
 const CAMERA_STATE_IDS = [
@@ -521,9 +532,9 @@ class Motioneye extends utils.Adapter {
 			if (stateId.startsWith('_')) {
 				continue;
 			}
-			const type = stateId === 'camerasOnline' ? 'number' : 'string';
+			const type = INFO_NUMBER_STATES.has(stateId) ? 'number' : 'string';
 			const role =
-				stateId === 'connection' ? 'indicator.connected' : stateId === 'camerasOnline' ? 'value' : 'text';
+				stateId === 'connection' ? 'indicator.connected' : INFO_NUMBER_STATES.has(stateId) ? 'value' : 'text';
 
 			await this.setObjectNotExistsAsync(`${INFO_PREFIX}.${stateId}`, {
 				type: 'state',
@@ -533,7 +544,8 @@ class Motioneye extends utils.Adapter {
 					role,
 					read: true,
 					write: false,
-					def: stateId === 'connection' ? false : stateId === 'camerasOnline' ? 0 : '',
+					unit: stateId === 'diskUsedPercent' ? '%' : stateId.endsWith('Gb') ? 'GB' : '',
+					def: stateId === 'connection' ? false : INFO_NUMBER_STATES.has(stateId) ? 0 : '',
 				},
 				native: {},
 			});
@@ -2195,12 +2207,18 @@ class Motioneye extends utils.Adapter {
 
 		const byId = new Map(cameras.map(entry => [Number(entry.id), entry]));
 		let online = 0;
+		/** @type {{ usedGb: number, totalGb: number, usedPercent: number } | null} */
+		let diskUsage = null;
 
 		for (const camera of this.camerasById.values()) {
 			const uiConfig = byId.get(camera.motionEyeId);
 			if (!uiConfig) {
 				await this.setStateAsync(`${camera.channel}.status`, 'not found in MotionEye', true);
 				continue;
+			}
+
+			if (!diskUsage) {
+				diskUsage = parseCameraDiskUsage(uiConfig);
 			}
 
 			online += 1;
@@ -2232,6 +2250,9 @@ class Motioneye extends utils.Adapter {
 
 		await this.setStateAsync(`${INFO_PREFIX}.camerasOnline`, online, true);
 		await this.setStateAsync(`${INFO_PREFIX}.lastSync`, new Date().toISOString(), true);
+		await this.setStateAsync(`${INFO_PREFIX}.diskUsedGb`, diskUsage?.usedGb ?? 0, true);
+		await this.setStateAsync(`${INFO_PREFIX}.diskTotalGb`, diskUsage?.totalGb ?? 0, true);
+		await this.setStateAsync(`${INFO_PREFIX}.diskUsedPercent`, diskUsage?.usedPercent ?? 0, true);
 		await this.updateServerVersionStates();
 	}
 

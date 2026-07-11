@@ -88,3 +88,6 @@ Channel names are lowercase (e.g. `garten`, `innenhof_ii`).
 | `_info.lastSync` | Last poll timestamp |
 | `_info.motionEyeVersion` | MotionEye version |
 | `_info.motionVersion` | Motion daemon version |
+| `_info.diskUsedGb` | Filesystem used space (GB) — left value in MotionEye “Disk usage” |
+| `_info.diskTotalGb` | Filesystem total capacity (GB) — right value (partition size, not free space) |
+| `_info.diskUsedPercent` | Used space in percent (e.g. 3) |

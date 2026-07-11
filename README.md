@@ -141,6 +141,9 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `_info.lastSync` | text | Last status poll timestamp |
 | `_info.motionEyeVersion` | text | MotionEye server version |
 | `_info.motionVersion` | text | Motion daemon version |
+| `_info.diskUsedGb` | value | Filesystem used space (GB), same as MotionEye “Festplattennutzung” left value |
+| `_info.diskTotalGb` | value | Filesystem total capacity (GB), same as MotionEye right value |
+| `_info.diskUsedPercent` | value | Used space in percent (3 = 3 %) |
 
 ## Installation
 
@@ -241,11 +244,14 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Instance `_info` disk usage from MotionEye: `diskUsedGb`, `diskTotalGb`, `diskUsedPercent` (filesystem of first online camera)
+
 ### 1.2.0 (2026-07-11)
 - (skvarel) Per-camera **`alertLevel`** datapoint: one VIS dropdown for off / motion-only / motion+Telegram / motion+video / full protection; syncs `mode` and Telegram-on-motion; legacy `mode` writes still supported
 - (skvarel) Fixed Telegram-on-motion image: trigger MotionEye snapshot before download when `lastsnap.jpg` is not ready yet (same path as manual snapshot button)
 - (skvarel) Telegram notification timestamps use local time (`YYYY-MM-DD HH:mm:ss`) instead of UTC ISO (`…Z`)
-
+  
 ### 1.1.0 (2026-07-11)
 - (skvarel) Per-camera Telegram triggers: separate **On motion** / **On snapshot** Yes/No dropdowns in the table (no global motion/snapshot checkboxes)
 
