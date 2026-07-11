@@ -35,6 +35,7 @@ FAQ and troubleshooting (Docker/Unraid, `unauthorized`, VIS stream): [EN](docs/e
 - Built-in webhook server — no simple-api dependency
 - MotionEye Config API sync for modes, webhook URLs, and motion detection tuning (`motiondetection.*`)
 - Per-camera sub-channels: `settings.*`, `overlay.*`, `motiondetection.*`, `storage.*`, `snapshots.*`
+- Built-in Telegram notifications on motion ( **Notifications** tab, optional)
 - `_info.connection` — instance shows when MotionEye is unreachable
 - Stream sibling relink after VIS re-render (multi-camera dashboards)
 
@@ -221,6 +222,7 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (skvarel) **Notifications** config tab: Telegram messages on motion webhook — global enable, recipient table (instance/Chat-ID), per-camera pre text / send image / post text / timestamp; test message button; sends three separate Telegram posts like manual Blockly (pre, image, post)
 - (skvarel) Snapshot cache in ioBroker file storage under `snapshots/<channel>/lastsnap.jpg` — copies MotionEye's latest saved snapshot after `snapshot` trigger (optional on motion webhook); datapoints `snapshots.urlLocal`, `snapshots.filePath`, `snapshots.html`, `snapshots.refresh`; new **Snapshots** config tab
 - (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
 - (skvarel) FAQ: clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)

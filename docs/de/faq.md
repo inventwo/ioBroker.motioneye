@@ -147,6 +147,23 @@ Pro Kamera abwählen: Tab **Snapshots** → **Vom Snapshot-Cache ausschließen**
 
 ---
 
+### Telegram-Benachrichtigungen (Tab **Benachrichtigungen**)
+
+Bei **Bewegungs-Webhook** kann der Adapter automatisch Telegram-Nachrichten senden — ohne Blockly/Skript.
+
+1. **Telegram-Adapter** installieren und Benutzer authentifizieren.
+2. Tab **Benachrichtigungen** → **Telegram-Benachrichtigungen aktivieren**.
+3. **Empfänger** eintragen (Instanz meist `0`, Chat-ID aus dem Telegram-Adapter).
+4. Pro Kamera **Text vor dem Bild**, **Bild senden**, **Text nach dem Bild**, optional **Zeitstempel anhängen**.
+
+Der Adapter sendet **bis zu drei separate Telegram-Nachrichten** (wie dein Blockly-Beispiel): Vor-Text → Bild (`snapshots.filePath`) → Nach-Text. Platzhalter in Texten: `{camera}`, `{channel}`, `{timestamp}`.
+
+**Test:** Button **Testnachricht senden**. **Mindestabstand pro Kamera** verhindert Flut bei Dauerbewegung.
+
+Für eigene Logik weiterhin Blockly/Skripte mit `snapshots.filePath` möglich.
+
+---
+
 ### Speicherplatz (`storage.*`)
 
 Seit Adapter **0.9.0** zeigt `motioneye.<Instanz>.<kamera>.storage.*` an, wie viele Snapshots/Videoclips aktuell gespeichert sind und wie viel Platz sie belegen (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh` sowie der Trigger `refresh`).

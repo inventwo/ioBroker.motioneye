@@ -730,6 +730,210 @@
 				}
 			}
 		},
+		"_notifications": {
+			"type": "panel",
+			"label": "tab_notifications",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMjEsMTlWMjBIM1YxOUw1LDE3VjExQzUsMy45IDEwLjksMy4yIDE2LDRDMTYsMy42IDE2LjcsMy4zIDE3LDNDMTguMSwzIDE5LDMuOSAxOSw1QzE5LDUuNSAxOC44LDYgMTguNSw2LjNMMTksMTdMMjEsMTlaTTEzLDIxQzEzLDIxLjYgMTIuNiwyMiAxMiwyMkMxMS40LDIyIDExLDIxLjYgMTEsMjFIMTNaTTExLjMsNC4xQzEwLjEsNC41IDkuMiw1LjQgOC43LDYuN0M3LjYsNy4yIDYuNyw4LjEgNi4zLDlMNiwxMVY1LjVDNi41LDQuNiA3LjUsNCA4LjUsNEM5LjYsNCAxMC4zLDQuMSAxMS4zLDQuMVoiLz48L3N2Zz4=",
+			"items": {
+				"_notificationsHeader": {
+					"type": "header",
+					"text": "header_notifications",
+					"size": 3
+				},
+				"telegramNotifications_hint": {
+					"type": "staticText",
+					"text": "telegramNotifications_hint",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "1rem"
+					}
+				},
+				"telegramNotificationsEnabled": {
+					"type": "checkbox",
+					"label": "telegramNotificationsEnabled",
+					"default": false,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
+				},
+				"telegramNotificationMinIntervalSec": {
+					"type": "number",
+					"label": "telegramNotificationMinIntervalSec",
+					"min": 5,
+					"max": 3600,
+					"default": 30,
+					"disabled": "!data.telegramNotificationsEnabled",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "telegramNotificationMinIntervalSec_help"
+				},
+				"telegramRecipients_label": {
+					"type": "staticText",
+					"text": "telegramRecipients_label",
+					"newLine": true,
+					"hidden": "!data.telegramNotificationsEnabled",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginTop": "4px",
+						"padding": "10px 14px",
+						"border": "1px solid #546e7a",
+						"borderRadius": "6px",
+						"backgroundColor": "rgba(84, 110, 122, 0.12)"
+					}
+				},
+				"telegramRecipients": {
+					"type": "table",
+					"newLine": true,
+					"hidden": "!data.telegramNotificationsEnabled",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"items": [
+						{
+							"title": "telegramRecipient_instance",
+							"attr": "instance",
+							"type": "number",
+							"default": 0,
+							"placeholder": "0",
+							"width": "12%"
+						},
+						{
+							"title": "telegramRecipient_chatId",
+							"attr": "chatId",
+							"type": "text",
+							"width": "35%"
+						},
+						{
+							"title": "telegramRecipient_name",
+							"attr": "name",
+							"type": "text",
+							"width": "53%"
+						}
+					]
+				},
+				"_testTelegram": {
+					"type": "sendTo",
+					"label": "test_telegram_button",
+					"help": "test_telegram_help",
+					"command": "testTelegram",
+					"variant": "contained",
+					"showProcess": true,
+					"timeout": 60000,
+					"hidden": "!data.telegramNotificationsEnabled",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"result": {
+						"sent": "test_telegram_result_sent",
+						"disabled": "test_telegram_result_disabled",
+						"no_recipients": "test_telegram_result_no_recipients",
+						"none": "test_telegram_result_none"
+					}
+				},
+				"_notificationsCameraHeader": {
+					"type": "header",
+					"text": "header_notifications_cameras",
+					"size": 3,
+					"newLine": true
+				},
+				"notifications_cameras_hint": {
+					"type": "staticText",
+					"text": "notifications_cameras_hint",
+					"newLine": true,
+					"hidden": "!data.telegramNotificationsEnabled",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginBottom": "10px"
+					}
+				},
+				"cameras": {
+					"type": "table",
+					"newLine": true,
+					"label": "notifications_table",
+					"noDelete": true,
+					"hidden": "!data.telegramNotificationsEnabled",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"items": [
+						{
+							"type": "text",
+							"attr": "name",
+							"title": "notifications_camera_name",
+							"width": "14%",
+							"readOnly": true
+						},
+						{
+							"type": "text",
+							"attr": "notificationPreText",
+							"title": "camera_notificationPreText",
+							"width": "22%",
+							"tooltip": "camera_notificationPreText_help"
+						},
+						{
+							"type": "checkbox",
+							"attr": "notificationSendImage",
+							"title": "camera_notificationSendImage",
+							"width": "10%",
+							"default": true,
+							"tooltip": "camera_notificationSendImage_help"
+						},
+						{
+							"type": "text",
+							"attr": "notificationPostText",
+							"title": "camera_notificationPostText",
+							"width": "22%",
+							"tooltip": "camera_notificationPostText_help"
+						},
+						{
+							"type": "checkbox",
+							"attr": "notificationIncludeTimestamp",
+							"title": "camera_notificationIncludeTimestamp",
+							"width": "12%",
+							"default": true,
+							"tooltip": "camera_notificationIncludeTimestamp_help"
+						},
+						{
+							"type": "checkbox",
+							"attr": "notificationExcluded",
+							"title": "camera_notificationExcluded",
+							"width": "12%",
+							"default": false,
+							"tooltip": "camera_notificationExcluded_help"
+						}
+					]
+				}
+			}
+		},
 		"_logging": {
 			"type": "panel",
 			"label": "tab_logging",

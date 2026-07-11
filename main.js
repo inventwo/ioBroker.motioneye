@@ -65,6 +65,7 @@ const {
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { createSnapshotCacheManager } = require('./lib/snapshotCacheManager');
+const { createTelegramNotificationManager } = require('./lib/telegramNotifications');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
 const { createVerboseLogger, describePassword, getUnauthorizedVerboseHints } = require('./lib/diagLog');
 
@@ -139,6 +140,7 @@ class Motioneye extends utils.Adapter {
 		this.motionEyeApi = undefined;
 		this.streamManager = undefined;
 		this.snapshotCache = undefined;
+		this.telegramNotifications = undefined;
 		this.webhookServer = undefined;
 		this.pollInterval = undefined;
 		this.storagePollInterval = undefined;
@@ -278,6 +280,30 @@ class Motioneye extends utils.Adapter {
 			isUnloading: () => this._unloading,
 		});
 		await this.snapshotCache.init();
+
+		this.telegramNotifications = createTelegramNotificationManager({
+			getConfig: () => this.config,
+			getCameraNotification: camera => camera.notification,
+			sendToTelegram: (instance, payload) =>
+				new Promise(resolve => {
+					this.sendTo(`telegram.${instance}`, 'send', payload, () => resolve());
+				}),
+			ensureSnapshot: async camera => {
+				await this.snapshotCache.refreshForNotification(camera);
+				const prefix = `${camera.channel}.${CAMERA_SNAPSHOTS_CHANNEL}`;
+				const [filePathState, lastUpdateState] = await Promise.all([
+					this.getStateAsync(`${prefix}.filePath`),
+					this.getStateAsync(`${prefix}.lastUpdate`),
+				]);
+				return {
+					filePath: String(filePathState?.val || ''),
+					lastUpdate: String(lastUpdateState?.val || ''),
+				};
+			},
+			log: (level, message) => this.log[level](message),
+			verboseLog: message => this.verboseLog(message),
+			isUnloading: () => this._unloading,
+		});
 
 		await this.ensureInfoStates();
 		await this.syncCameraRegistry();
@@ -2132,6 +2158,9 @@ class Motioneye extends utils.Adapter {
 			if (this.snapshotCache) {
 				void this.snapshotCache.maybeRefreshOnMotion(camera);
 			}
+			if (this.telegramNotifications) {
+				void this.telegramNotifications.onMotion(camera);
+			}
 		}
 	}
 
@@ -2329,6 +2358,8 @@ class Motioneye extends utils.Adapter {
 			await this.handleApplyOverlayNow(obj);
 		} else if (obj.command === 'refreshStorageNow') {
 			await this.handleRefreshStorageNow(obj);
+		} else if (obj.command === 'testTelegram') {
+			await this.handleTestTelegram(obj);
 		}
 	}
 
@@ -2521,6 +2552,26 @@ class Motioneye extends utils.Adapter {
 
 		this.log.info(`refreshStorageNow: refreshed storage stats for ${refreshed} camera(s)`);
 		this.replyToMessage(obj, { result: refreshed > 0 ? 'refreshed' : 'none', refreshed });
+	}
+
+	/**
+	 * @param {ioBroker.Message} obj
+	 */
+	async handleTestTelegram(obj) {
+		if (!this.telegramNotifications) {
+			this.replyToMessage(obj, { error: 'Adapter instance is not running' });
+			return;
+		}
+
+		const firstCamera = this.camerasById.values().next().value;
+		const result = await this.telegramNotifications.sendTestNotification(firstCamera);
+		if (!result.sent) {
+			this.replyToMessage(obj, { result: result.reason || 'none' });
+			return;
+		}
+
+		this.log.info('Telegram test notification sent');
+		this.replyToMessage(obj, { result: 'sent' });
 	}
 
 	/**
