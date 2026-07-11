@@ -114,8 +114,33 @@ Ab der nächsten Adapter-Version zeigt der Konfigurations-Tab **Overlay** eine Z
 | **Datenpunkt `snapshot`** | Nur ein Button — löst in MotionEye eine Aufnahme aus; MotionEye speichert die Datei auf der Festplatte |
 | **Datenpunkt `motion`** | Boolesches Ereignis per Webhook — ohne Bilddatei |
 | **`storage.*`-Datenpunkte** | Nur **Anzahl und belegter Speicherplatz** aus MotionEye — nicht die Dateien selbst |
+| **`snapshots.*`-Datenpunkte** (optional) | **Letzter Snapshot als JPEG** im ioBroker-Dateispeicher — eine Datei pro Kamera, wird bei jedem Update überschrieben |
 
 **Bilder und Clips ansehen oder herunterladen:** MotionEye-Weboberfläche (Bilder / Filme pro Kamera) oder direkt auf dem MotionEye-Host im Dateisystem / Netzwerkfreigabe, die in MotionEye konfiguriert ist.
+
+Für VIS/Telegram ohne MotionEye-Login kannst du den Snapshot-Cache im Tab **Snapshots** aktivieren — siehe [Snapshot-Cache](#snapshot-cache-snapshots) unten.
+
+---
+
+### Snapshot-Cache (`snapshots.*`)
+
+Wenn **Letzten Snapshot in ioBroker cachen** aktiv ist (`snapshotCacheEnabled`, standardmäßig an), lädt der Adapter `lastsnap.jpg` von MotionEye (Symlink auf den zuletzt gespeicherten Snapshot) und speichert sie unter **Admin → Dateien → `motioneye.<Instanz>/snapshots/<kanal>/lastsnap.jpg`**.
+
+| Auslöser | Wann |
+|----------|------|
+| **Datenpunkt `snapshot`** | Nach jeder erfolgreichen Snapshot-Aktion (mit konfigurierbarer Wartezeit, damit MotionEye die Datei schreiben kann) |
+| **Bewegungs-Webhook** | Optional (`snapshotCacheOnMotion`, standardmäßig aus) — pro Kamera rate-limitiert |
+| **`snapshots.refresh`** | Manuell neu laden, ohne weiteren Snapshot auszulösen |
+
+**Datenpunkte für Automatisierung / VIS:**
+
+- `snapshots.urlLocal` — vollständige URL, z. B. `http://192.168.1.10:8082/motioneye.0/snapshots/garten/lastsnap.jpg`
+- `snapshots.html` — HTML-Widget-Binding (wie bei `streamUrl`)
+- `snapshots.lastUpdate` — Zeitpunkt der letzten Cache-Aktualisierung
+
+Voraussetzung: **Web-Adapter** (`admin` / Port 8082), damit das JPEG per HTTP ausgeliefert wird. Für die LAN-URL wird **ioBroker-Host für Webhooks** (`webhookHost`) verwendet, wenn gesetzt.
+
+Pro Kamera abwählen: Tab **Snapshots** → **Vom Snapshot-Cache ausschließen**.
 
 ---
 

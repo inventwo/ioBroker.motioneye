@@ -66,6 +66,17 @@ Channel names are lowercase (e.g. `garten`, `innenhof_ii`).
 | `lastRefresh` | yes | no | Timestamp of the last successful refresh |
 | `refresh` | no | yes | Trigger a refresh now |
 
+### Per camera snapshot cache (`motioneye.<instance>.<camera>.snapshots.*`)
+
+| State | Read | Write | Description |
+|-------|------|-------|-------------|
+| `url` | yes | no | Web path under ioBroker file storage |
+| `urlLocal` | yes | no | Full LAN URL (web adapter) |
+| `html` | yes | no | HTML snippet for VIS html widget |
+| `lastUpdate` | yes | no | ISO timestamp of last cache update |
+| `sizeKb` | yes | no | Cached JPEG size in KB |
+| `refresh` | no | yes | Re-download from MotionEye |
+
 ### Instance info (`motioneye.<instance>._info.*`)
 
 | State | Description |

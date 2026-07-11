@@ -64,6 +64,7 @@ const {
 } = require('./lib/motionDetectionProfiles');
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
+const { createSnapshotCacheManager } = require('./lib/snapshotCacheManager');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
 const { createVerboseLogger, describePassword, getUnauthorizedVerboseHints } = require('./lib/diagLog');
 
@@ -104,6 +105,8 @@ const MOTION_DETECTION_PARAMS = MOTION_DETECTION_PARAM_IDS;
 
 /** Snapshot/video count + occupied space grouped under the `storage` sub-channel. */
 const CAMERA_STORAGE_CHANNEL = 'storage';
+/** Cached snapshot JPEG + URLs grouped under the `snapshots` sub-channel. */
+const CAMERA_SNAPSHOTS_CHANNEL = 'snapshots';
 /** Floor for storagePollIntervalSec when auto-refresh is enabled (media listing is expensive). */
 const STORAGE_POLL_MIN_SEC = 300;
 /** Human-readable labels for the left_text/right_text enum (MotionEye UI config). */
@@ -135,6 +138,7 @@ class Motioneye extends utils.Adapter {
 
 		this.motionEyeApi = undefined;
 		this.streamManager = undefined;
+		this.snapshotCache = undefined;
 		this.webhookServer = undefined;
 		this.pollInterval = undefined;
 		this.storagePollInterval = undefined;
@@ -246,6 +250,34 @@ class Motioneye extends utils.Adapter {
 			);
 		}
 
+		this.snapshotCache = createSnapshotCacheManager({
+			namespace: this.namespace,
+			getConfig: () => this.config,
+			getMotionEyeApi: () => this.motionEyeApi,
+			writeFile: (relativePath, data) =>
+				new Promise((resolve, reject) => {
+					this.writeFile(this.namespace, relativePath, data, err => {
+						if (err) {
+							reject(err instanceof Error ? err : new Error(String(err)));
+							return;
+						}
+						resolve();
+					});
+				}),
+			setState: (id, val, ack) => this.setStateAsync(id, val, ack),
+			getState: id => this.getStateAsync(id),
+			resolveLocalHost: async () => {
+				const host = await this.resolveWebhookHost();
+				return host || '127.0.0.1';
+			},
+			resolveWebAdapter: () => this.resolveWebAdapter(),
+			verboseLog: message => this.verboseLog(message),
+			log: (level, message) => this.log[level](message),
+			delayFn: ms => this.delay(ms),
+			isUnloading: () => this._unloading,
+		});
+		await this.snapshotCache.init();
+
 		await this.ensureInfoStates();
 		await this.syncCameraRegistry();
 		this.logVerboseStartup();
@@ -274,6 +306,7 @@ class Motioneye extends utils.Adapter {
 		this.subscribeStates('*.overlay.customRightText');
 		this.subscribeStates('*.overlay.textScale');
 		this.subscribeStates('*.storage.refresh');
+		this.subscribeStates('*.snapshots.refresh');
 
 		const pollSec = Math.min(
 			Math.max(30, Number(this.config.statusPollIntervalSec) || 300),
@@ -336,22 +369,20 @@ class Motioneye extends utils.Adapter {
 					: rootId;
 
 		const existing = await this.getForeignObjectAsync(rootId);
+		const metaCommon = {
+			name,
+			type: 'meta.user',
+		};
 		if (!existing) {
 			await this.setForeignObjectAsync(rootId, {
 				type: 'meta',
-				common: {
-					name,
-					type: 'meta.folder',
-				},
+				common: metaCommon,
 				native: {},
 			});
-		} else if (existing.type !== 'meta') {
+		} else if (existing.type !== 'meta' || existing.common?.type !== 'meta.user') {
 			await this.extendForeignObjectAsync(rootId, {
 				type: 'meta',
-				common: {
-					name,
-					type: 'meta.folder',
-				},
+				common: metaCommon,
 			});
 		}
 	}
@@ -392,6 +423,22 @@ class Motioneye extends utils.Adapter {
 		}
 
 		return '';
+	}
+
+	/**
+	 * @returns {Promise<{ port: number, secure: boolean }>}
+	 */
+	async resolveWebAdapter() {
+		try {
+			const webObj = await this.getForeignObjectAsync('system.adapter.web.0');
+			return {
+				port: Number(webObj?.native?.port) || 8082,
+				secure: webObj?.native?.secure === true,
+			};
+		} catch (error) {
+			this.log.debug(`Could not read web adapter port, using 8082: ${error.message}`);
+			return { port: 8082, secure: false };
+		}
 	}
 
 	async ensureInfoStates() {
@@ -689,6 +736,7 @@ class Motioneye extends utils.Adapter {
 		await this.ensureCameraOverlayObjects(camera);
 		await this.ensureCameraMotionDetectionObjects(camera);
 		await this.ensureCameraStorageObjects(camera);
+		await this.ensureCameraSnapshotsObjects(camera);
 
 		await this.extendObjectAsync(`${channelId}.mode`, {
 			common: { role: CAMERA_MODE_ROLE },
@@ -1192,6 +1240,100 @@ class Motioneye extends utils.Adapter {
 
 		for (const state of states) {
 			await this.setObjectNotExistsAsync(`${storageId}.${state.id}`, {
+				type: 'state',
+				common: /** @type {ioBroker.StateCommon} */ (state.common),
+				native: {},
+			});
+		}
+	}
+
+	/**
+	 * Create the `snapshots` sub-channel: cached JPEG in ioBroker file storage plus
+	 * URLs and HTML for VIS/Telegram (filled by snapshotCacheManager).
+	 *
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 */
+	async ensureCameraSnapshotsObjects(camera) {
+		const snapshotsId = `${camera.channel}.${CAMERA_SNAPSHOTS_CHANNEL}`;
+
+		await this.setObjectNotExistsAsync(snapshotsId, {
+			type: 'channel',
+			common: { name: `${camera.name} snapshots` },
+			native: {},
+		});
+
+		const states = [
+			{
+				id: 'url',
+				common: {
+					name: `${camera.name} snapshot URL`,
+					type: 'string',
+					role: 'url',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
+				id: 'urlLocal',
+				common: {
+					name: `${camera.name} snapshot URL (LAN)`,
+					type: 'string',
+					role: 'url',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
+				id: 'html',
+				common: {
+					name: `${camera.name} snapshot HTML`,
+					type: 'string',
+					role: 'text',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
+				id: 'lastUpdate',
+				common: {
+					name: `${camera.name} snapshot last update`,
+					type: 'string',
+					role: 'date',
+					read: true,
+					write: false,
+					def: '',
+				},
+			},
+			{
+				id: 'sizeKb',
+				common: {
+					name: `${camera.name} snapshot size`,
+					type: 'number',
+					role: 'value',
+					unit: 'KB',
+					read: true,
+					write: false,
+					def: 0,
+				},
+			},
+			{
+				id: 'refresh',
+				common: {
+					name: `${camera.name} snapshot cache refresh`,
+					type: 'boolean',
+					role: 'button',
+					read: true,
+					write: true,
+					def: false,
+				},
+			},
+		];
+
+		for (const state of states) {
+			await this.setObjectNotExistsAsync(`${snapshotsId}.${state.id}`, {
 				type: 'state',
 				common: /** @type {ioBroker.StateCommon} */ (state.common),
 				native: {},
@@ -1975,6 +2117,9 @@ class Motioneye extends utils.Adapter {
 			await this.setStateAsync(`${camera.channel}.lastAction`, 'motion webhook', true);
 			this.verboseLog(`Motion webhook for camera "${camera.name}" (id=${cameraId})`);
 			this.log.debug(`Motion webhook for ${camera.name}`);
+			if (this.snapshotCache) {
+				void this.snapshotCache.maybeRefreshOnMotion(camera);
+			}
 		}
 	}
 
@@ -2036,6 +2181,9 @@ class Motioneye extends utils.Adapter {
 			try {
 				await this.motionEyeApi.takeSnapshot(camera.motionEyeId);
 				await this.setStateAsync(`${camera.channel}.lastAction`, 'action/snapshot: OK', true);
+				if (this.snapshotCache?.isEnabledForCamera(camera)) {
+					void this.snapshotCache.scheduleAfterSnapshot(camera);
+				}
 			} catch (error) {
 				this.log.error(`Snapshot failed for ${camera.name}: ${error.message}`);
 				await this.setStateAsync(
@@ -2071,6 +2219,14 @@ class Motioneye extends utils.Adapter {
 		if (stateName === `${CAMERA_STORAGE_CHANNEL}.refresh` && state.val === true) {
 			await this.refreshCameraStorage(camera);
 			await this.setStateAsync(`${camera.channel}.${CAMERA_STORAGE_CHANNEL}.refresh`, false, true);
+			return;
+		}
+
+		if (stateName === `${CAMERA_SNAPSHOTS_CHANNEL}.refresh` && state.val === true) {
+			if (this.snapshotCache) {
+				await this.snapshotCache.refreshManual(camera);
+			}
+			await this.setStateAsync(`${camera.channel}.${CAMERA_SNAPSHOTS_CHANNEL}.refresh`, false, true);
 			return;
 		}
 

@@ -624,6 +624,112 @@
 				}
 			}
 		},
+		"_snapshots": {
+			"type": "panel",
+			"label": "tab_snapshots",
+			"icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNNCw0SDdWMTlINHYtM3ptMTAsMTRWMTJoM3Y2SDE0di0zem0tNi0xMEg5VjhoM3Y2aDMiLz48L3N2Zz4=",
+			"items": {
+				"_snapshotsHeader": {
+					"type": "header",
+					"text": "header_snapshots",
+					"size": 3
+				},
+				"snapshotCacheEnabled": {
+					"type": "checkbox",
+					"label": "snapshotCacheEnabled",
+					"default": true,
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "snapshotCacheEnabled_help"
+				},
+				"snapshotCacheOnMotion": {
+					"type": "checkbox",
+					"label": "snapshotCacheOnMotion",
+					"default": false,
+					"disabled": "!data.snapshotCacheEnabled",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "snapshotCacheOnMotion_help"
+				},
+				"snapshotCacheDelayMs": {
+					"type": "number",
+					"label": "snapshotCacheDelayMs",
+					"min": 0,
+					"max": 5000,
+					"default": 800,
+					"disabled": "!data.snapshotCacheEnabled",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "snapshotCacheDelayMs_help"
+				},
+				"snapshotCacheMotionMinIntervalSec": {
+					"type": "number",
+					"label": "snapshotCacheMotionMinIntervalSec",
+					"min": 5,
+					"max": 3600,
+					"default": 30,
+					"disabled": "!data.snapshotCacheEnabled || !data.snapshotCacheOnMotion",
+					"xs": 12,
+					"sm": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
+					"help": "snapshotCacheMotionMinIntervalSec_help"
+				},
+				"_snapshotsInfo": {
+					"type": "staticText",
+					"text": "snapshots_info",
+					"newLine": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"style": {
+						"fontSize": "0.875rem",
+						"whiteSpace": "pre-wrap",
+						"marginBottom": "10px"
+					}
+				},
+				"cameras": {
+					"type": "table",
+					"newLine": true,
+					"label": "snapshots_table",
+					"noDelete": true,
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12,
+					"items": [
+						{
+							"type": "text",
+							"attr": "name",
+							"title": "snapshots_camera_name",
+							"width": "70%",
+							"readOnly": true
+						},
+						{
+							"type": "checkbox",
+							"attr": "snapshotCacheExcluded",
+							"title": "camera_snapshotCacheExcluded",
+							"width": "30%",
+							"default": false,
+							"tooltip": "camera_snapshotCacheExcluded_help"
+						}
+					]
+				}
+			}
+		},
 		"_logging": {
 			"type": "panel",
 			"label": "tab_logging",

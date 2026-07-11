@@ -69,6 +69,17 @@ Kanalnamen in Kleinbuchstaben (z. B. `garten`, `innenhof_ii`).
 | `lastRefresh` | ja | nein | Zeitstempel der letzten erfolgreichen Aktualisierung |
 | `refresh` | nein | ja | Aktualisierung jetzt auslösen |
 
+### Snapshot-Cache (`motioneye.<Instanz>.<kamera>.snapshots.*`)
+
+| Datenpunkt | Lesen | Schreiben | Beschreibung |
+|------------|-------|-----------|--------------|
+| `url` | ja | nein | Web-Pfad im ioBroker-Dateispeicher |
+| `urlLocal` | ja | nein | Vollständige LAN-URL (Web-Adapter) |
+| `html` | ja | nein | HTML-Snippet für VIS-HTML-Widget |
+| `lastUpdate` | ja | nein | ISO-Zeitstempel der letzten Cache-Aktualisierung |
+| `sizeKb` | ja | nein | Größe des gecachten JPEG in KB |
+| `refresh` | nein | ja | Von MotionEye neu laden |
+
 ### Instanz-Info (`motioneye.<Instanz>._info.*`)
 
 | Datenpunkt | Beschreibung |

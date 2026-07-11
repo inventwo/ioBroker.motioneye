@@ -19,7 +19,7 @@
 
 Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for any HTML-capable widget — no simple-api required for webhooks.
 
-**Snapshots and video clips are not stored in ioBroker.** MotionEye saves them on the MotionEye server (typically under `/var/lib/motioneye/`, e.g. `Camera1` or a custom media folder). The adapter only triggers snapshots, reports motion events, and optionally shows file counts via `storage.*` — see [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
+**Snapshots and video clips are not stored in ioBroker by default.** MotionEye saves them on the MotionEye server (typically under `/var/lib/motioneye/`). Optionally, the adapter can cache the **latest snapshot JPEG** per camera in ioBroker file storage (`snapshots.*`) for VIS/Telegram — see [FAQ](docs/en/faq.md#snapshot-cache-snapshots).
 
 ## Documentation
 
@@ -34,7 +34,7 @@ FAQ and troubleshooting (Docker/Unraid, `unauthorized`, VIS stream): [EN](docs/e
 - Dynamic channels under `motioneye.0.<name>.*` (lowercase folder names)
 - Built-in webhook server — no simple-api dependency
 - MotionEye Config API sync for modes, webhook URLs, and motion detection tuning (`motiondetection.*`)
-- Per-camera sub-channels: `settings.*`, `overlay.*`, `motiondetection.*`, `storage.*`
+- Per-camera sub-channels: `settings.*`, `overlay.*`, `motiondetection.*`, `storage.*`, `snapshots.*`
 - `_info.connection` — instance shows when MotionEye is unreachable
 - Stream sibling relink after VIS re-render (multi-camera dashboards)
 
@@ -58,7 +58,20 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `motionEyeId` | value | yes | no | MotionEye camera ID |
 | `motionEyeName` | text | yes | no | Original name in MotionEye |
 
-> The `snapshot` button asks MotionEye to take a picture — the file is saved on the **MotionEye server**, not in ioBroker. See [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
+> The `snapshot` button asks MotionEye to take a picture — the file is saved on the **MotionEye server**. With **Snapshots** config enabled, the adapter also copies `lastsnap.jpg` into ioBroker file storage (`Admin → Files → motioneye.0/snapshots/<channel>/`). See [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
+
+### Per camera snapshot cache (`motioneye.0.<name>.snapshots.*`)
+
+| State | Type | Read | Write | Description |
+|-------|------|------|-------|-------------|
+| `url` | text | yes | no | Web path, e.g. `/motioneye.0/snapshots/garten/lastsnap.jpg` |
+| `urlLocal` | url | yes | no | Full LAN URL via ioBroker web adapter |
+| `html` | text | yes | no | Ready-to-use HTML for html widget (like `streamUrl`) |
+| `lastUpdate` | text | yes | no | ISO timestamp of the last cache update |
+| `sizeKb` | value | yes | no | Cached JPEG size in KB |
+| `refresh` | button | no | yes | Re-download from MotionEye without new snapshot |
+
+> Enabled on the **Snapshots** config tab (`snapshotCacheEnabled`, default on). After `snapshot` or optionally on motion webhook. See [FAQ](docs/en/faq.md#snapshot-cache-snapshots).
 
 ### Per camera device settings (`motioneye.0.<name>.settings.*`)
 
@@ -207,6 +220,7 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (skvarel) Snapshot cache in ioBroker file storage under `snapshots/<channel>/lastsnap.jpg` — copies MotionEye's latest saved snapshot after `snapshot` trigger (optional on motion webhook); datapoints `snapshots.urlLocal`, `snapshots.html`, `snapshots.refresh`; new **Snapshots** config tab
 - (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
 - (skvarel) FAQ: clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)
 

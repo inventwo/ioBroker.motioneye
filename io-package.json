@@ -175,6 +175,10 @@
     "requestTimeoutMs": 10000,
     "storagePollEnabled": false,
     "storagePollIntervalSec": 3600,
+    "snapshotCacheEnabled": true,
+    "snapshotCacheOnMotion": false,
+    "snapshotCacheDelayMs": 800,
+    "snapshotCacheMotionMinIntervalSec": 30,
     "disableStreamOnStart": true,
     "applyMediaSettingsOnStart": true,
     "streamAutoOffMs": 120000,
@@ -211,7 +215,7 @@
           "uk": "Камери MotionEye та стани адаптера",
           "zh-cn": "MotionEye 摄像头和适配器状态"
         },
-        "type": "meta.folder"
+        "type": "meta.user"
       },
       "native": {}
     },

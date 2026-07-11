@@ -114,8 +114,33 @@ From the next adapter release onwards, the **Overlay** config tab shows one tabl
 | **`snapshot` datapoint** | Button only — tells MotionEye to take a picture; MotionEye writes the file to disk |
 | **`motion` datapoint** | Boolean event from MotionEye webhook — no image attached |
 | **`storage.*` datapoints** | Read-only **counts and occupied space** queried from MotionEye — not the files themselves |
+| **`snapshots.*` datapoints** (optional) | **Latest snapshot JPEG** cached in ioBroker file storage — one file per camera, overwritten on each update |
 
 **To view or download pictures and clips:** open the MotionEye web UI (Pictures / Movies for each camera), or access the files directly on the MotionEye host filesystem / network share configured in MotionEye.
+
+For VIS/Telegram without MotionEye login, enable the snapshot cache on the **Snapshots** config tab — see [Snapshot cache](#snapshot-cache-snapshots) below.
+
+---
+
+### Snapshot cache (`snapshots.*`)
+
+When **Cache latest snapshot in ioBroker** is enabled (`snapshotCacheEnabled`, default on), the adapter downloads MotionEye's `lastsnap.jpg` (symlink to the latest saved snapshot) and stores it under **Admin → Files → `motioneye.<instance>/snapshots/<channel>/lastsnap.jpg`**.
+
+| Trigger | When |
+|---------|------|
+| **`snapshot` datapoint** | After each successful snapshot action (with configurable delay so MotionEye can write the file) |
+| **Motion webhook** | Optional (`snapshotCacheOnMotion`, off by default) — rate-limited per camera |
+| **`snapshots.refresh`** | Manual re-download without taking a new snapshot |
+
+**Datapoints for automation / VIS:**
+
+- `snapshots.urlLocal` — full URL, e.g. `http://192.168.1.10:8082/motioneye.0/snapshots/garten/lastsnap.jpg`
+- `snapshots.html` — HTML widget binding (same pattern as `streamUrl`)
+- `snapshots.lastUpdate` — when the cache was last refreshed
+
+Requires the **web adapter** (`admin` / port 8082) so the JPEG is served over HTTP. Uses **ioBroker host for webhooks** (`webhookHost`) for the LAN URL when set.
+
+Per-camera opt-out: **Snapshots** tab → **Exclude from snapshot cache**.
 
 ---
 
