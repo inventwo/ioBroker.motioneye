@@ -19,7 +19,7 @@
 
 Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for any HTML-capable widget — no simple-api required for webhooks.
 
-**Snapshots and video clips are not stored in ioBroker by default.** MotionEye saves them on the MotionEye server (typically under `/var/lib/motioneye/`). Optionally, the adapter can cache the **latest snapshot JPEG** per camera in ioBroker file storage (`snapshots.*`) for VIS/Telegram — see [FAQ](docs/en/faq.md#snapshot-cache-snapshots).
+MotionEye cameras are the primary store for snapshots and video clips (typically under `/var/lib/motioneye/` on the MotionEye server). The adapter can additionally cache the **latest snapshot JPEG** per camera in ioBroker file storage (`snapshots.*`, **Snapshots** tab, on by default) for VIS, Telegram, and scripts — see [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
 
 ## Documentation
 

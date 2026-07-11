@@ -106,19 +106,19 @@ Ab der nächsten Adapter-Version zeigt der Konfigurations-Tab **Overlay** eine Z
 
 ### Wo werden Snapshots und Videos gespeichert?
 
-**Nicht in ioBroker.** Der Adapter legt keine Snapshot- oder Videodateien ab — unter `motioneye.*` im Objektbaum gibt es keinen Medienordner.
+**Kurz:** Das **gesamte Medienarchiv** (alle Snapshots, alle Videoclips) liegt auf dem **MotionEye-Server** — nicht in ioBroker. Zusätzlich kann der Adapter den **letzten Snapshot** pro Kamera im **ioBroker-Dateispeicher** cachen (Tab **Snapshots**, standardmäßig aktiv): eine JPEG-Datei unter **Admin → Dateien**, Datenpunkte `snapshots.*`. Es gibt **kein** vollständiges Archiv in ioBroker — nur `lastsnap.jpg`, die bei jedem Update überschrieben wird.
 
 | Was | Wo |
 |-----|-----|
-| **Snapshot-/Videodateien** | Auf dem **MotionEye-Server**, im Medienordner der Kamera (Standard `/var/lib/motioneye/Camera<N>/`, oder ein eigener Ordner in MotionEye / Feld **Medienordner** im Cameras-Tab) |
-| **Datenpunkt `snapshot`** | Nur ein Button — löst in MotionEye eine Aufnahme aus; MotionEye speichert die Datei auf der Festplatte |
+| **Snapshot-/Video-Archiv** | Auf dem **MotionEye-Server**, im Medienordner der Kamera (Standard `/var/lib/motioneye/Camera<N>/`, oder ein eigener Ordner in MotionEye / Feld **Medienordner** im Cameras-Tab) |
+| **Datenpunkt `snapshot`** | Button — löst in MotionEye eine Aufnahme aus; MotionEye speichert die Datei auf dem MotionEye-Server |
 | **Datenpunkt `motion`** | Boolesches Ereignis per Webhook — ohne Bilddatei |
 | **`storage.*`-Datenpunkte** | Nur **Anzahl und belegter Speicherplatz** aus MotionEye — nicht die Dateien selbst |
-| **`snapshots.*`-Datenpunkte** (optional) | **Letzter Snapshot als JPEG** im ioBroker-Dateispeicher — eine Datei pro Kamera, wird bei jedem Update überschrieben |
+| **`snapshots.*` + Dateien-Tab** | **Letzter Snapshot als JPEG** im ioBroker-Dateispeicher (Cache, optional abschaltbar) — `snapshots.filePath` für Telegram/Skripte, `snapshots.urlLocal` / `snapshots.html` für VIS |
 
-**Bilder und Clips ansehen oder herunterladen:** MotionEye-Weboberfläche (Bilder / Filme pro Kamera) oder direkt auf dem MotionEye-Host im Dateisystem / Netzwerkfreigabe, die in MotionEye konfiguriert ist.
+**Archiv ansehen oder herunterladen:** MotionEye-Weboberfläche (Bilder / Filme pro Kamera) oder direkt auf dem MotionEye-Host.
 
-Für VIS/Telegram ohne MotionEye-Login kannst du den Snapshot-Cache im Tab **Snapshots** aktivieren — siehe [Snapshot-Cache](#snapshot-cache-snapshots) unten.
+Details zum Snapshot-Cache (VIS, Telegram, Blockly): [Snapshot-Cache](#snapshot-cache-snapshots) unten.
 
 ---
 
@@ -139,7 +139,7 @@ Wenn **Letzten Snapshot in ioBroker cachen** aktiv ist (`snapshotCacheEnabled`, 
 - `snapshots.html` — HTML-Widget-Binding (wie bei `streamUrl`)
 - `snapshots.lastUpdate` — Zeitpunkt der letzten Cache-Aktualisierung
 
-**Telegram:** `snapshots.filePath` als `text` in `sendTo('telegram.0', 'send', { text: filePath, caption: '…' })` verwenden. **Nicht** die Download-URL aus Admin → Dateien (`:8081/files/...`) — die liefert HTML, kein JPEG.
+**Telegram:** `snapshots.filePath` als **einzige** Meldung/`text` verwenden (Blockly: nur den Datenpunkt, nicht mit Text verketten). Caption für Text unter dem Bild nur per JavaScript (`caption: '…'`) oder zwei getrennte Telegram-Nachrichten. **Nicht** die Download-URL aus Admin → Dateien (`:8081/files/...`) — die liefert HTML, kein JPEG.
 
 Voraussetzung: **Web-Adapter** (`admin` / Port 8082), damit das JPEG per HTTP für `urlLocal` ausgeliefert wird. Für die LAN-URL wird **ioBroker-Host für Webhooks** (`webhookHost`) verwendet, wenn gesetzt.
 
