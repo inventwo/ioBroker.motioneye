@@ -19,6 +19,8 @@
 
 Connect MotionEye cameras to ioBroker for motion detection, snapshots, and live streams. Control detection modes (`off` / `still` / `sharp`) from ioBroker or VIS and provide `streamUrl` HTML for any HTML-capable widget — no simple-api required for webhooks.
 
+**Snapshots and video clips are not stored in ioBroker.** MotionEye saves them on the MotionEye server (typically under `/var/lib/motioneye/`, e.g. `Camera1` or a custom media folder). The adapter only triggers snapshots, reports motion events, and optionally shows file counts via `storage.*` — see [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
+
 ## Documentation
 
 - 🇺🇸 [Documentation](docs/en/README.md)
@@ -55,6 +57,8 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `webhookUrl` | url | yes | no | URL written to MotionEye |
 | `motionEyeId` | value | yes | no | MotionEye camera ID |
 | `motionEyeName` | text | yes | no | Original name in MotionEye |
+
+> The `snapshot` button asks MotionEye to take a picture — the file is saved on the **MotionEye server**, not in ioBroker. See [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
 
 ### Per camera device settings (`motioneye.0.<name>.settings.*`)
 
@@ -94,7 +98,7 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `lastRefresh` | text | yes | no | Timestamp of the last successful refresh |
 | `refresh` | button | no | yes | Trigger a refresh now |
 
-> Refreshing requires MotionEye to recursively scan and check every stored file, which can be slow for cameras with large media libraries. Not part of the regular status poll — refresh manually via `refresh`, or enable a slow auto-refresh on the **Storage** config tab (`storagePollEnabled` + `storagePollIntervalSec`, default: disabled), where you can also exclude individual cameras from that auto-refresh while keeping the manual `refresh` datapoint available. See [FAQ](docs/en/faq.md#storage-storage).
+> Refreshing requires MotionEye to recursively scan and check every stored file, which can be slow for cameras with large media libraries. Not part of the regular status poll — refresh manually via `refresh`, or enable a slow auto-refresh on the **Storage** config tab (`storagePollEnabled` + `storagePollIntervalSec`, default: disabled), where you can also exclude individual cameras from that auto-refresh while keeping the manual `refresh` datapoint available. These datapoints report **statistics only** — the files themselves remain on the MotionEye server. See [FAQ](docs/en/faq.md#storage-storage).
 
 ### Per camera motion detection (`motioneye.0.<name>.motiondetection.*`)
 
@@ -204,6 +208,7 @@ If you like our work and would like to support us, we appreciate any donation.
 -->
 ### **WORK IN PROGRESS**
 - (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
+- (skvarel) FAQ: clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)
 
 ### 0.10.0 (2026-07-10)
 - (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.

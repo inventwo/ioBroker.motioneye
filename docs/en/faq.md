@@ -104,6 +104,21 @@ From the next adapter release onwards, the **Overlay** config tab shows one tabl
 
 ---
 
+### Where are snapshots and videos stored?
+
+**Not in ioBroker.** The adapter does not save snapshot or video files — there is no media folder under `motioneye.*` in the object tree.
+
+| What | Where |
+|------|-------|
+| **Snapshot/video files** | On the **MotionEye server**, in that camera's media directory (default `/var/lib/motioneye/Camera<N>/`, or a custom folder set in MotionEye / the adapter **Media folder** field on the Cameras tab) |
+| **`snapshot` datapoint** | Button only — tells MotionEye to take a picture; MotionEye writes the file to disk |
+| **`motion` datapoint** | Boolean event from MotionEye webhook — no image attached |
+| **`storage.*` datapoints** | Read-only **counts and occupied space** queried from MotionEye — not the files themselves |
+
+**To view or download pictures and clips:** open the MotionEye web UI (Pictures / Movies for each camera), or access the files directly on the MotionEye host filesystem / network share configured in MotionEye.
+
+---
+
 ### Storage (`storage.*`)
 
 Since adapter **0.9.0**, `motioneye.<instance>.<camera>.storage.*` reports how many snapshots/video clips are currently stored and how much space they occupy (`snapshotCount`, `videoCount`, `usedSpaceMb`, `lastRefresh`, and the `refresh` trigger).
