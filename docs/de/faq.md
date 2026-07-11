@@ -70,9 +70,7 @@ Ab Adapter **0.6.0** liegen Kamera-Parameter unter `motioneye.<Instanz>.<kamera>
 
 ### Bewegungserkennung (`motiondetection.*`)
 
-<!-- RELEASE: "GitHub-Alpha"-Einleitung vor npm-Stable-Release durch "Ab Adapter X.Y.Z" ersetzen -->
-
-In der aktuellen **GitHub-Alpha** (noch nicht im npm-Stable) liegen die Parameter zur Feineinstellung der Bewegungserkennung unter `motioneye.<Instanz>.<kamera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
+Ab Adapter **1.0.0** liegen die Parameter zur Feineinstellung der Bewegungserkennung unter `motioneye.<Instanz>.<kamera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
 
 1. **Erkennung ein/aus** steuerst du weiterhin über den Root-Datenpunkt `mode` (`off` / `still` / `sharp`) — `motiondetection.*` regelt nur Empfindlichkeit und Timing, solange die Erkennung aktiv ist.
 2. **`frameChangeThreshold`** ist der Anteil der Bildpixel in Prozent, der sich ändern muss, um Bewegung auszulösen (0–20 %, wie der Schieberegler in MotionEye). Bei `0` ist die Erkennung praktisch ausgeschaltet.
@@ -95,7 +93,7 @@ Ab Adapter **0.7.0** liegt die Textüberlagerung der Kamera unter `motioneye.<In
 
 **Textüberlagerung über die Adapter-Konfiguration voreinstellen (Overlay-Tab):**
 
-Ab der nächsten Adapter-Version zeigt der Konfigurations-Tab **Overlay** eine Zeile pro Kamera (aus dem Cameras-Tab) mit den gleichen Feldern wie oben, plus einem Button **"Overlay-Einstellungen jetzt anwenden"**. Das wirkt nur in eine Richtung — von der Config zu den Datenpunkten — die Tabelle wird nie automatisch aus Datenpunkt-Änderungen aktualisiert und kann dadurch auch nichts, was du live geändert hast, unbemerkt zurücksetzen:
+Ab Adapter **0.8.0** zeigt der Konfigurations-Tab **Overlay** eine Zeile pro Kamera (aus dem Cameras-Tab) mit den gleichen Feldern wie oben, plus einem Button **"Overlay-Einstellungen jetzt anwenden"**. Das wirkt nur in eine Richtung — von der Config zu den Datenpunkten — die Tabelle wird nie automatisch aus Datenpunkt-Änderungen aktualisiert und kann dadurch auch nichts, was du live geändert hast, unbemerkt zurücksetzen:
 
 - Lässt du ein Feld leer (bzw. steht das Dropdown auf **"— unverändert —"**), wird es übersprungen — ein bestehender Wert wird nie überschrieben.
 - **Neue Kamera** (im Cameras-Tab angelegt, aber noch nicht gespeichert/neu gestartet): Ausgefüllte Felder werden zum Startwert der Datenpunkte, sobald diese beim nächsten Neustart zum ersten Mal angelegt werden — kein weiterer Schritt nötig.

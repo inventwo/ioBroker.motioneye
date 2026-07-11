@@ -70,9 +70,7 @@ From adapter **0.6.0** onwards, camera parameters live under `motioneye.<instanc
 
 ### Motion detection tuning (`motiondetection.*`)
 
-<!-- RELEASE: replace "GitHub alpha" intro with "From adapter X.Y.Z onwards," before npm stable release -->
-
-Available in the current **GitHub alpha** (not yet on npm stable): motion detection tuning parameters live under `motioneye.<instance>.<camera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
+Since adapter **1.0.0**, motion detection tuning parameters live under `motioneye.<instance>.<camera>.motiondetection.*` (`frameChangeThreshold`, `autoThresholdTuning`, `autoNoiseDetect`, `noiseLevel`, `eventGap`, `minimumMotionFrames`, `lightSwitchDetect`, `despeckleFilter`, `preCapture`, `postCapture`).
 
 1. **Detection on/off** is still controlled via root `mode` (`off` / `still` / `sharp`) — the `motiondetection.*` datapoints only tune sensitivity and timing while detection is enabled.
 2. **`frameChangeThreshold`** is the percentage of image pixels that must change to trigger motion (0–20 %, matching the MotionEye slider). Setting it to `0` effectively disables detection.

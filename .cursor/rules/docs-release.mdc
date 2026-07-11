@@ -37,17 +37,17 @@ Required sections: Installation, Configuration, Usage, Changelog, License, Suppo
 - **Never** edit `CHANGELOG_OLD.md` manually
 - **Never** use bold type tags in changelog lines (breaks io-package news translation)
 
-## Pre-release checklist (motiondetection)
+## Pre-release checklist (motiondetection) — done for 1.0.0
 
-Before tagging a stable npm release, replace temporary **GitHub alpha** wording with the released version (search repo for `RELEASE:`):
+Temporary GitHub-alpha wording was replaced before the **1.0.0** npm release. Current text:
 
-| File | Replace |
+| File | Wording |
 |------|---------|
-| `docs/en/faq.md` | `Available in the current **GitHub alpha** (not yet on npm stable):` → `From adapter **X.Y.Z** onwards,` |
-| `docs/de/faq.md` | `In der aktuellen **GitHub-Alpha** (noch nicht im npm-Stable)` → `Ab Adapter **X.Y.Z**` |
-| `README.md` | `After updating from GitHub, restart the instance` → `After updating the adapter, restart the instance` (or drop if redundant) |
+| `docs/en/faq.md` | `Since adapter **1.0.0**, motion detection tuning parameters live under …` |
+| `docs/de/faq.md` | `Ab Adapter **1.0.0** liegen die Parameter zur Feineinstellung …` |
+| `README.md` | `After updating the adapter, restart the instance so motiondetection.* objects are created.` |
 
-Use the same version style as other FAQ sections (e.g. overlay **0.7.0**, storage **0.9.0**). Remove any `<!-- RELEASE: ... -->` HTML comments once done.
+Use the same version style as other FAQ sections (e.g. overlay **0.8.0**, storage **0.9.0**). If similar pre-release placeholders are added again, search the repo for `RELEASE:` and swap them before tagging.
 
 ## io-package.json
 

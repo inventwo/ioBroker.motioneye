@@ -130,9 +130,7 @@ Channel folder names are lowercase (e.g. `innenhof_ii`, `auffahrt`).
 | `preCapture` | level | yes | yes | Frames captured before motion is detected |
 | `postCapture` | level | yes | yes | Frames captured after motion stops |
 
-<!-- RELEASE: "After updating from GitHub" → "After updating the adapter" before npm stable release -->
-
-> Motion detection itself is controlled via root `mode` (`off` / `still` / `sharp`). Setting `frameChangeThreshold` to `0` effectively disables motion detection. Changes made in the MotionEye web UI appear in ioBroker after the next status poll. After updating from GitHub, restart the instance so `motiondetection.*` objects are created. See [FAQ](docs/en/faq.md#motion-detection-tuning-motiondetection).
+> Motion detection itself is controlled via root `mode` (`off` / `still` / `sharp`). Setting `frameChangeThreshold` to `0` effectively disables motion detection. Changes made in the MotionEye web UI appear in ioBroker after the next status poll. After updating the adapter, restart the instance so `motiondetection.*` objects are created. See [FAQ](docs/en/faq.md#motion-detection-tuning-motiondetection).
 
 ### Instance (`motioneye.0._info.*`)
 
@@ -209,6 +207,27 @@ A dedicated **Storage** tab bundles everything for `storage.*`: the global auto-
 
 See [FAQ](docs/en/faq.md#storage-storage) for details.
 
+### Snapshots tab
+
+The **Snapshots** tab controls the optional cache of MotionEye's `lastsnap.jpg` per camera in ioBroker file storage (`Admin → Files → motioneye.0/snapshots/<channel>/lastsnap.jpg`):
+
+- **Cache latest snapshot in ioBroker** (`snapshotCacheEnabled`, default on) — download after each `snapshot` trigger
+- **Update cache on motion webhook** (`snapshotCacheOnMotion`, default off) + minimum interval
+- **Wait before download** (`snapshotCacheDelayMs`) — gives MotionEye time to write the file
+- Per-camera **Exclude from snapshot cache** checkbox
+
+Datapoints: `snapshots.urlLocal`, `snapshots.filePath`, `snapshots.html`, `snapshots.refresh`. See [FAQ](docs/en/faq.md#where-are-snapshots-and-videos-stored).
+
+### Notifications tab
+
+The **Notifications** tab sends Telegram messages via the ioBroker Telegram adapter (optional):
+
+- **Enable Telegram notifications** + triggers: **on motion** and/or **on snapshot**
+- **Recipients** table: instance, Chat ID, display name, **Active** checkbox
+- Per camera: pre/post text, **Send image** / **Timestamp** / **Notifications** (Yes/No dropdowns), **Recipients** filter (empty = all active; name or chat ID)
+
+See [FAQ](docs/en/faq.md#telegram-notifications-notifications-tab).
+
 ## Support
 
 If you like our work and would like to support us, we appreciate any donation.
@@ -222,10 +241,10 @@ If you like our work and would like to support us, we appreciate any donation.
   ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (skvarel) **Notifications** config tab: Telegram messages on motion webhook and/or snapshot update — global enable, trigger checkboxes (motion / snapshot), recipient table, per-camera pre text / send image / post text / timestamp; test message button
-- (skvarel) Snapshot cache in ioBroker file storage under `snapshots/<channel>/lastsnap.jpg` — copies MotionEye's latest saved snapshot after `snapshot` trigger (optional on motion webhook); datapoints `snapshots.urlLocal`, `snapshots.filePath`, `snapshots.html`, `snapshots.refresh`; new **Snapshots** config tab
-- (skvarel) Per-camera motion detection tuning under `motiondetection.*`: frame change threshold, auto threshold/noise, noise level, event gap, minimum motion frames, light switch detection, despeckle filter, and pre/post capture frames — read during status poll and writable via datapoints
-- (skvarel) **FAQ:** clarify that snapshots and videos are stored on the MotionEye server, not in ioBroker (`snapshot` trigger, `storage.*` stats only)
+- (skvarel) Notifications tab: built-in Telegram on motion and/or snapshot — recipients with Active toggle, per-camera message template (Yes/No dropdowns), per-camera recipient filter, test message
+- (skvarel) Snapshot cache: `lastsnap.jpg` in ioBroker file storage, **Snapshots** tab, datapoints `snapshots.*` for VIS/Telegram/scripts
+- (skvarel) Per-camera motion detection tuning under `motiondetection.*`
+- (skvarel) FAQ: snapshot storage, Telegram hints, notifications tab
 
 ### 0.10.0 (2026-07-10)
 - (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.
