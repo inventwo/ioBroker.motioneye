@@ -139,6 +139,10 @@
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/inventwo/ioBroker.motioneye/main/admin/motioneye.png",
     "readme": "https://github.com/inventwo/ioBroker.motioneye/blob/main/README.md",
+    "docs": {
+      "en": "docs/en/README.md",
+      "de": "docs/de/README.md"
+    },
     "loglevel": "info",
     "tier": 3,
     "mode": "daemon",
