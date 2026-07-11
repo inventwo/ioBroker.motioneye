@@ -1,6 +1,9 @@
 # Older changes
 
 _No released versions yet._
+## 0.6.1 (2026-07-03)
+- (skvarel) Fixed privacy mask regions not surviving adapter restarts/updates: mask lines are now persisted to the settings channel's native config instead of only in memory
+
 ## 0.6.0 (2026-07-02)
 - (skvarel) Per-camera device settings under `settings.*`: read and control framerate, resolution, rotation, auto brightness and privacy mask (`settings.framerate`, `settings.resolution`, `settings.availableResolutions`, `settings.rotation`, `settings.autoBrightness`, `settings.privacyMask`); resolution is validated against the camera's supported list
 
