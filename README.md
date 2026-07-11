@@ -225,6 +225,8 @@ The **Notifications** tab sends Telegram messages via the ioBroker Telegram adap
 - **Enable Telegram notifications** + **Recipients** table (instance, Chat ID, display name, **Active** checkbox)
 - Per camera: pre/post text, **Send image** / **Timestamp**, **On motion** / **On snapshot** (Yes/No dropdowns), **Recipients** filter (empty = all active; name or chat ID)
 
+For VIS arming in one control, use datapoint **`alertLevel`** on each camera (`off` / `motion` / `notify` / `record` / `full`) — see [Alert level](docs/en/alert-level.md). Legacy setups can keep using **`mode`** only.
+
 See [FAQ](docs/en/faq.md#telegram-notifications-notifications-tab).
 
 ## Support
@@ -239,6 +241,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Per-camera **`alertLevel`** datapoint: one VIS dropdown for off / motion-only / motion+Telegram / motion+video / full protection; syncs `mode` and Telegram-on-motion; legacy `mode` writes still supported
+
 ### 1.1.0 (2026-07-11)
 - (skvarel) Per-camera Telegram triggers: separate **On motion** / **On snapshot** Yes/No dropdowns in the table (no global motion/snapshot checkboxes)
 

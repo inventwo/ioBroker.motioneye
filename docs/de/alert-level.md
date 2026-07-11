@@ -1,0 +1,35 @@
+![Logo](../../admin/motioneye.png)
+
+[Zurück zur Dokumentationsübersicht](README.md)
+
+## Schutzstufe (`alertLevel`)
+
+Pro Kamera kombiniert **alertLevel** MotionEye-Modus und Telegram-bei-Bewegung in einem schreibbaren Datenpunkt — ideal für ein VIS-Dropdown.
+
+| `alertLevel` | MotionEye-`mode` | `motion`-Trigger | Telegram bei Bewegung |
+|--------------|------------------|------------------|------------------------|
+| `off` | `off` | nein | nein |
+| `motion` | `still` | ja | nein |
+| `notify` | `still` | ja | ja (Text/Bild laut Tab Benachrichtigungen) |
+| `record` | `sharp` | ja | nein |
+| `full` | `sharp` | ja | ja |
+
+Pfad: `motioneye.<Instanz>.<kamera>.alertLevel` (gleiche Ebene wie `mode`).
+
+### VIS-Nutzung
+
+Dropdown an **`alertLevel`** binden statt an `mode`. Der Adapter wendet das Profil an und hält **`mode`** synchron (`still` / `sharp` / `off`).
+
+Aliase (ohne Groß/Kleinschreibung): `aus`, `bewegung`, `alarm`, `aufnahme`, `vollschutz` oder `0`–`4`.
+
+### Legacy-Steuerung über `mode`
+
+Direktes Schreiben auf **`mode`** funktioniert weiter (bestehende VIS/Skripte). Telegram folgt dann der Config im Tab **Benachrichtigungen**; **`alertLevel`** wird zur Anzeige auf die passende Stufe gesetzt.
+
+Schreiben auf **`alertLevel`** hat Vorrang für Telegram-bei-Bewegung, bis wieder **`mode`** geschrieben wird.
+
+### Persistenz
+
+Die gewählte Stufe liegt im **`alertLevel`**-State und wird nach Adapter-Neustart erneut angewendet.
+
+Manueller **`snapshot`** und **Bei Snapshot** in der Config bleiben unabhängig.

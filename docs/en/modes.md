@@ -11,3 +11,5 @@
 | `sharp` | yes | motion-triggered MP4 | yes |
 
 Set mode via datapoint `<camera>.mode` or from scripts. The adapter writes the corresponding MotionEye config when **Control MotionEye via config API** is enabled.
+
+For a **single VIS dropdown** that also controls Telegram-on-motion, use [`alertLevel`](alert-level.md) instead (`off` / `motion` / `notify` / `record` / `full`). The `mode` datapoint stays in sync.

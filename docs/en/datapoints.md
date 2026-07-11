@@ -10,7 +10,8 @@ Channel names are lowercase (e.g. `garten`, `innenhof_ii`).
 
 | State | Read | Write | Description |
 |-------|------|-------|-------------|
-| `mode` | yes | yes | `off` / `still` / `sharp` |
+| `mode` | yes | yes | `off` / `still` / `sharp` (MotionEye; see [modes](modes.md)) |
+| `alertLevel` | yes | yes | Combined profile: `off` / `motion` / `notify` / `record` / `full` — see [alert level](alert-level.md) |
 | `motion` | yes | no | Motion detected (auto-reset) |
 | `snapshot` | no | yes | Trigger snapshot (button) |
 | `stream` | yes | yes | Live MJPEG stream on/off |

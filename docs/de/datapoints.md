@@ -10,7 +10,8 @@ Kanalnamen in Kleinbuchstaben (z. B. `garten`, `innenhof_ii`).
 
 | Datenpunkt | Lesen | Schreiben | Beschreibung |
 |------------|-------|-----------|--------------|
-| `mode` | ja | ja | `off` / `still` / `sharp` |
+| `mode` | ja | ja | `off` / `still` / `sharp` (MotionEye; siehe [Modi](modes.md)) |
+| `alertLevel` | ja | ja | Kombiniertes Profil: `off` / `motion` / `notify` / `record` / `full` — siehe [Schutzstufe](alert-level.md) |
 | `motion` | ja | nein | Bewegung erkannt (Auto-Reset) |
 | `snapshot` | nein | ja | Snapshot auslösen (Button) |
 | `stream` | ja | ja | Live-MJPEG-Stream ein/aus |

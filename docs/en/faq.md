@@ -159,6 +159,8 @@ The adapter sends **up to three separate Telegram messages** (like your Blockly 
 
 For custom logic, Blockly/scripts with `snapshots.filePath` still work.
 
+**VIS alert level:** Bind one dropdown to `motioneye.<instance>.<camera>.alertLevel` to control MotionEye mode and Telegram-on-motion together (`off` / `motion` / `notify` / `record` / `full`). Details: [Alert level](alert-level.md).
+
 ---
 
 ### Storage (`storage.*`)

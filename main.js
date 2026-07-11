@@ -19,6 +19,12 @@ const {
 	MEDIA_SETTINGS,
 } = require('./lib/modeProfiles');
 const {
+	normalizeAlertLevel,
+	getAlertLevelProfile,
+	inferAlertLevel,
+	ALERT_LEVEL_STATES,
+} = require('./lib/alertLevelProfiles');
+const {
 	FRAMERATE_MIN,
 	FRAMERATE_MAX,
 	VALID_ROTATIONS,
@@ -153,6 +159,11 @@ class Motioneye extends utils.Adapter {
 		this.availableResolutionsByChannel = new Map();
 		/** @type {Map<string, unknown[]>} Last known privacy mask regions per channel (to restore on re-enable). */
 		this.privacyMaskLinesByChannel = new Map();
+		/** @type {Map<string, boolean>} When true, Telegram on motion follows alertLevel profile instead of admin config. */
+		this.alertLevelActiveByChannel = new Map();
+		/** @type {Map<string, import('./lib/alertLevelProfiles').AlertLevel>} Last known alert level per channel. */
+		this.alertLevelByChannel = new Map();
+		this._syncingAlertLevel = false;
 		this.webhookHost = '';
 		this._unloading = false;
 		this._serverVersionsFetched = false;
@@ -286,7 +297,7 @@ class Motioneye extends utils.Adapter {
 
 		this.telegramNotifications = createTelegramNotificationManager({
 			getConfig: () => this.config,
-			getCameraNotification: camera => camera.notification,
+			getCameraNotification: camera => this.getEffectiveCameraNotification(camera),
 			sendToTelegram: (instance, payload) =>
 				new Promise(resolve => {
 					this.sendTo(`telegram.${instance}`, 'send', payload, () => resolve());
@@ -321,6 +332,7 @@ class Motioneye extends utils.Adapter {
 		await this.initializeCameras();
 
 		this.subscribeStates('*.mode');
+		this.subscribeStates('*.alertLevel');
 		this.subscribeStates('*.snapshot');
 		this.subscribeStates('*.stream');
 		this.subscribeStates('*.streamPulse');
@@ -611,6 +623,71 @@ class Motioneye extends utils.Adapter {
 
 	/**
 	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @returns {import('./lib/telegramNotifications').CameraNotificationConfig}
+	 */
+	getEffectiveCameraNotification(camera) {
+		const notification = { ...camera.notification };
+		if (!this.alertLevelActiveByChannel.get(camera.channel)) {
+			return notification;
+		}
+
+		const level = this.alertLevelByChannel.get(camera.channel);
+		if (!level) {
+			return notification;
+		}
+
+		notification.onMotion = getAlertLevelProfile(level).telegramOnMotion;
+		return notification;
+	}
+
+	/**
+	 * @param {string} channel
+	 * @param {import('./lib/alertLevelProfiles').AlertLevel} level
+	 */
+	rememberAlertLevel(channel, level) {
+		this.alertLevelByChannel.set(channel, level);
+	}
+
+	/**
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {'off'|'still'|'sharp'} mode
+	 * @returns {Promise<void>}
+	 */
+	async refreshAlertLevelState(camera, mode) {
+		let telegramOnMotion = camera.notification.onMotion;
+		if (this.alertLevelActiveByChannel.get(camera.channel)) {
+			const level = this.alertLevelByChannel.get(camera.channel);
+			if (level) {
+				telegramOnMotion = getAlertLevelProfile(level).telegramOnMotion;
+			}
+		}
+
+		const level = inferAlertLevel(mode, telegramOnMotion);
+		this.rememberAlertLevel(camera.channel, level);
+		await this.setStateAsync(`${camera.channel}.alertLevel`, level, true);
+	}
+
+	/**
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
+	 * @param {import('./lib/alertLevelProfiles').AlertLevel} level
+	 * @returns {Promise<void>}
+	 */
+	async applyAlertLevel(camera, level) {
+		const profile = getAlertLevelProfile(level);
+		this.alertLevelActiveByChannel.set(camera.channel, true);
+		this.rememberAlertLevel(camera.channel, level);
+		this._syncingAlertLevel = true;
+
+		try {
+			await this.setStateAsync(`${camera.channel}.alertLevel`, level, true);
+			await this.setMode(camera, profile.mode);
+		} finally {
+			this._syncingAlertLevel = false;
+		}
+	}
+
+	/**
+	 * @param {import('./lib/cameraRegistry').ResolvedCamera} camera
 	 */
 	async ensureCameraObjects(camera) {
 		const channelId = camera.channel;
@@ -639,6 +716,18 @@ class Motioneye extends utils.Adapter {
 						still: 'Still',
 						sharp: 'Sharp',
 					},
+				},
+			},
+			{
+				id: 'alertLevel',
+				common: {
+					name: `${camera.name} alert level`,
+					type: 'string',
+					role: CAMERA_MODE_ROLE,
+					read: true,
+					write: true,
+					def: '',
+					states: ALERT_LEVEL_STATES,
 				},
 			},
 			{
@@ -770,6 +859,9 @@ class Motioneye extends utils.Adapter {
 
 		await this.extendObjectAsync(`${channelId}.mode`, {
 			common: { role: CAMERA_MODE_ROLE },
+		});
+		await this.extendObjectAsync(`${channelId}.alertLevel`, {
+			common: { role: CAMERA_MODE_ROLE, states: ALERT_LEVEL_STATES },
 		});
 		await this.extendObjectAsync(`${channelId}.motion`, {
 			common: { write: false, role: 'sensor.motion' },
@@ -1559,14 +1651,26 @@ class Motioneye extends utils.Adapter {
 	 */
 	async applyInitialCameraConfig(camera) {
 		const channelId = camera.channel;
+		const alertLevelState = await this.getStateAsync(`${channelId}.alertLevel`);
+		const storedAlertLevel = normalizeAlertLevel(alertLevelState?.val);
 		const currentMode = await this.getStateAsync(`${channelId}.mode`);
-		const mode = /** @type {'off'|'still'|'sharp'} */ (
-			normalizeMode(currentMode && currentMode.val) || camera.defaultMode || 'off'
-		);
+		const mode = storedAlertLevel
+			? getAlertLevelProfile(storedAlertLevel).mode
+			: /** @type {'off'|'still'|'sharp'} */ (
+					normalizeMode(currentMode && currentMode.val) || camera.defaultMode || 'off'
+				);
+
+		if (storedAlertLevel) {
+			this.alertLevelActiveByChannel.set(camera.channel, true);
+			this.rememberAlertLevel(camera.channel, storedAlertLevel);
+		}
 
 		if (!this.config.useMotionEyeConfig) {
 			await this.setStateAsync(`${channelId}.mode`, mode, true);
 			await this.setStateAsync(`${channelId}.status`, 'MotionEye config sync disabled', true);
+			if (!storedAlertLevel) {
+				await this.refreshAlertLevelState(camera, mode);
+			}
 			return;
 		}
 
@@ -1597,6 +1701,10 @@ class Motioneye extends utils.Adapter {
 		const result = await this.motionEyeApi.saveCameraConfig(camera.motionEyeId, patch);
 		await this.setStateAsync(`${channelId}.mode`, mode, true);
 		await this.setStateAsync(`${channelId}.status`, `Mode=${MODE_LABELS[mode]}`, true);
+
+		if (!storedAlertLevel) {
+			await this.refreshAlertLevelState(camera, mode);
+		}
 
 		if (result.changed) {
 			await this.setStateAsync(`${channelId}.lastAction`, 'config/set initial', true);
@@ -1632,6 +1740,9 @@ class Motioneye extends utils.Adapter {
 
 		if (!fromPoll) {
 			await this.setStateAsync(`${channelId}.mode`, mode, true);
+			if (!this._syncingAlertLevel) {
+				await this.refreshAlertLevelState(camera, mode);
+			}
 		}
 	}
 
@@ -2109,6 +2220,7 @@ class Motioneye extends utils.Adapter {
 			} else {
 				await this.setStateAsync(`${camera.channel}.status`, `Mode=${MODE_LABELS[mode]}`, true);
 			}
+			await this.refreshAlertLevelState(camera, mode);
 
 			const streaming = !!uiConfig.video_streaming;
 			const streamState = await this.getStateAsync(`${camera.channel}.stream`);
@@ -2205,7 +2317,27 @@ class Motioneye extends utils.Adapter {
 			return;
 		}
 
+		if (stateName === 'alertLevel') {
+			const level = normalizeAlertLevel(state.val);
+			if (!level) {
+				this.log.warn(`Invalid alertLevel "${state.val}" for ${camera.name}`);
+				return;
+			}
+
+			try {
+				await this.applyAlertLevel(camera, level);
+			} catch (error) {
+				this.log.error(`applyAlertLevel failed for ${camera.name}: ${error.message}`);
+				await this.setStateAsync(`${camera.channel}.status`, `error: ${error.message}`, true);
+			}
+			return;
+		}
+
 		if (stateName === 'mode') {
+			if (this._syncingAlertLevel) {
+				return;
+			}
+
 			const mode = normalizeMode(state.val);
 			if (!mode) {
 				this.log.warn(`Invalid mode "${state.val}" for ${camera.name}`);
@@ -2213,6 +2345,7 @@ class Motioneye extends utils.Adapter {
 			}
 
 			try {
+				this.alertLevelActiveByChannel.delete(camera.channel);
 				await this.setMode(camera, mode);
 			} catch (error) {
 				this.log.error(`setMode failed for ${camera.name}: ${error.message}`);

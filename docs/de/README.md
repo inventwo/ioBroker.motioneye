@@ -7,6 +7,7 @@
 - [Einstellungen](settings.md)
 - [Kameras](cameras.md)
 - [Kameramodi](modes.md)
+- [Schutzstufe (VIS)](alert-level.md)
 - [Datenpunkte](datapoints.md)
 - [Livestream in VIS](vis-stream.md)
 - [Hilfe & FAQ](faq.md)

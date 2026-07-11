@@ -159,6 +159,8 @@ Der Adapter sendet **bis zu drei separate Telegram-Nachrichten** (wie dein Block
 
 Für eigene Logik weiterhin Blockly/Skripte mit `snapshots.filePath` möglich.
 
+**VIS-Schutzstufe:** Ein Dropdown an `motioneye.<Instanz>.<kamera>.alertLevel` steuert MotionEye-Modus und Telegram-bei-Bewegung gemeinsam (`off` / `motion` / `notify` / `record` / `full`). Details: [Schutzstufe](alert-level.md).
+
 ---
 
 ### Speicherplatz (`storage.*`)
