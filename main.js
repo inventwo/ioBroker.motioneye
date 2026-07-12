@@ -5,6 +5,8 @@
  */
 
 const utils = require('@iobroker/adapter-core');
+const fs = require('node:fs');
+const path = require('node:path');
 const { createMotionEyeApi } = require('./lib/motionEyeApi');
 const { buildStoragePatch } = require('./lib/mediaStorage');
 const { summarizeMediaList, bytesToMb } = require('./lib/mediaUsage');
@@ -71,6 +73,7 @@ const {
 const { createWebhookServer } = require('./lib/webhookServer');
 const { createStreamManager } = require('./lib/streamManager');
 const { createSnapshotCacheManager } = require('./lib/snapshotCacheManager');
+const { buildSnapshotAbsoluteFilePath } = require('./lib/snapshotCache');
 const { createTelegramNotificationManager } = require('./lib/telegramNotifications');
 const { parseCameraDiskUsage } = require('./lib/diskUsage');
 const { capTimerMs, MAX_TIMER_MS } = require('./lib/timerMs');
@@ -320,12 +323,29 @@ class Motioneye extends utils.Adapter {
 				}),
 			readSnapshotFile: relativePath =>
 				new Promise((resolve, reject) => {
-					this.readFile(this.namespace, relativePath, undefined, (error, data) => {
-						if (error) {
+					const tryFs = () => {
+						const channel = String(relativePath).split('/')[1] || '';
+						const absPath = channel
+							? buildSnapshotAbsoluteFilePath(utils.getAbsoluteDefaultDataDir(), this.namespace, channel)
+							: path.join(utils.getAbsoluteDefaultDataDir(), 'files', this.namespace, relativePath);
+						try {
+							resolve(fs.readFileSync(absPath));
+						} catch (error) {
 							reject(error instanceof Error ? error : new Error(String(error)));
+						}
+					};
+
+					if (typeof this.readFile !== 'function') {
+						tryFs();
+						return;
+					}
+
+					this.readFile(this.namespace, relativePath, (error, data) => {
+						if (!error && data) {
+							resolve(data);
 							return;
 						}
-						resolve(/** @type {Buffer|null} */ (data || null));
+						tryFs();
 					});
 				}),
 			ensureSnapshot: async camera => {
