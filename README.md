@@ -246,7 +246,8 @@ If you like our work and would like to support us, we appreciate any donation.
 -->
 ### **WORK IN PROGRESS**
 - (skvarel) Fixed Telegram on snapshot ignored for some cameras: legacy `notificationEnabled: false` in saved config no longer overrides per-camera **On snapshot** = Yes
-- (skvarel) Fixed Telegram text-only for some cameras: legacy `notificationImageExcluded` no longer overrides per-camera **Bild senden** = Yes
+- (skvarel) Fixed Telegram text-only for some cameras: legacy `notificationImageExcluded` no longer overrides per-camera **Send image** = Yes
+- (skvarel) Telegram images read from adapter file storage and sent as photo buffer (fixes missing images when absolute path differs); log Telegram errors and oversize JPEGs as document
 
 ### 1.3.0 (2026-07-11)
 - (skvarel) Instance `_info` disk usage from MotionEye: `diskUsedGb`, `diskTotalGb`, `diskUsedPercent` (filesystem of first online camera)

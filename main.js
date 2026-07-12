@@ -311,7 +311,22 @@ class Motioneye extends utils.Adapter {
 			getCameraNotification: camera => this.getEffectiveCameraNotification(camera),
 			sendToTelegram: (instance, payload) =>
 				new Promise(resolve => {
-					this.sendTo(`telegram.${instance}`, 'send', payload, () => resolve());
+					this.sendTo(`telegram.${instance}`, 'send', payload, response => {
+						if (response && typeof response === 'object' && 'error' in response && response.error) {
+							this.log.warn(`Telegram send failed: ${response.error}`);
+						}
+						resolve();
+					});
+				}),
+			readSnapshotFile: relativePath =>
+				new Promise((resolve, reject) => {
+					this.readFile(this.namespace, relativePath, undefined, (error, data) => {
+						if (error) {
+							reject(error instanceof Error ? error : new Error(String(error)));
+							return;
+						}
+						resolve(/** @type {Buffer|null} */ (data || null));
+					});
 				}),
 			ensureSnapshot: async camera => {
 				await this.snapshotCache.refreshForNotification(camera);
