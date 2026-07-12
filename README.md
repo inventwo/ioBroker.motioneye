@@ -244,6 +244,9 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (skvarel) Fixed Telegram on snapshot ignored for some cameras: legacy `notificationEnabled: false` in saved config no longer overrides per-camera **On snapshot** = Yes
+
 ### 1.3.0 (2026-07-11)
 - (skvarel) Instance `_info` disk usage from MotionEye: `diskUsedGb`, `diskTotalGb`, `diskUsedPercent` (filesystem of first online camera)
 
