@@ -244,6 +244,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+
 ### 1.3.1 (2026-07-12)
 - (skvarel) Fixed Telegram snapshot notifications ignored or text-only on some cameras: legacy saved flags (`notificationEnabled`, `notificationImageExcluded`) no longer override per-camera **On snapshot** / **Send image** = Yes
 - (skvarel) Telegram snapshot images sent as photo buffer with caption (reliable delivery vs. absolute file path)
