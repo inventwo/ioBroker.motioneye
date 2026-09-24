@@ -1,6 +1,12 @@
 # Older changes
 
 _No released versions yet._
+## 1.0.0 (2026-07-11)
+- (skvarel) Notifications tab: built-in Telegram on motion and/or snapshot — recipients with Active toggle, per-camera message template (Yes/No dropdowns), per-camera recipient filter, test message
+- (skvarel) Snapshot cache: `lastsnap.jpg` in ioBroker file storage, **Snapshots** tab, datapoints `snapshots.*` for VIS/Telegram/scripts
+- (skvarel) Per-camera motion detection tuning under `motiondetection.*`
+- (skvarel) FAQ: snapshot storage, Telegram hints, notifications tab
+
 ## 0.10.0 (2026-07-10)
 - (skvarel) Fixed `snapshot` action failing with `404 not found` on some MotionEye/Motion combinations: snapshots are now triggered via MotionEye's own authenticated `/action/{id}/snapshot` endpoint (same connection as everything else) instead of a direct, unauthenticated call to Motion's raw webcontrol port. The `motionPort` setting is no longer needed and has been removed.
 

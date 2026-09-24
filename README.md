@@ -244,8 +244,8 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
-- (skvarel) Updated dependencies: `@iobroker/adapter-core` to ^3.4.3, `@iobroker/testing` to ^6.2.1 
+### 1.3.2 (2026-09-24)
+- (skvarel) Updated dependencies: `@iobroker/adapter-core` to ^3.4.3, `@iobroker/testing` to ^6.2.1
 
 ### 1.3.1 (2026-07-12)
 - (skvarel) Fixed Telegram snapshot notifications ignored or text-only on some cameras: legacy saved flags (`notificationEnabled`, `notificationImageExcluded`) no longer override per-camera **On snapshot** / **Send image** = Yes
@@ -261,12 +261,6 @@ If you like our work and would like to support us, we appreciate any donation.
 
 ### 1.1.0 (2026-07-11)
 - (skvarel) Per-camera Telegram triggers: separate **On motion** / **On snapshot** Yes/No dropdowns in the table (no global motion/snapshot checkboxes)
-
-### 1.0.0 (2026-07-11)
-- (skvarel) Notifications tab: built-in Telegram on motion and/or snapshot — recipients with Active toggle, per-camera message template (Yes/No dropdowns), per-camera recipient filter, test message
-- (skvarel) Snapshot cache: `lastsnap.jpg` in ioBroker file storage, **Snapshots** tab, datapoints `snapshots.*` for VIS/Telegram/scripts
-- (skvarel) Per-camera motion detection tuning under `motiondetection.*`
-- (skvarel) FAQ: snapshot storage, Telegram hints, notifications tab
 
 ## Older changes
 - [CHANGELOG_OLD.md](CHANGELOG_OLD.md)
