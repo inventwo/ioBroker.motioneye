@@ -244,6 +244,7 @@ If you like our work and would like to support us, we appreciate any donation.
 <!--
   ### **WORK IN PROGRESS**
 -->
+
 ### 1.3.2 (2026-09-24)
 - (skvarel) Updated dependencies: `@iobroker/adapter-core` to ^3.4.3, `@iobroker/testing` to ^6.2.1
 
